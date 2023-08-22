@@ -26,7 +26,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
     public function collection()
     {
         $employee_rs = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
-            ->select('employees.salutation','employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code','employees.emp_pf_no', 'loans.*', DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month <= '".$this->month_yr."') as recoveries"),DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month = '".$this->month_yr."') as payroll_deduction"), DB::raw("(SELECT  payroll_details.emp_pf_int FROM payroll_details WHERE payroll_details.employee_id =  employees.emp_code and payroll_details.month_yr = '".$this->month_yr."') as pf_iterest"))
+            ->select('employees.salutation','employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname','employees.emp_status', 'employees.emp_designation', 'employees.old_emp_code','employees.emp_pf_no', 'loans.*', DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month <= '".$this->month_yr."') as recoveries"),DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month = '".$this->month_yr."') as payroll_deduction"), DB::raw("(SELECT  payroll_details.emp_pf_int FROM payroll_details WHERE payroll_details.employee_id =  employees.emp_code and payroll_details.month_yr = '".$this->month_yr."') as pf_iterest"))
             ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $this->month_yr)
             ->where('loan_type', '=', $this->loan_type)
             ->where('deduction', '=', 'Y')
@@ -71,6 +71,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                         'Employee Code'=>$record->old_emp_code,
                         'Employee Name'=>$record->salutation.' '.$record->emp_fname.' '.$record->emp_mname.' '.$record->emp_lname,
                         'Loan ID'=>$record->loan_id,
+                        'Employee type'=>$record->emp_status,
                         'PF Number'=>$record->emp_pf_no,
                         'PF Loan Outstanding'=>$record->loan_amount,
                         'PF Loan Deduction'=>$record->payroll_deduction,
@@ -88,6 +89,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                     'Employee Code' => 'Total',
                     'Employee Name'=> '',
                     'Loan ID'=> '',
+                    'Employee type'=> '',
                     'PF Number'=>'',
                     'PF Loan Outstanding'=> number_format($total_loan_amount,2),
                     'PF Loan Deduction'=> number_format($total_installment,2),
@@ -119,7 +121,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                         'Employee Code'=>$record->old_emp_code,
                         'Employee Name'=>$record->salutation.' '.$record->emp_fname.' '.$record->emp_mname.' '.$record->emp_lname,
                         'Loan ID'=>$record->loan_id,
-                        
+                        'Employee type'=>$record->emp_status,
                         'Outstanding Amount'=>$record->loan_amount,
                         'Deducted Amount'=>$record->payroll_deduction,
                         'Balance Amount'=>number_format($balance,2),
@@ -134,7 +136,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                     'Employee Code' => 'Total',
                     'Employee Name' => '',
                     'Loan ID' => '',
-                   
+                    'Employee type' => '',
                     'Outstanding Amount'=>$total_loan_amount,
                     'Deducted Amount'=>$total_installment,
                     'Balance Amount'=>number_format($total_balance,2),
@@ -156,6 +158,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                 'Employee Code',
                 'Employee Name',
                 'Loan ID',
+                'Employee Type',
                 'PF Number',
                 'PF Loan Outstanding',
                 'PF Loan Deduction',
@@ -173,6 +176,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                 'Employee Code',
                 'Employee Name',
                 'Loan ID',
+                'Employee Type',
                 'Outstanding Amount',
                 'Deducted Amount',
                 'Balance Amount',

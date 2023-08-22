@@ -155,15 +155,14 @@ Loan Information System - Loan Report
 
                                         @foreach ($result as $index=>$record)
                                         @php
-
                                             $balance=0;
                                             if($record->recoveries==null){
-                                                $balance = $record->loan_amount;
+                                                $balance = $record->total_loan_amount;
                                             }else{
-                                                $balance = $record->loan_amount-$record->recoveries;
+                                                $balance = $record->total_loan_amount-$record->recoveries;
                                             }
                                             
-                                            $total_loan_amount=$total_loan_amount+$record->loan_amount;
+                                            $total_loan_amount=$total_loan_amount+$record->total_loan_amount;
                                             $total_installment=$total_installment+$record->payroll_deduction;
                                             $total_pf_interest=$total_pf_interest+$record->pf_iterest;
                                             $total_deduction=$total_deduction+$record->payroll_deduction+$record->pf_iterest;
@@ -183,7 +182,7 @@ Loan Information System - Loan Report
 											<td>{{ucwords($record->loan_id)}}</td>
 											<td>{{ucwords($record->emp_status)}}</td>
 											<td>{{ucwords($record->emp_pf_no)}}</td>
-											<td>{{$record->loan_amount}}</td>
+											<td>{{$record->total_loan_amount}}</td>
 											
 											<td>{{$record->payroll_deduction}}</td>
 											
@@ -198,7 +197,7 @@ Loan Information System - Loan Report
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="6" style="font-weight:700;">
+											<td colspan="5" style="font-weight:700;">
 											Grand Total
 											</td>
 											
@@ -241,7 +240,7 @@ Loan Information System - Loan Report
 											<th style="width:12%;">Employee Code</th>
 											<th>Employee Name</th>
 											<th style="width:10%;">Loan ID</th>
-											<th style="width:5%;">Employee type</th>
+                                            <th style="width:10%;">Employee Type</th>
 											<!-- <th>Deduction</th> -->
 											<th style="width:5%;">Outstanding Amount</th>
                                             <th >Deducted Amount</th>
@@ -267,12 +266,12 @@ Loan Information System - Loan Report
                                         @php
                                             $balance=0;
                                             if($record->recoveries==null){
-                                                $balance = $record->loan_amount;
+                                                $balance = $record->total_loan_amount;
                                             }else{
-                                                $balance = $record->loan_amount-$record->recoveries;
+                                                $balance = $record->total_loan_amount-$record->recoveries;
                                             }
                                             
-                                            $total_loan_amount=$total_loan_amount+$record->loan_amount;
+                                            $total_loan_amount=$total_loan_amount+$record->total_loan_amount;
                                            
                                             $total_balance=$total_balance+$balance;
 											$total_installment=$total_installment+$record->payroll_deduction;
@@ -286,7 +285,7 @@ Loan Information System - Loan Report
 											<td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
 											<td>{{ucwords($record->loan_id)}}</td>
 											<td>{{ucwords($record->emp_status)}}</td>
-											<td>{{$record->loan_amount}}</td>
+											<td>{{$record->total_loan_amount}}</td>
 											<td>{{$record->payroll_deduction}}</td>
 											<td>{{ number_format($balance,2) }}</td>
 											<td>{{ number_format($record->adjust_amount,2) }}</td>

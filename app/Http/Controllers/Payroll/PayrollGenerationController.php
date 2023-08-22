@@ -2885,6 +2885,7 @@ class PayrollGenerationController extends Controller
                         Session::flash('message', 'Record Successfully updated.');
                         // Session::flash('message', 'Payroll already generated for said period');
                     } else {
+                        //dd($data);
                         //echo 'Before:::: '.$data['employee_id'].'<br>';
                         Payroll_detail::insert($data);
                         
@@ -2892,7 +2893,7 @@ class PayrollGenerationController extends Controller
                         
                         $salary_adv_loan=$this->getLoanDeductionValue($data['employee_id'],'SA',$data['month_yr']);
                         $pf_loan=$this->getLoanDeductionValue($data['employee_id'],'PF',$data['month_yr']);
-                        
+                        //dd( $salary_adv_loan);
                         
                         // if start for adv non diducated if salary balance 0
                         
@@ -2903,6 +2904,7 @@ class PayrollGenerationController extends Controller
                                 foreach($salary_adv_loan as $rec){
                                     $loanRecovery = new LoanRecovery;
                                     $loanRecovery->loan_id = $rec['id'];
+                                    // $loanRecovery->emp_code = $data['employee_id'];
                                     $loanRecovery->amount = $rec['installment_amount'];
                                     $loanRecovery->payout_month = $data['month_yr'];
                                     $loanRecovery->save();
@@ -2919,6 +2921,7 @@ class PayrollGenerationController extends Controller
                                 foreach($pf_loan as $rec){
                                     $loanRecovery = new LoanRecovery;
                                     $loanRecovery->loan_id = $rec['id'];
+                                    // $loanRecovery->emp_code = $data['employee_id'];
                                     $loanRecovery->amount = $rec['installment_amount'];
                                     $loanRecovery->payout_month = $data['month_yr'];
                                     $loanRecovery->save();

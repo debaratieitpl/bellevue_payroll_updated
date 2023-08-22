@@ -380,22 +380,46 @@ class LoanController extends Controller
             $data['req_type'] = $request->loan_type;
 
             $employee_rs = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
-                ->select('employees.salutation','employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code','employees.emp_pf_no', 'loans.*', DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month <= '".$request->month."') as recoveries"), DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month = '".$request->month."') as payroll_deduction"), DB::raw("(SELECT  payroll_details.emp_pf_int FROM payroll_details WHERE payroll_details.employee_id =  employees.emp_code and payroll_details.month_yr = '".$request->month."') as pf_iterest"))
+                ->select('employees.salutation','employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname','employees.emp_status', 'employees.emp_designation', 'employees.old_emp_code','employees.emp_pf_no', 'loans.*', DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month <= '".$request->month."') as recoveries"), DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month = '".$request->month."') as payroll_deduction"), DB::raw("(SELECT  payroll_details.emp_pf_int FROM payroll_details WHERE payroll_details.employee_id =  employees.emp_code and payroll_details.month_yr = '".$request->month."') as pf_iterest"))
                 ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $request->month)
                 ->where('loan_type', '=', $request->loan_type)
                 ->where('deduction', '=', 'Y')
+                // ->where('loans.emp_code', '=', 7014)
                 ->where('loans.loan_amount', '>', 0)
                 ->where(DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id and loan_recoveries.payout_month = '".$request->month."')"), '>', 0)
                 //->where('employees.old_emp_code', '=', '0665')
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
 
-            // dd($employee_rs[0]);
+            // $employee_rs = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
+            // ->select(
+            //     'employees.salutation', 'employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname',
+            //     'employees.emp_designation', 'employees.old_emp_code', 'employees.emp_pf_no','employees.emp_status', 'loans.*',
+            //     DB::raw('SUM(loans.loan_amount) as total_loan_amount'),
+            //     DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.emp_code =  loans.emp_code and loan_recoveries.payout_month <= '".$request->month."' AND loan_recoveries.loan_type = '".$request->loan_type."') as recoveries"),
+            //     DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.emp_code =  loans.emp_code and loan_recoveries.payout_month = '".$request->month."' AND loan_recoveries.loan_type = '".$request->loan_type."') as payroll_deduction"),
+            //     DB::raw("(SELECT  payroll_details.emp_pf_int FROM payroll_details WHERE payroll_details.employee_id =  employees.emp_code and payroll_details.month_yr = '".$request->month."') as pf_iterest")
+            // )
+            //     ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $request->month)
+            //     ->where('loans.loan_type', '=', $request->loan_type)
+            //     ->where('loans.deduction', '=', 'Y')
+            //     ->where('loans.loan_amount', '>', 0)
+            //     ->where('loans.emp_code', '=', 7014)
+            //     ->where(DB::raw("(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.emp_code =  loans.emp_code and loan_recoveries.payout_month = '".$request->month."' AND loan_recoveries.loan_type = '".$request->loan_type."')"), '>', 0)
+            //     ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
+            //     ->groupBy('employees.emp_code')
+            //     ->get();
+
+          
+
+
+
+             //dd($employee_rs[0]);
 
             $data['result'] = $employee_rs;
 
 
-            return view('loan/monthly-loan-report', $data);
+            return view('loan/monthly-loan-report-new-2', $data);
         } else {
             return redirect('/');
         }
