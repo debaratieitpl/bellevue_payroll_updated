@@ -56,172 +56,62 @@ body {-webkit-print-color-adjust: exact;}
 			</tr>
 		</table>
 		@if($req_type=='PF')
+            @php
+            $employeeTotals = [];
+            $index = 0; 
+            @endphp
+        
+            @foreach ($result as $record)
+                @php
+                    $key = $record->emp_code;
+            
+                    if (!isset($employeeTotals[$key])) {
+                        $employeeTotals[$key] = [
+                            'index' => ++$index,
+                            'emp_code' => $record->emp_code,
+                            'old_emp_code' => $record->old_emp_code,
+                            'emp_status' => $record->emp_status,
+                            'emp_department' => $record->emp_department,
+                            'emp_name' => "{$record->salutation} {$record->emp_fname} {$record->emp_mname} {$record->emp_lname}",
+                            'loan_amount' => 0,
+                            'payroll_deduction' => 0,
+                            'pf_interest' => 0,
+                            'balance' => 0,
+                            'loanadjust' => 0,
+                        ];
+                    }
+            
+                    $balance = $record->recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->recoveries);
+                    $employeeTotals[$key]['loan_amount'] += $record->loan_amount;
+                    $employeeTotals[$key]['payroll_deduction'] += $record->payroll_deduction;
+                    $employeeTotals[$key]['pf_interest'] += $record->pf_iterest;
+                    $employeeTotals[$key]['balance'] += $balance;
+                    $employeeTotals[$key]['loanadjust'] += $record->adjust_amount;
+            
+                    $pf_interest = $record->pf_iterest;
+                @endphp
+            @endforeach
 			<table border="1" class="sal-det" style="width:100%;border-collapse:collapse;border-color:#cacaca;">
 				<thead>
                 <tr>
-					<th style="width:8%;">Sl. No.</th>
-					<th style="width:5%;">Employee Code</th>
-					<th>Employee Name</th>
-					<th style="width:5%;">Loan ID</th>
-					<th style="width:5%;">PF Number</th>
-					<th style="width:5%;">PF Loan Outstanding </th>
-					<th style="width:5%;">PF Loan Deduction </th>
-					<th style="width:5%;">PF Interest </th>
-					<th style="width:5%;">Total Deduction </th>
-					<th style="width:5%;">PF Loan Balance</th>
-					<th style="width:5%;">Loan Adjust</th>
-					<th style="width:5%;">Final PF Loan Balance</th>
-				</tr>
-				</thead>
-                <tbody>
-					@php
-                                            
-                                            
-						$total_loan_amount=0;
-						
-						$total_balance=0;
-						$total_installment=0;
-						$total_pf_interest=0;
-						$total_deduction=0;
-						$total_loanadjust=0;
-					   
-					@endphp
-
-					@foreach ($result as $index=>$record)
-					@php
-
-						$balance=0;
-						if($record->recoveries==null){
-							$balance = $record->loan_amount;
-						}else{
-							$balance = $record->loan_amount-$record->recoveries;
-						}
-						
-						$total_loan_amount=$total_loan_amount+$record->loan_amount;
-						$total_installment=$total_installment+$record->payroll_deduction;
-						$total_pf_interest=$total_pf_interest+$record->pf_iterest;
-						$total_deduction=$total_deduction+$record->payroll_deduction+$record->pf_iterest;
-						
-						$total_balance=$total_balance+$balance;
-						$total_loanadjust=$total_loanadjust+$record->adjust_amount;
-
-						$pf_interest=$record->pf_iterest;
-						
-					@endphp
-
-					<tr>
-						<td>{{$loop->iteration}}</td>
-						
-						<td>{{$record->old_emp_code}}</td>
-						<td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
-						<td>{{ucwords($record->loan_id)}}</td>
-						<td>{{ucwords($record->emp_pf_no)}}</td>
-						<td>{{$record->loan_amount}}</td>
-						
-						<td>{{$record->payroll_deduction}}</td>
-						
-						<td>{{$pf_interest}}</td>
-						<td>{{ number_format($record->payroll_deduction+$pf_interest,2) }}</td>
-						<td>{{ number_format($balance,2) }}</td>
-						<td>{{ number_format($record->adjust_amount,2) }}</td>
-						<td>{{ number_format($balance-$record->adjust_amount,2) }}</td>
-						
-					</tr>
-					@endforeach
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="5" style="font-weight:700;">
-						Grand Total
-						</td>
-						
-						<td>
-							<div class="total_loan_amount" style="font-weight:700;">{{number_format($total_loan_amount,2)}}</div>
-						</td>
-						
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_installment,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_pf_interest,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_deduction,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_balance,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_loanadjust,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format(($total_balance-$total_loanadjust),2)}}</div>
-						</td>
-						
-						
-						
-					</tr>
-				</tfoot>
-			</table>
-		@endif
-		@if($req_type=='SA')
-			<table border="1" class="sal-det" style="width:100%;border-collapse:collapse;border-color:#cacaca;">
-				<thead>
-				<tr>
-					<th style="width:8%;">Sl. No.</th>
+					<th style="width:5%;">Sl. No.</th>
 					<th style="width:12%;">Employee Code</th>
+                    <th >Employee Department</th>
 					<th>Employee Name</th>
-					<th style="width:10%;">Loan ID</th>
-					
-					<th style="width:5%;">Outstanding Amount</th>
-					<th >Deducted Amount</th>
-					<th style="width:5%;">Balance Amount</th>
-					<th style="width:5%;">Adjust Amount</th>
-					<th style="width:5%;">Final Balance Amount</th>
+					<th>Final PF Loan Balance</th>
 				</tr>
 				</thead>
                 <tbody>
-					@php
-                                            
-						$total_loan_amount=0;
-						
-						$total_balance=0;
-						$total_loanadjust=0;
-						$total_installment=0;
-						
-					@endphp
-
-					@foreach ($result as $index=>$record)
-					@php
-						$balance=0;
-						if($record->recoveries==null){
-							$balance = $record->loan_amount;
-						}else{
-							$balance = $record->loan_amount-$record->recoveries;
-						}
-						
-						$total_loan_amount=$total_loan_amount+$record->loan_amount;
-						
-						$total_balance=$total_balance+$balance;
-						$total_installment=$total_installment+$record->payroll_deduction;
-						$total_loanadjust=$total_loanadjust+$record->adjust_amount;
-						
-					@endphp
-
-					<tr>
-						<td>{{$loop->iteration}}</td>
-						<td>{{$record->old_emp_code}}</td>
-						<td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
-						<td>{{ucwords($record->loan_id)}}</td>
-						
-						<td>{{$record->loan_amount}}</td>
-						<td>{{$record->payroll_deduction}}</td>
-						<td>{{ number_format($balance,2) }}</td>
-						<td>{{ number_format($record->adjust_amount,2) }}</td>
-						<td>{{ number_format($balance-$record->adjust_amount,2) }}</td>
-						
-					</tr>
-					@endforeach
+                    @foreach ($employeeTotals as $employee)
+					    <tr>
+                            <td>{{ $employee['index'] }}</td>
+                            <td>{{ $employee['old_emp_code'] }}</td>
+                            <td>{{ $employee['emp_department'] }}</td>
+                            <td>{{ $employee['emp_name'] }}</td>
+                            <td>{{ number_format($employee['balance'] - $employee['loanadjust'], 2) }}</td>
+                   
+					    </tr>
+                    @endforeach
 				</tbody>
 				<tfoot>
 					<tr>
@@ -230,21 +120,78 @@ body {-webkit-print-color-adjust: exact;}
 						</td>
 						
 						<td>
-							<div class="total_loan_amount" style="font-weight:700;">{{number_format($total_loan_amount,2)}}</div>
+							<div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_column($employeeTotals, 'balance')) - array_sum(array_column($employeeTotals, 'loanadjust')), 2) }}</div>
 						</td>
-						
+					</tr>
+				</tfoot>
+			</table>
+		@endif
+		@if($req_type=='SA')
+
+            @php
+                $consolidatedData = [];
+                $index = 0; 
+            
+                foreach ($result as $record) {
+                    $empCode = $record->emp_code;
+            
+                    if (!isset($consolidatedData[$empCode])) {
+                        $consolidatedData[$empCode] = [
+                            'total_loan_amount' => 0,
+                            'total_installment' => 0,
+                            'total_balance' => 0,
+                            'total_loanadjust' => 0,
+                            'index' => ++$index,
+                            'emp_code' => $record->emp_code,
+                            'old_emp_code' => $record->old_emp_code,
+                            'emp_status' => $record->emp_status,
+                            'emp_department' => $record->emp_department,
+                            'emp_name' => "{$record->salutation} {$record->emp_fname} {$record->emp_mname} {$record->emp_lname}",
+                        ];
+                    }
+            
+                    $balance = $record->recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->recoveries);
+            
+                    // $consolidatedData[$empCode]['recordCount']++;
+                    $consolidatedData[$empCode]['total_loan_amount'] += $record->loan_amount;
+                    $consolidatedData[$empCode]['total_installment'] += $record->payroll_deduction;
+                    $consolidatedData[$empCode]['total_balance'] += $balance;
+                    $consolidatedData[$empCode]['total_loanadjust'] += $record->adjust_amount;
+                }
+            @endphp
+			<table border="1" class="sal-det" style="width:100%;border-collapse:collapse;border-color:#cacaca;">
+				<thead>
+				<tr>
+					<th style="width:5%;">Sl. No.</th>
+					<th style="width:12%;">Employee Code</th>
+                    <th >Employee Department</th>
+					<th>Employee Name</th>
+					<th>Final Balance Amount</th>
+				</tr>
+				</thead>
+                <tbody>
+					
+                    @foreach ($consolidatedData as $empCode => $employee)
+                        <tr>
+                            <td>{{ $employee['index'] }}</td>
+                            <td>{{ $employee['old_emp_code'] }}</td>
+                            <td>{{ $employee['emp_department'] }}</td>
+                            <td>{{ $employee['emp_name'] }}</td>
+                            <td>{{ number_format($employee['total_balance'] - $employee['total_loanadjust'], 2) }}</td>
+                            
+                        </tr>
+				    @endforeach
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="4" style="font-weight:700;">
+						Grand Total
+						</td>
 						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_installment,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_balance,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format($total_loanadjust,2)}}</div>
-						</td>
-						<td>
-							<div class="total_balance" style="font-weight:700;">{{number_format(($total_balance-$total_loanadjust),2)}}</div>
-						</td>
+                            <div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_map(function($employee) {
+                                return $employee['total_balance'] - $employee['total_loanadjust'];
+                            }, $consolidatedData)), 2) }}</div>
+                        </td>
 						
 						
 						

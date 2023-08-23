@@ -120,8 +120,8 @@ Loan Information System - Loan Report
 						<div class="payroll-table table-responsive" style="width:100%;margin:0 auto;">
 							@if($req_type=='PF')
 							@php
-							$employeeTotals = []; // To store the calculated totals for each employee
-							$index = 0; // To keep track of the unique employees
+							$employeeTotals = [];
+							$index = 0; 
 							@endphp
 						
 						@foreach ($result as $record)
@@ -203,36 +203,36 @@ Loan Information System - Loan Report
 							@endif
 							@if($req_type=='SA')
                             @php
-                            $consolidatedData = [];
-                        
-                            foreach ($result as $record) {
-                                $empCode = $record->emp_code;
-                        
-                                if (!isset($consolidatedData[$empCode])) {
-                                    $consolidatedData[$empCode] = [
-                                        'recordCount' => 0,
-                                        'total_loan_amount' => 0,
-                                        'total_installment' => 0,
-                                        'total_balance' => 0,
-                                        'total_loanadjust' => 0,
-                                        'salutation' => $record->salutation,
-                                        'emp_fname' => $record->emp_fname,
-                                        'emp_mname' => $record->emp_mname,
-                                        'emp_lname' => $record->emp_lname,
-                                        'emp_status' => $record->emp_status,
-                                        'old_emp_code' => $record->old_emp_code,
-                                    ];
+                                $consolidatedData = [];
+                            
+                                foreach ($result as $record) {
+                                    $empCode = $record->emp_code;
+                            
+                                    if (!isset($consolidatedData[$empCode])) {
+                                        $consolidatedData[$empCode] = [
+                                            'recordCount' => 0,
+                                            'total_loan_amount' => 0,
+                                            'total_installment' => 0,
+                                            'total_balance' => 0,
+                                            'total_loanadjust' => 0,
+                                            'salutation' => $record->salutation,
+                                            'emp_fname' => $record->emp_fname,
+                                            'emp_mname' => $record->emp_mname,
+                                            'emp_lname' => $record->emp_lname,
+                                            'emp_status' => $record->emp_status,
+                                            'old_emp_code' => $record->old_emp_code,
+                                        ];
+                                    }
+                            
+                                    $balance = $record->recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->recoveries);
+                            
+                                    $consolidatedData[$empCode]['recordCount']++;
+                                    $consolidatedData[$empCode]['total_loan_amount'] += $record->loan_amount;
+                                    $consolidatedData[$empCode]['total_installment'] += $record->payroll_deduction;
+                                    $consolidatedData[$empCode]['total_balance'] += $balance;
+                                    $consolidatedData[$empCode]['total_loanadjust'] += $record->adjust_amount;
                                 }
-                        
-                                $balance = $record->recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->recoveries);
-                        
-                                $consolidatedData[$empCode]['recordCount']++;
-                                $consolidatedData[$empCode]['total_loan_amount'] += $record->loan_amount;
-                                $consolidatedData[$empCode]['total_installment'] += $record->payroll_deduction;
-                                $consolidatedData[$empCode]['total_balance'] += $balance;
-                                $consolidatedData[$empCode]['total_loanadjust'] += $record->adjust_amount;
-                            }
-                        @endphp
+                            @endphp
                         
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead style="text-align:center;vertical-align:middle;">
