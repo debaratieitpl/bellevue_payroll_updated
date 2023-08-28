@@ -91,6 +91,16 @@ Payroll Information System-Payroll Generation
 					<!----------------view----------------->
 
 					<div class="card-body card-block">
+
+                        <div class="px-5">
+					        <a href="{{route('payroll.vw-montly-overtime.export').'?month='.$req_month}}">
+					            <button type="submit" class="btn btn-success mx-1" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Export</button>
+					        </a>
+					        <button type="button" class="btn btn-primary mx-1" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;" data-toggle="modal" data-target="#exampleModal">
+                              Import
+                            </button>
+					    </div>
+
 						<div class="payroll-table table-responsive" style="width:100%;margin:0 auto;overflow-x:scroll;">
 							<form action="{{url('payroll/update-overtimes-all')}}" method="post" id="myForm">
                             {{csrf_field()}}
@@ -171,6 +181,36 @@ Payroll Information System-Payroll Generation
 						</div>
 					</div>
 					<!------------------------------->
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <form style='padding: 0px;' action="{{route('payroll.vw-montly-overtime.import').'?month='.$req_month}}" method="post" enctype="multipart/form-data">
+                              @csrf
+                              <div class="modal-content">
+                                <!--<div class="modal-header">-->
+                                <!--  <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>-->
+                                <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                                <!--    <span aria-hidden="true">&times;</span>-->
+                                <!--  </button>-->
+                                <!--</div>-->
+                                <div class="modal-body">
+                                  
+                                    <div class="form-group">
+                                      <label for="excel_file">Upload Excel</label>
+                                      <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file">
+                                    </div>
+                                  
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" style="padding: 0px 8px;height: 32px;" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Import</button>
+                                </div>
+                              </div>
+                          </form>
+                        </div>
+                      </div>
+                      <!-- END -->
 
 				</div>
                 @endif

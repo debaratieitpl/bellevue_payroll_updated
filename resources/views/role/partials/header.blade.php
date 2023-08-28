@@ -2,9 +2,9 @@
 <header id="header" class="header">
     <div class="top-left">
         <div class="navbar-header">
-            <a class="navbar-brand" href="./"><img src="{{ asset('theme/images/bellevue-logo1.png') }}" alt="Logo"></a>
+            <a class="navbar-brand" href="{{url('dashboard')}}"><img src="{{ asset('theme/images/bellevue-logo1.png') }}" alt="Logo"></a>
             <!-- <a class="navbar-brand" href="./">Bellevue</a> -->
-            <a class="navbar-brand hidden" href="./"><img src="{{ asset('images/logo2.png') }}" alt="Logo"></a>
+            <a class="navbar-brand hidden" href="{{url('dashboard')}}"><img src="{{ asset('images/logo2.png') }}" alt="Logo"></a>
          
         </div>
     </div>

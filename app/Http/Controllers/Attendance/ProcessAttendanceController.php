@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExcelFileExportAttendanceEntry;
+use App\Exports\MonthlyEmployeeAttendanceExport;
+use App\Imports\MonthlyEmployeeAttendanceImport;
 use Session;
 use Validator;
 use View;
@@ -488,7 +490,6 @@ class ProcessAttendanceController extends Controller
             $payrolldate = explode('/', $request['month_yr']);
             $payroll_date = "0" . ($payrolldate[0] - 2);
             $origDate = $payroll_date . "/" . $payrolldate[1];
-
             //$current_month_days = cal_days_in_month(CAL_GREGORIAN, $payrolldate[0], $payrolldate[1]);
             //dd($current_month_days);
             $datestring = $payrolldate[1] . '-' . $payrolldate[0] . '-01';
@@ -500,7 +501,6 @@ class ProcessAttendanceController extends Controller
             $formatmonthyr = $payrolldate[1] . "-" . $payroll_date . "-01";
 
             $month_yr_new = $request['month_yr'];
-
             $monthlist = Process_attendance::select('month_yr')->distinct('month_yr')->get();
 
             // $rate_rs = Rate_master::leftJoin('rate_details', 'rate_details.rate_id', '=', 'rate_masters.id')
@@ -537,6 +537,23 @@ class ProcessAttendanceController extends Controller
             }
 
             return view('attendance/set-monthly-process-attandance-all', compact('result', 'Roledata', 'month_yr_new', 'monthlist'));
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function getMonthlyAttendanceExport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            $excelName = 'attendance.xlsx';
+            return \Excel::download(new MonthlyEmployeeAttendanceExport($request->month), $excelName); //Export Query
+        } else {
+            return redirect('/');
+        }
+    }
+    public function getMonthlyAttendanceImport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            \Excel::import(new MonthlyEmployeeAttendanceImport(), $request->file('excel_file'));
+            return redirect()->route('attendance.view-montly-attendance-data-all')->with('success', 'Import Successfully');
         } else {
             return redirect('/');
         }

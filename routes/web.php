@@ -715,9 +715,12 @@ Route::post('payroll/vw-montly-coop/import', 'Payroll\PayrollGenerationControlle
 Route::get('attendance/add-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@addMonthlyAttendancePAAllemployee');
 Route::post('attendance/add-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@listAttendanceAllemployee');
 Route::post('attendance/save-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@SaveAttendanceAllemployee');
-Route::get('attendance/view-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@viewMonthlyAttendanceAllemployee');
+Route::get('attendance/view-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@viewMonthlyAttendanceAllemployee')->name('attendance.view-montly-attendance-data-all');
 Route::post('attendance/view-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@listMonthlyAttendanceAllemployee');
 Route::post('attendance/update-montly-attendance-data-all', 'Attendance\ProcessAttendanceController@UpdateAttendanceAllemployee');
+
+Route::get('attendance/vw-montly-attendance/export', 'Attendance\ProcessAttendanceController@getMonthlyAttendanceExport')->name('attendance.vw-montly-attendance.export');
+Route::post('attendance/vw-montly-attendance/import', 'Attendance\ProcessAttendanceController@getMonthlyAttendanceImport')->name('attendance.vw-montly-attendance.import');
 
 Route::get('attendance/report-monthly-attendance', 'Attendance\ProcessAttendanceController@reportMonthlyAttendanceAllemployee');
 Route::post('attendance/report-monthly-attendance', 'Attendance\ProcessAttendanceController@getMonthlyAttendanceReport');
@@ -730,6 +733,9 @@ Route::get('payroll/add-montly-itax-all', 'Payroll\PayrollGenerationController@a
 Route::post('payroll/vw-add-itax-all', 'Payroll\PayrollGenerationController@listItaxAllemployee');
 Route::post('payroll/save-itax-all', 'Payroll\PayrollGenerationController@SaveItaxAll');
 Route::post('payroll/update-itax-all', 'Payroll\PayrollGenerationController@UpdateItaxAll');
+
+Route::get('payroll/vw-montly-tax/export', 'Payroll\PayrollGenerationController@getMonthlyTaxDeductionExport')->name('payroll.vw-montly-tax.export');
+Route::post('payroll/vw-montly-tax/import', 'Payroll\PayrollGenerationController@getMonthlyTaxDeductionImport')->name('payroll.vw-montly-tax.import');
 
 //generate allowances
 Route::get('payroll/vw-montly-allowances', 'Payroll\PayrollGenerationController@getMonthlyEarningAllowances');
@@ -750,6 +756,9 @@ Route::get('payroll/add-montly-overtimes', 'Payroll\PayrollGenerationController@
 Route::post('payroll/vw-add-overtimes-all', 'Payroll\PayrollGenerationController@listOvertimesAllemployee');
 Route::post('payroll/save-overtimes-all', 'Payroll\PayrollGenerationController@SaveOvertimesAll');
 Route::post('payroll/update-overtimes-all', 'Payroll\PayrollGenerationController@UpdateOvertimesAll');
+
+Route::get('payroll/vw-montly-overtime/export', 'Payroll\PayrollGenerationController@getMonthlyOvertimeExport')->name('payroll.vw-montly-overtime.export');
+Route::post('payroll/vw-montly-overtime/import', 'Payroll\PayrollGenerationController@getMonthlyOvertimeImport')->name('payroll.vw-montly-overtime.import');
 
 //******* Routes with Finance & Accounts end *********//
 

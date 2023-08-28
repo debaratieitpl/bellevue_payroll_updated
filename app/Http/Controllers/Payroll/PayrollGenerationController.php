@@ -33,6 +33,10 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExcelFileExportPayrollEntry;
 use App\Exports\MonthlyEmployeeCooperativeExport;
 use App\Imports\MonthlyEmployeeCooperativeImport; 
+use App\Exports\MonthlyEmployeeTaxExport;
+use App\Imports\MonthlyEmployeeTaxImport;
+use App\Exports\MonthlyEmployeeOvertimeExport;
+use App\Imports\MonthlyEmployeeOvertimeImport;
 use Session;
 use View;
 use DB;
@@ -3327,8 +3331,45 @@ class PayrollGenerationController extends Controller
     //Import Monthly Updated Coop
     public function getMonthlyCoopDeductionImport(Request $request) {
         if (!empty(Session::get('admin'))) {
+
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+            $data['monthlist'] = MonthlyEmployeeCooperative::select('month_yr')->distinct('month_yr')->get();
+            $data['req_month'] = $request->month;
+
             \Excel::import(new MonthlyEmployeeCooperativeImport(), $request->file('excel_file'));
-            return back();
+
+            $employee_rs = MonthlyEmployeeCooperative::join('employees', 'employees.emp_code', '=', 'monthly_employee_cooperatives.emp_code')
+            ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'monthly_employee_cooperatives.*')
+            ->where('monthly_employee_cooperatives.month_yr', '=', $request->month)
+            ->orderBy('employees.emp_fname', 'asc')
+            ->get();
+            if (count($employee_rs) == 0) {
+                Session::flash('error', 'Cooperative for the month ' . $request->month . ' already processed.');
+                return redirect('payroll/vw-montly-coop');
+            }
+            $result = '';
+            foreach ($employee_rs as $mainkey => $emcode) {
+
+                $result .= '<tr id="' . $emcode->emp_code . '">
+                            <td><div class="checkbox"><label><input type="checkbox" name="empcode_check[]" id="chk_' . $emcode->emp_code . '" value="' . $emcode->emp_code . '" class="checkhour"></label></div></td>
+                            <td><input type="text" readonly class="form-control sm_emp_code" name="emp_code' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_code . '"></td>
+                            <td>' . $emcode->old_emp_code . '</td>
+                            <td><input type="text" readonly class="form-control sm_emp_name" name="emp_name' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_fname . ' ' . $emcode->emp_mname . ' ' . $emcode->emp_lname . '"></td>
+                            <td><input type="text" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_designation . '"></td>
+                            <td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request->month . '"></td>
+                            <td><input type="number" step="any" class="form-control sm_d_coop" name="d_coop' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->coop_amount . '" id="d_coop_' . $emcode->emp_code . '"></td><td><input type="number" step="any" class="form-control sm_d_insup" name="d_insup' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->insurance_prem . '" id="d_insup_' . $emcode->emp_code . '"></td><td><input type="number" step="any" class="form-control sm_d_misc" name="d_misc' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->misc_ded . '" id="d_misc_' . $emcode->emp_code . '"></td>';
+            }
+
+            $data['result'] = $result;
+
+            return view('payroll/monthly-coop', $data);
+            //return back();
         } else {
             return redirect('/');
         }
@@ -3965,6 +4006,7 @@ class PayrollGenerationController extends Controller
 
     public function viewMonthlyItaxDeduction(Request $request)
     {
+       // dd($request->all());
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
@@ -4101,6 +4143,61 @@ class PayrollGenerationController extends Controller
             }
 
             return redirect('payroll/vw-montly-itax');
+        } else {
+            return redirect('/');
+        }
+    }
+
+     //Export Monthly Tax
+     public function getMonthlyTaxDeductionExport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            $excelName = 'monthlytaxdeduction.xlsx';
+            return \Excel::download(new MonthlyEmployeeTaxExport($request->month), $excelName); //Export Query
+        } else {
+            return redirect('/');
+        }
+    }
+    
+    //Import Monthly Updated Tax
+    public function getMonthlyTaxDeductionImport(Request $request) {
+       // dd($request->all());
+        if (!empty(Session::get('admin'))) {
+            
+            //return back();
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+            $data['monthlist'] = MonthlyEmployeeItax::select('month_yr')->distinct('month_yr')->get();
+            $data['req_month'] = $request->month;
+
+            \Excel::import(new MonthlyEmployeeTaxImport(), $request->file('excel_file'));
+
+            $employee_rs = MonthlyEmployeeItax::join('employees', 'employees.emp_code', '=', 'monthly_employee_itaxes.emp_code')
+                ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'monthly_employee_itaxes.*')
+                ->where('monthly_employee_itaxes.month_yr', $request->month)
+                ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
+                ->get();
+
+            $result = '';
+            foreach ($employee_rs as $mainkey => $emcode) {
+
+                $result .= '<tr id="' . $emcode->emp_code . '">
+                            <td><div class="checkbox"><label><input type="checkbox" name="empcode_check[]" id="chk_' . $emcode->emp_code . '" value="' . $emcode->emp_code . '" class="checkhour"></label></div></td>
+                            <td><input type="text" readonly class="form-control sm_emp_code" name="emp_code' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_code . '"></td>
+                            <td>' . $emcode->old_emp_code . '</td>
+                            <td><input type="text" readonly class="form-control sm_emp_name" name="emp_name' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_fname . ' ' . $emcode->emp_mname . ' ' . $emcode->emp_lname . '"></td>
+                            <td><input type="text" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_designation . '"></td>
+                            <td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request->month . '"></td>
+                            <td><input type="number" step="any" class="form-control sm_d_itax" name="d_itax' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->itax_amount . '" id="d_itax_' . $emcode->emp_code . '"></td>';
+            }
+
+            $data['result'] = $result;
+
+            return view('payroll/monthly-incometax', $data);
         } else {
             return redirect('/');
         }
@@ -5280,6 +5377,25 @@ class PayrollGenerationController extends Controller
                 Session::flash('error', 'No Record is selected');
             }
 
+            return redirect('payroll/vw-montly-overtime');
+        } else {
+            return redirect('/');
+        }
+    }
+
+     //Export Monthly overtime
+     public function getMonthlyOvertimeExport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            $excelName = 'monthly-overtime.xlsx';
+            return \Excel::download(new MonthlyEmployeeOvertimeExport($request->month), $excelName); //Export Query
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function getMonthlyOvertimeImport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            \Excel::import(new MonthlyEmployeeOvertimeImport(), $request->file('excel_file'));
             return redirect('payroll/vw-montly-overtime');
         } else {
             return redirect('/');

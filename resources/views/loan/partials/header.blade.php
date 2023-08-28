@@ -3,8 +3,8 @@
     <div class="top-left">
         <div class="navbar-header">
             <!-- <a class="navbar-brand" href="{{url('/')}}"><img src="{{ asset('theme/images/bopt-logo.png') }}" alt="Logo"></a> -->
-            <a class="navbar-brand" href="./"><img src="{{ asset('theme/images/bellevue-logo1.png') }}" alt="Logo"></a>
-            <a class="navbar-brand hidden" href="{{url('/')}}"><img src="{{ asset('theme/images/bellevue-logo1.png') }}" alt="Logo"></a>
+            <a class="navbar-brand" href="{{url('dashboard')}}"><img src="{{ asset('theme/images/bellevue-logo1.png') }}" alt="Logo"></a>
+            <a class="navbar-brand hidden" href="{{url('dashboard')}}"><img src="{{ asset('theme/images/bellevue-logo1.png') }}" alt="Logo"></a>
            
         </div>
     </div>

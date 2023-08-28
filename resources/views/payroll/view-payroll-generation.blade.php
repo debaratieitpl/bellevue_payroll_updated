@@ -85,7 +85,7 @@ Payroll Information System-Payroll Generation
 												
                         </div>
           <div class="clear-fix">
-            <table id="bootstrap-data-table" class="table table-striped table-bordered table-responsive" style="width:1200px;overflow-x:scroll;">
+            <table id="bootstrap-data-table" class="table table-striped table-bordered table-responsive" style="overflow-x:scroll;">
               <thead>
                 <tr>
                   <th rowspan="2">Sl. No.</th>
