@@ -100,17 +100,17 @@ body {-webkit-print-color-adjust: exact;}
 				</thead>
 				<tbody>
 					<?php
-$total_calculation = 0;
-$i = 1;
-$subtotal_basic=0;
-$subtotal_apf=0;
-$subtotal_pf=0;
-$subtotal_pf_employer=0;
-$subtotal_pf_pension=0;
-$subtotal_opening=0;
-$subtotal_closing=0;
-//dd($employee_ptax);
-if (!empty($employee_ptax)) {foreach ($employee_ptax as $val) {?>
+				$total_calculation = 0;
+				$i = 1;
+				$subtotal_basic=0;
+				$subtotal_apf=0;
+				$subtotal_pf=0;
+				$subtotal_pf_employer=0;
+				$subtotal_pf_pension=0;
+				$subtotal_opening=0;
+				$subtotal_closing=0;
+				//dd($employee_ptax);
+				if (!empty($employee_ptax)) {foreach ($employee_ptax as $val) {?>
                    
 					<tr class="part">
 						<td style="text-align: center;"><?php echo $i; ?></td>
@@ -123,10 +123,10 @@ if (!empty($employee_ptax)) {foreach ($employee_ptax as $val) {?>
 						<td style="text-align:right;"><?php $subtotal_apf+=$val->emp_apf; echo $val->emp_apf; ?></td>
 						<td style="text-align:right;"><?php
 
-    $total_calculation += $val->emp_apf+$val->emp_apf_mtd+$val->emp_pf_mtd + $val->emp_pf + $val->emp_pf_employer_mtd + $val->emp_pf_employer + $val->opening_data;
-	$subtotal_closing=$total_calculation;
-	$subtotal_pf+=$val->emp_pf; 
-    echo $val->emp_pf;?></td>
+						$total_calculation += $val->emp_apf+$val->emp_apf_mtd+$val->emp_pf_mtd + $val->emp_pf + $val->emp_pf_employer_mtd + $val->emp_pf_employer + $val->opening_data;
+						$subtotal_closing=$total_calculation;
+						$subtotal_pf+=$val->emp_pf; 
+						echo $val->emp_pf;?></td>
 						<td style="text-align:right;"><?php $subtotal_pf_employer+=$val->emp_pf_employer; echo $val->emp_pf_employer; ?></td>
 						<td style="text-align:right;"><?php $subtotal_pf_pension+=$val->emp_pf_pension; echo $val->emp_pf_pension; ?></td>
 						<td style="text-align:right;"><?php $subtotal_opening+=$val->emp_apf_mtd+$val->emp_pf_mtd + $val->emp_pf_employer_mtd + $val->opening_data; echo $val->emp_apf_mtd+$val->emp_pf_mtd + $val->emp_pf_employer_mtd + $val->opening_data; ?></td>

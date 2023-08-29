@@ -793,9 +793,13 @@ Route::get('payroll/salary-statement', 'Payroll\PtaxEmployeeWiseController@ViewS
 Route::post('payroll/salary-statement', 'Payroll\PtaxEmployeeWiseController@ShowSalaryStatementReport');
 Route::get('payroll/vw-p-tax-department-wise', 'Payroll\PtaxEmployeeWiseController@ViewPtaxDeptWise');
 Route::post('payroll/vw-p-tax-department-wise', 'Payroll\PtaxEmployeeWiseController@ShowReportPtaxDeptWise');
-Route::get('payroll/vw-gpf-wise', 'Payroll\PtaxEmployeeWiseController@ViewGpfMonthlyWise');
-Route::post('payroll/vw-gpf-wise', 'Payroll\PtaxEmployeeWiseController@ShowReportGpfMonthlyWise');
+Route::get('payroll/vw-gpf-wise', 'Payroll\PtaxEmployeeWiseController@ViewGpfMonthlyWise')->name('payroll.vm-employee-wise');
+Route::post('payroll/vw-gpf-wise-report', 'Payroll\PtaxEmployeeWiseController@ShowReportGpfMonthlyWise');
 Route::get('payroll/vw-gpf-emplyeewise', 'Payroll\PtaxEmployeeWiseController@ViewGpfEmployeewise');
+//add for excel and pdf file show 
+Route::post('payroll/vw-gpf-file-show', 'Payroll\PtaxEmployeeWiseController@ShowGpfEmployeewiseFile');
+Route::post('payroll/employeewise-payroll-report', 'Payroll\PtaxEmployeeWiseController@employeewisePayrollReport');
+
 Route::post('payroll/vw-gpf-emplyeewise', 'Payroll\PtaxEmployeeWiseController@ShowReportGpfEmployeewise');
 Route::get('payroll/payslip/{emp_id}/{pay_dtl_id}', 'Payroll\EmployeeWisePayslipController@viewPayrollDetails');
 Route::post('payroll/payslip/mail-to-employee', 'Payroll\EmployeeWisePayslipController@mailPayrollToEmployees');
