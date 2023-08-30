@@ -800,7 +800,7 @@ Route::post('payroll/vw-gpf-wise-report', 'Payroll\PtaxEmployeeWiseController@Sh
 Route::post('payroll/vw-gpf-employee-file-show', 'Payroll\PtaxEmployeeWiseController@ShowGpfMonthlyWiseFile');
 Route::post('payroll/monthlywise-payroll-report', 'Payroll\PtaxEmployeeWiseController@GpfMonthlyWisePayrollReport');
 
-Route::get('payroll/vw-gpf-emplyeewise', 'Payroll\PtaxEmployeeWiseController@ViewGpfEmployeewise');
+Route::get('payroll/vw-gpf-emplyeewise', 'Payroll\PtaxEmployeeWiseController@ViewGpfEmployeewise')->name('payroll.vm-employee-wise');;
 Route::post('payroll/vw-gpf-emplyeewise', 'Payroll\PtaxEmployeeWiseController@ShowReportGpfEmployeewise');
 //add for excel and pdf file show and export excel
 Route::post('payroll/vw-gpf-file-show', 'Payroll\PtaxEmployeeWiseController@ShowGpfEmployeewiseFile');

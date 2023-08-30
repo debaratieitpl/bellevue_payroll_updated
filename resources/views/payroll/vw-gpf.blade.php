@@ -71,7 +71,7 @@ Payroll Information System-PTAX
 	              </form>
 				  @if ($result!='')
 				  <div style="display:inline-flex;float:left;" class="card-icon">
-						  <form  method="post" action="{{ url('payroll/monthlywise-payroll-report') }}" enctype="multipart/form-data"  style="padding: 0px !important;">
+						  <form  method="post" action="{{ url('payroll/monthlywise-payroll-report') }}" enctype="multipart/form-data" target="_blank"  style="padding: 0px !important;">
 							  <input type="hidden" name="_token" value="{{ csrf_token() }}">
 							  <input type="hidden" name="from_month" value="{{ $result }}">
 							  <button data-toggle="tooltip" data-placement="bottom" title="Download Excel" class="btn btn-default" style="background:none !important;" type="submit"><img  style="width: 35px;" src="{{ asset('img/excel-dnld.png')}}"></button>

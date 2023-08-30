@@ -90,18 +90,19 @@ Payroll Information System-PTAX
 
                   @if ($result!='')
                         <div style="display:inline-flex;float:left;" class="card-icon">
-                                <form  method="post" action="{{ url('payroll/employeewise-payroll-report') }}" enctype="multipart/form-data" >
+                                <form  method="post" action="{{ url('payroll/employeewise-payroll-report') }}" enctype="multipart/form-data" style="padding: 0px !important;">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="from_month" value="{{ $result }}">
                                     <input type="hidden" name="emp_code" value="{{ $emp_code }}">
                                     <button data-toggle="tooltip" data-placement="bottom" title="Download Excel" class="btn btn-default" style="background:none !important;" type="submit"><img  style="width: 35px;" src="{{ asset('img/excel-dnld.png')}}"></button>
                                 </form>
-                                <form  method="post" action="{{url('payroll/vw-gpf-emplyeewise')}}" enctype="multipart/form-data" target="_blank">
+                                <form  method="post" action="{{url('payroll/vw-gpf-emplyeewise')}}" enctype="multipart/form-data" target="_blank" style="padding: 0px !important;">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="from_month" value="{{ $result }}">
                                     <input type="hidden" name="emp_code" value="{{ $emp_code }}">
                                     <button data-toggle="tooltip" data-placement="bottom" title="Download Pdf" class="btn btn-default" style="background:none !important;" type="submit"><img  style="width: 35px;" src="{{ asset('img/print-button.jpg')}}"></button>
                                 </form>
+							<a href="{{route('payroll.vm-employee-wise')}}" style="padding: 10px !important;"><button class="btn btn-warning btn-sm">Reset </button></a>
                         </div>
                  @endif
                 
