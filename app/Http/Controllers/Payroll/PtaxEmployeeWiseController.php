@@ -19,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExcelFileExportDeptSummary;
 use App\Exports\ExcelFileExportDeductedCoop;
 use App\Exports\ExcelFileExportEmployeeWise;
+use App\Exports\ExcelFileExportMonthlyWise;
 use App\Exports\ExcelFileExportNonDeductedCoop;
 use App\Exports\ExcelFileExportMiscRecovery;
 use App\Exports\ExcelFileExportCoopEntry;
@@ -149,6 +150,28 @@ class PtaxEmployeeWiseController extends Controller
                 ->get();
 
             $data['monthlist'] = Payroll_detail::select('month_yr')->distinct('month_yr')->get();
+            $data['result']='';
+            return view('payroll/vw-gpf', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    //show file pdf and excel
+    public function ShowGpfMonthlyWiseFile(Request $request)
+    {
+        //dd($request->all()); 
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+            $data['monthlist'] = Payroll_detail::select('month_yr')->distinct('month_yr')->get();
+            $data['employeeslist'] = Employee::get();
+            $data['result'] =  $request->month_yr;
             return view('payroll/vw-gpf', $data);
         } else {
             return redirect('/');
@@ -296,6 +319,35 @@ class PtaxEmployeeWiseController extends Controller
             return redirect('/');
         }
     }
+
+    public function GpfMonthlyWisePayrollReport(Request $request)
+    {
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+            $month_yr = '';
+            if (isset($request->from_month)) {
+                $month_yr = $request->from_month;
+            }
+            $month_yr_str='';
+            if($month_yr!=''){
+                $month_yr_str=explode('/',$month_yr);
+                $month_yr_str=implode('-',$month_yr_str);
+            }
+
+            return Excel::download(new ExcelFileExportMonthlyWise($month_yr), 'MonthlyWiseReport-'.$month_yr_str.'.xlsx');
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
     public function ViewGpfEmployeewise()
     {
         if (!empty(Session::get('admin'))) {

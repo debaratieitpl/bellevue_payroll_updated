@@ -47,8 +47,8 @@ Payroll Information System-PTAX
 	          <div class="card">
 	            <!-- <div class="card-header"> <strong>GPF Statement</strong> </div> -->
 	            <div class="card-body card-block">
-                      	@include('include.messages')
-	              <form action="" method="post" style="width: 70%;margin: 0 auto;" target="_blank">
+                @include('include.messages')
+	              <form action="{{ url('payroll/vw-gpf-employee-file-show')}}" method="post" style="width: 70%;margin: 0 auto;">
 	              	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	                <div class="row form-group">
 
@@ -57,7 +57,7 @@ Payroll Information System-PTAX
 						<select data-placeholder="Choose Month..." name="month_yr" id="month" class="form-control" required>
 							<option value="" selected disabled > Select </option>
 							<?php foreach ($monthlist as $month) {?>
-							<option value="<?php echo $month->month_yr; ?>" @if(isset($month_yr_new) && $month_yr_new==$month->month_yr) selected @endif><?php echo $month->month_yr; ?></option>
+							<option value="<?php echo $month->month_yr; ?>" @if(isset($result) && $result==$month->month_yr) selected @endif><?php echo $month->month_yr; ?></option>
 							<?php }?>
                         </select>
 					</div>
@@ -65,11 +65,26 @@ Payroll Information System-PTAX
 
 	                  <div class="col-md-4 btn-up">
 	                    <button type="submit" class="btn btn-danger btn-sm" id="showbankstatement">Show </button>
+						
 	                  </div>
 	                </div>
-
-
 	              </form>
+				  @if ($result!='')
+				  <div style="display:inline-flex;float:left;" class="card-icon">
+						  <form  method="post" action="{{ url('payroll/monthlywise-payroll-report') }}" enctype="multipart/form-data"  style="padding: 0px !important;">
+							  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+							  <input type="hidden" name="from_month" value="{{ $result }}">
+							  <button data-toggle="tooltip" data-placement="bottom" title="Download Excel" class="btn btn-default" style="background:none !important;" type="submit"><img  style="width: 35px;" src="{{ asset('img/excel-dnld.png')}}"></button>
+						  </form>
+						  <form  method="post" action="{{url('payroll/vw-gpf-wise-report')}}" enctype="multipart/form-data" target="_blank" style="padding: 0px !important;">
+							  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+							  <input type="hidden" name="month_yr" value="{{ $result }}">
+							  <button data-toggle="tooltip" data-placement="bottom" title="Download Pdf" class="btn btn-default" style="background:none !important;" type="submit"><img  style="width: 35px;" src="{{ asset('img/print-button.jpg')}}"></button>
+						  </form>
+						<a href="{{route('payroll.vm-monthly-wise')}}" style="padding: 10px !important;"><button class="btn btn-warning btn-sm">Reset </button></a>
+				  </div>
+		         @endif
+				  
 	            </div>
 	          </div>
 
