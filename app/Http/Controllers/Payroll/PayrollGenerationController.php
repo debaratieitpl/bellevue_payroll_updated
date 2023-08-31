@@ -5407,7 +5407,7 @@ class PayrollGenerationController extends Controller
                 ->where('loan_type', '=', $loan_type)
                 ->where('deduction', '=', 'Y')
                 ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $paroll_month)
-                ->get();
+                ->get(); 
 
         $loanDetails=array();
 

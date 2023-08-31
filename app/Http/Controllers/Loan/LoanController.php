@@ -34,12 +34,13 @@ class LoanController extends Controller
                 ->get();
 
              $data['employee_rs'] = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
-                ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'loans.*',DB::raw('(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id) as balance'))
+                ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'loans.*',
+                DB::raw('(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id) as balance'))
                 //->where('loans.month_yr', $request->month)
-
+                ->where('loans.emp_code', 7210)        
                 ->orderBy('loans.id', 'desc')
                 ->get();
-
+            //dd($data);
             return View('loan.index', $data);
         } else {
             return redirect('/');

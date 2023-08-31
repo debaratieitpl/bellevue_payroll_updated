@@ -1140,7 +1140,7 @@ if ($value->id == '1') {
 									<option value='V'>Variable</option>
 									</select>
 									</td>
-                                    <td><input type="text" name="value[]"  id="value<?php echo $tr_id; ?>" class="form-control" onchange="storeValue(this, <?php echo $tr_id; ?>)"></td>
+                                    <td><input type="text" name="value[]"  id="value<?php echo $tr_id; ?>" class="form-control"></td>
 
 									<td><button class="btn-success" type="button" id="addearn<?php echo ($tr_id + 1); ?>" onClick="addnewrowearn(<?php echo ($tr_id + 1); ?>)" data-id="earn<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
                                 </tr>

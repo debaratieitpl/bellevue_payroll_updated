@@ -313,7 +313,7 @@ class EmployeeController extends Controller
     {
         if (!empty(Session::get('admin'))) {
 
-             //dd($request->all());
+            // dd($request->all());
 
             date_default_timezone_set('Asia/Kolkata');
 
@@ -537,13 +537,14 @@ class EmployeeController extends Controller
                 Session::flash('message', 'Record has been successfully updated');
                 return redirect('employees');
             } else {
-                //insert new data 
+
                 $retiredate = $request->emp_retirement_date;
                 $date = str_replace('/', '-', $retiredate);
                 $retirementdate = date_create($date);
                 $retire_date = date_format($retirementdate, 'Y-m-d');
 
                 if (isset($request->pay)) {
+
                     $countper = count($request->pay);
 
                     for ($i = 0; $i < $countper; $i++) {
@@ -580,31 +581,26 @@ class EmployeeController extends Controller
                 $pay['created_at'] = date('Y-m-d h:i:s');
                 $pay['updated_at'] = date('Y-m-d h:i:s');
                 //dd($request->name_earn);
- 
-                //calculate the total all earning values , accept hra(hra not calculate)
+
                 if ($request->name_earn && count($request->name_earn) != 0) {
                     $arr_un = count(array_unique($request->name_earn));
                     if (count($request->name_earn) != $arr_un) {
                         Session::flash('error', 'Pay Structure Earning Head Must be unique');
+
                         return redirect('employees');
                     }
-                
-                    $totalEarningValue = 0; // Initialize total earning value
-                
                     for ($i = 0; $i < count($request->name_earn); $i++) {
+
                         if ($request->name_earn[$i] != '') {
-                            // Check if the earning name is not 'hra'
-                            if ($request->name_earn[$i] !== 'hra') {
-                                $totalEarningValue += intval($request->value[$i]);
-                            }
-                
                             $pay[$request->name_earn[$i]] = $request->value[$i];
                             $pay[$request->name_earn[$i] . '_type'] = $request->head_type[$i];
+
                         }
+
                     }
                 }
                 
-                //dd($request->name_deduct);
+
                 if ($request->name_deduct && count($request->name_deduct) != 0) {
                     $arr_un = count(array_unique($request->name_deduct));
                     if (count($request->name_deduct) != $arr_un) {
@@ -622,27 +618,6 @@ class EmployeeController extends Controller
 
                     }
                 }
-
-              // calculate pf of total earning value(12%) + PF value if its fixed then only
-              if(isset($pay['pf_type']) && $pay['pf_type'] == 'F'){
-                if(isset($request->emp_basic_pay) && $request->emp_basic_pay <= 15000) {
-                    if (array_key_exists('pf', $pay)) {
-                        $percentage_calculate = $totalEarningValue * 0.12 ;
-                        $toatlPf = $pay['pf'] + $percentage_calculate ;
-                        if($toatlPf <= 1800){
-                         $pay['pf'] =  "$toatlPf";
-                        }else{
-                         $pay['pf'] ="1800";
-                        }
-                        
-                    } else {
-                        $pay['pf'] ="0";
-                    }
-    
-                  }
-
-              }
-             
 
                 $data = array(
                     'emp_code' => $request->emp_code,
@@ -776,9 +751,6 @@ class EmployeeController extends Controller
                     'emp_pf_inactuals' => $request->emp_pf_inactuals,
                     'emp_bonus' => $request->emp_bonus,
                 );
-                //dd($totalEarningValue);
-                //dd($data);
-                //dd($education);
                 //dd($pay);
                 Employee_pay_structure::insert($pay);
 
@@ -892,7 +864,6 @@ class EmployeeController extends Controller
     public function updateEmployee(Request $request)
     {
         if (!empty(Session::get('admin'))) {
-            //dd($request->all());
             date_default_timezone_set('Asia/Kolkata');
 
             if (strtotime($request->emp_dob) > strtotime(date('Y-m-d'))) {
@@ -1001,50 +972,21 @@ class EmployeeController extends Controller
             $payupdate['apf_percent'] = $request->emp_apf_percent;
 
             $payupdate['updated_at'] = date('Y-m-d h:i:s');
-
-            // if ($request->name_earn && count($request->name_earn) != 0) {
-
-            //     $arr_un = count(array_unique($request->name_earn));
-            //     if (count($request->name_earn) != $arr_un) {
-            //         Session::flash('error', 'Pay Structure Earning Head Must be unique');
-
-            //         return redirect('employees');
-            //     }
-            //     for ($i = 0; $i < count($request->name_earn); $i++) {
-            //         if($request->name_earn[$i] !=''){
-            //             $payupdate[$request->name_earn[$i]] = $request->value[$i];
-            //             $payupdate[$request->name_earn[$i] . '_type'] = $request->head_type[$i];
-            //         }
-            //     }
-            // }
-
-
-
-            //calculate the total all earning values , accept hra(hra not calculate)
             if ($request->name_earn && count($request->name_earn) != 0) {
+
                 $arr_un = count(array_unique($request->name_earn));
                 if (count($request->name_earn) != $arr_un) {
                     Session::flash('error', 'Pay Structure Earning Head Must be unique');
+
                     return redirect('employees');
                 }
-            
-                $totalEarningValue = 0; // Initialize total earning value
-            
                 for ($i = 0; $i < count($request->name_earn); $i++) {
-                    if ($request->name_earn[$i] != '') {
-                        // Check if the earning name is not 'hra'
-                        if ($request->name_earn[$i] !== 'hra') {
-                            $totalEarningValue += intval($request->value[$i]);
-                        }
-            
+                    if($request->name_earn[$i] !=''){
                         $payupdate[$request->name_earn[$i]] = $request->value[$i];
                         $payupdate[$request->name_earn[$i] . '_type'] = $request->head_type[$i];
                     }
                 }
             }
-
-
-
 
             if ($request->name_deduct && count($request->name_deduct) != 0) {
                 $arr_un = count(array_unique($request->name_deduct));
@@ -1061,38 +1003,6 @@ class EmployeeController extends Controller
 
                 }
             }
-            //dd($request->emp_basic_pay);
-          // calculate pf of total earning value(12%) + PF value if its fixed then only
-          if(isset($payupdate['pf_type']) && $payupdate['pf_type'] == 'F'){
-            if(isset($request->emp_basic_pay) && $request->emp_basic_pay <= 15000) {
-                if (array_key_exists('pf', $payupdate)) {
-                    
-                    $rate_details = Rate_details::leftJoin('rate_masters', 'rate_masters.id', '=', 'rate_details.rate_id')
-                ->select('rate_details.*', 'rate_masters.head_name', 'rate_masters.head_type')
-                // ->where('rate_details.from_date', '>=', date('Y-01-01'))
-                // ->where('rate_details.to_date', '<=', date('Y-12-31'))
-                ->where('rate_details.rate_id', '=', 15)
-
-                ->first();
-
-                    $percentage_calculate = $totalEarningValue * $rate_details->inpercentage / 100 ;
-                    $toatlPf = ($request->emp_basic_pay * $rate_details->inpercentage / 100) + $percentage_calculate ;
-                    if($toatlPf <= 1800){
-                     $payupdate['pf'] =  "$toatlPf";
-                    }else{
-                     $payupdate['pf'] ="1800";
-                    }
-                    
-                } else {
-                    $payupdate['pf'] ="0";
-                }
-
-              }
-
-          }
-
-
-
 
             //dd($payupdate);
             $dataupdate = array(
@@ -1226,8 +1136,6 @@ class EmployeeController extends Controller
                 'emp_pf_inactuals' => $request->emp_pf_inactuals,
                 'emp_bonus' => $request->emp_bonus,
             );
-
-            //dd($payupdate);
 
             Employee::where('emp_code', $decrypted_empid)
                 ->update($dataupdate);
