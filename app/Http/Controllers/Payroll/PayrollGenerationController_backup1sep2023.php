@@ -2889,54 +2889,49 @@ class PayrollGenerationController extends Controller
                         Session::flash('message', 'Record Successfully updated.');
                         // Session::flash('message', 'Payroll already generated for said period');
                     } else {
-                        if($data['emp_present_days'] > 0){
-
-                            Payroll_detail::insert($data);
-                            
-                            MonthlyEmployeeCooperative::where('month_yr', $data['month_yr'])->where('emp_code', $data['employee_id'])->update($status);
-                            
-                            $salary_adv_loan=$this->getLoanDeductionValue($data['employee_id'],'SA',$data['month_yr']);
-                            $pf_loan=$this->getLoanDeductionValue($data['employee_id'],'PF',$data['month_yr']);
-                            //dd( $salary_adv_loan);
-                            
-                            // if start for adv non diducated if salary balance 0
-                            
-                            if($data['emp_gross_salary'] > $data['emp_adv'] ){
-                            
-                                if(!empty($salary_adv_loan)){
-                                    //echo('****SA*****');
-                                    foreach($salary_adv_loan as $rec){
-                                        $loanRecovery = new LoanRecovery;
-                                        $loanRecovery->loan_id = $rec['id'];
-                                        // $loanRecovery->emp_code = $data['employee_id'];
-                                        $loanRecovery->amount = $rec['installment_amount'];
-                                        $loanRecovery->payout_month = $data['month_yr'];
-                                        $loanRecovery->save();
-                                    }
-                                }
-                            }
-                            // if end for adv non diducated if salary balance 0
-                            
-                            // if start for pfloan non diducated if salary balance 0
-                            
-                            if($data['emp_gross_salary'] > $data['emp_pf_loan'] ){
-                                if(!empty($pf_loan)){
-                                    //echo('***PF LOAN*****');
-                                    foreach($pf_loan as $rec){
-                                        $loanRecovery = new LoanRecovery;
-                                        $loanRecovery->loan_id = $rec['id'];
-                                        // $loanRecovery->emp_code = $data['employee_id'];
-                                        $loanRecovery->amount = $rec['installment_amount'];
-                                        $loanRecovery->payout_month = $data['month_yr'];
-                                        $loanRecovery->save();
-                                    }
-                                }
-                            }
-
-                        }
                         //dd($data);
                         //echo 'Before:::: '.$data['employee_id'].'<br>';
+                        Payroll_detail::insert($data);
                         
+                        MonthlyEmployeeCooperative::where('month_yr', $data['month_yr'])->where('emp_code', $data['employee_id'])->update($status);
+                        
+                        $salary_adv_loan=$this->getLoanDeductionValue($data['employee_id'],'SA',$data['month_yr']);
+                        $pf_loan=$this->getLoanDeductionValue($data['employee_id'],'PF',$data['month_yr']);
+                        //dd( $salary_adv_loan);
+                        
+                        // if start for adv non diducated if salary balance 0
+                        
+                        if($data['emp_gross_salary'] > $data['emp_adv'] ){
+                        
+                            if(!empty($salary_adv_loan)){
+                                //echo('****SA*****');
+                                foreach($salary_adv_loan as $rec){
+                                    $loanRecovery = new LoanRecovery;
+                                    $loanRecovery->loan_id = $rec['id'];
+                                    // $loanRecovery->emp_code = $data['employee_id'];
+                                    $loanRecovery->amount = $rec['installment_amount'];
+                                    $loanRecovery->payout_month = $data['month_yr'];
+                                    $loanRecovery->save();
+                                }
+                            }
+                        }
+                         // if end for adv non diducated if salary balance 0
+                        
+                        // if start for pfloan non diducated if salary balance 0
+                        
+                        if($data['emp_gross_salary'] > $data['emp_pf_loan'] ){
+                            if(!empty($pf_loan)){
+                                //echo('***PF LOAN*****');
+                                foreach($pf_loan as $rec){
+                                    $loanRecovery = new LoanRecovery;
+                                    $loanRecovery->loan_id = $rec['id'];
+                                    // $loanRecovery->emp_code = $data['employee_id'];
+                                    $loanRecovery->amount = $rec['installment_amount'];
+                                    $loanRecovery->payout_month = $data['month_yr'];
+                                    $loanRecovery->save();
+                                }
+                            }
+                        }
                          // if end for pfloan non diducated if salary balance 0
 
                         //echo 'After:::: '.$data['employee_id'].'<br>';
@@ -5412,7 +5407,7 @@ class PayrollGenerationController extends Controller
                 ->where('loan_type', '=', $loan_type)
                 ->where('deduction', '=', 'Y')
                 ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $paroll_month)
-                ->get(); 
+                ->get();
 
         $loanDetails=array();
 
