@@ -435,6 +435,14 @@ class CommonHelper
         $key = \Config::get('app.key');
         return openssl_decrypt(base64_decode($value), $cipher, $key);           
     }
+    // Helper function to round a decimal number as per your logic
+    public static function customRound($number) {
+            // Round to one decimal place
+        $rounded = round($number, 1);
+
+        // Use number_format to format to two decimal places
+        return number_format($rounded, 2);
+    }
 
  
 }

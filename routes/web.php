@@ -23,6 +23,9 @@ use Route;
 Route::get('/', 'HomeController@getlogin');
 Route::post('/login', 'HomeController@DoLogin');
 Route::get('dashboard', 'HomeController@Dashboard');
+//test output figure
+Route::get('testfigure', 'HomeController@testfigure');
+
 Route::get('change-password', 'HomeController@changepassword');
 Route::post('save-change-password', 'HomeController@savechangepassword');
 Route::get('logout', 'HomeController@Logout');
