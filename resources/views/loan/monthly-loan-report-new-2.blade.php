@@ -177,26 +177,26 @@ Loan Information System - Loan Report
 										<td>{{ $employee['old_emp_code'] }}</td>
 										<td>{{ $employee['emp_name'] }}</td>
                                         <td>{{ $employee['emp_status'] }}</td>
-										<td>{{ number_format($employee['loan_amount'], 2) }}</td>
-										<td>{{ number_format($employee['payroll_deduction'], 2) }}</td>
-										<td>{{ number_format($employee['pf_interest'], 2) }}</td>
-										<td>{{ number_format($employee['payroll_deduction'] + $employee['pf_interest'], 2) }}</td>
-										<td>{{ number_format($employee['balance'], 2) }}</td>
-										<td>{{ number_format($employee['loanadjust'], 2) }}</td>
-										<td>{{ number_format($employee['balance'] - $employee['loanadjust'], 2) }}</td>
+										<td>{{ number_format(round($employee['loan_amount'], 1),2) }}</td>
+										<td>{{ number_format(round($employee['payroll_deduction'], 1),2) }}</td>
+										<td>{{ number_format(round($employee['pf_interest'], 1),2)}}</td>
+										<td>{{ number_format(round($employee['payroll_deduction'] + $employee['pf_interest'], 1),2) }}</td>
+										<td>{{ number_format(round($employee['balance'], 1),2) }}</td>
+										<td>{{ number_format(round($employee['loanadjust'], 1),2)}}</td>
+										<td>{{ number_format(round($employee['balance'] - $employee['loanadjust'], 1),2) }}</td>
 									</tr>
 								@endforeach
 							</tbody>
 							<tfoot>
 								<tr>
 									<td colspan="4" style="font-weight:700;">Grand Total</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'loan_amount')), 2) }}</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'payroll_deduction')), 2) }}</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'pf_interest')), 2) }}</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'payroll_deduction')) + array_sum(array_column($employeeTotals, 'pf_interest')), 2) }}</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'balance')), 2) }}</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'loanadjust')), 2) }}</td>
-									<td>{{ number_format(array_sum(array_column($employeeTotals, 'balance')) - array_sum(array_column($employeeTotals, 'loanadjust')), 2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'loan_amount')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'pf_interest')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')) + array_sum(array_column($employeeTotals, 'pf_interest')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'balance')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'loanadjust')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'balance')) - array_sum(array_column($employeeTotals, 'loanadjust')), 1),2) }}</td>
 								</tr>
 							</tfoot>
 						</table>
@@ -260,11 +260,11 @@ Loan Information System - Loan Report
                                         <td>{{ $employee['salutation'] }} {{ $employee['emp_fname'] }} {{ $employee['emp_mname'] }} {{ $employee['emp_lname'] }}</td>
                                         {{-- <td>Consolidated Loan ID</td>  --}}
                                         <td>{{ $employee['emp_status'] }}</td>
-                                        <td>{{ number_format($employee['total_loan_amount'], 2) }}</td>
-                                        <td>{{ number_format($employee['total_installment'], 2) }}</td>
-                                        <td>{{ number_format($employee['total_balance'], 2) }}</td>
-                                        <td>{{ number_format($employee['total_loanadjust'], 2) }}</td>
-                                        <td>{{ number_format($employee['total_balance'] - $employee['total_loanadjust'], 2) }}</td>
+                                        <td>{{ number_format(round($employee['total_loan_amount'], 1), 2) }}</td>
+                                        <td>{{ number_format(round($employee['total_installment'], 1), 2) }}</td>
+                                        <td>{{ number_format(round($employee['total_balance'], 1), 2) }}</td>
+                                        <td>{{ number_format(round($employee['total_loanadjust'], 1), 2) }}</td>
+                                        <td>{{ number_format(round($employee['total_balance'] - $employee['total_loanadjust'], 1), 2)  }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -274,21 +274,21 @@ Loan Information System - Loan Report
                                         Grand Total
                                     </td>
                                     <td>
-                                        <div class="total_loan_amount" style="font-weight:700;">{{ number_format(array_sum(array_column($consolidatedData, 'total_loan_amount')), 2) }}</div>
+                                        <div class="total_loan_amount" style="font-weight:700;">{{ number_format(round(array_sum(array_column($consolidatedData, 'total_loan_amount')), 1),2) }}</div>
                                     </td>
                                     <td>
-                                        <div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_column($consolidatedData, 'total_installment')), 2) }}</div>
+                                        <div class="total_balance" style="font-weight:700;">{{ number_format(round(array_sum(array_column($consolidatedData, 'total_installment')), 1),2) }}</div>
                                     </td>
                                     <td>
-                                        <div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_column($consolidatedData, 'total_balance')), 2) }}</div>
+                                        <div class="total_balance" style="font-weight:700;">{{ number_format(round(array_sum(array_column($consolidatedData, 'total_balance')), 1),2) }}</div>
                                     </td>
                                     <td>
-                                        <div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_column($consolidatedData, 'total_loanadjust')), 2) }}</div>
+                                        <div class="total_balance" style="font-weight:700;">{{ number_format(round(array_sum(array_column($consolidatedData, 'total_loanadjust')), 1),2) }}</div>
                                     </td>
                                     <td>
-                                        <div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_map(function($employee) {
+                                        <div class="total_balance" style="font-weight:700;">{{ number_format(round(array_sum(array_map(function($employee) {
                                             return $employee['total_balance'] - $employee['total_loanadjust'];
-                                        }, $consolidatedData)), 2) }}</div>
+                                        }, $consolidatedData)), 1),2) }}</div>
                                     </td>
                                 </tr>
                             </tfoot>

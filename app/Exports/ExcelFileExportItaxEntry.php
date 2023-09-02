@@ -52,7 +52,7 @@ class ExcelFileExportItaxEntry implements FromCollection, WithHeadings
                     'Employee Code'=>$record->old_emp_code,
                     'Employee Name'=>$record->salutation.' '.$record->emp_fname.' '.$record->emp_mname.' '.$record->emp_lname,
                     'Status'=>ucwords($record->status),
-                    'Income Tax Deduction'=>$record->itax_amount,
+                    'Income Tax Deduction'=>number_format(round($record->itax_amount, 1), 2),
                 );
                 $h++;
             }
@@ -61,7 +61,7 @@ class ExcelFileExportItaxEntry implements FromCollection, WithHeadings
                 'Employee Code'=>'Total',
                 'Employee Name'=>'',
                 'Status'=>'',
-                'Income Tax Deduction'=>$total_itax_amount,
+                'Income Tax Deduction'=>number_format(round($total_itax_amount, 1), 2),
     
             );
 

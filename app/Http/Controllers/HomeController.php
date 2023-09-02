@@ -264,6 +264,7 @@ class HomeController extends Controller
 
     public function testfigure()
     {
+       // dd(number_format(round(14500.86, 1), 2));
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')

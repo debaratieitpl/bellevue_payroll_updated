@@ -139,7 +139,7 @@ Payroll Information System-Payroll Generation
 											<td>{{$record->old_emp_code}}</td>
 											<td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
 											<td>{{ucwords($record->status)}}</td>
-											<td>{{$record->itax_amount}}</td>
+											<td>{{number_format(round($record->itax_amount, 1), 2)}}</td>
 											
 											
 											
@@ -154,7 +154,7 @@ Payroll Information System-Payroll Generation
 											</td>
 											
 											<td>
-                                                <div class="total_insu_prem" style="font-weight:700;">{{$total_itax_amount}}</div>
+                                                <div class="total_insu_prem" style="font-weight:700;">{{number_format(round($total_itax_amount, 1), 2)}}</div>
                                             </td>
 											
 											

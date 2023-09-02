@@ -177,7 +177,7 @@ body {-webkit-print-color-adjust: exact;}
                             <td>{{ $employee['old_emp_code'] }}</td>
                             <td>{{ $employee['emp_department'] }}</td>
                             <td>{{ $employee['emp_name'] }}</td>
-                            <td>{{ number_format($employee['total_balance'] - $employee['total_loanadjust'], 2) }}</td>
+                            <td>{{ number_format(round($employee['total_balance'] - $employee['total_loanadjust'], 1),2) }}</td>
                             
                         </tr>
 				    @endforeach
@@ -188,9 +188,9 @@ body {-webkit-print-color-adjust: exact;}
 						Grand Total
 						</td>
 						<td>
-                            <div class="total_balance" style="font-weight:700;">{{ number_format(array_sum(array_map(function($employee) {
+                            <div class="total_balance" style="font-weight:700;">{{ number_format(round(array_sum(array_map(function($employee) {
                                 return $employee['total_balance'] - $employee['total_loanadjust'];
-                            }, $consolidatedData)), 2) }}</div>
+                            }, $consolidatedData)), 1),2) }}</div>
                         </td>
 						
 						

@@ -76,10 +76,10 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
     //                     'PF Loan Outstanding'=>$record->loan_amount,
     //                     'PF Loan Deduction'=>$record->payroll_deduction,
     //                     'PF Interest'=>$pf_interest,
-    //                     'Total Deduction'=>number_format($record->payroll_deduction+$pf_interest,2),
-    //                     'PF Loan Balance'=>number_format($balance,2),
-    //                     'Loan Adjust'=>number_format($record->adjust_amount,2),
-    //                     'Final PF Loan Balance'=>number_format($balance-$record->adjust_amount,2),
+    //                     'Total Deduction'=>number_format(round($record->payroll_deduction+$pf_interest,1),2),
+    //                     'PF Loan Balance'=>number_format(round($balance,1),2),
+    //                     'Loan Adjust'=>number_format(round($record->adjust_amount,1),2),
+    //                     'Final PF Loan Balance'=>number_format(round($balance-$record->adjust_amount,1),2),
         
     //                 );
     //                 $h++;
@@ -91,13 +91,13 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
     //                 'Loan ID'=> '',
     //                 'Employee type'=> '',
     //                 'PF Number'=>'',
-    //                 'PF Loan Outstanding'=> number_format($total_loan_amount,2),
-    //                 'PF Loan Deduction'=> number_format($total_installment,2),
-    //                 'PF Interest'=> number_format($total_pf_interest,2),
-    //                 'Total Deduction'=> number_format($total_deduction,2),
-    //                 'PF Loan Balance'=> number_format($total_balance,2),
-    //                 'Loan Adjust'=> number_format($total_loanadjust,2),
-    //                 'Final PF Loan Balance'=> number_format(($total_balance-$total_loanadjust),2),
+    //                 'PF Loan Outstanding'=> number_format(round($total_loan_amount,1),2),
+    //                 'PF Loan Deduction'=> number_format(round($total_installment,1),2),
+    //                 'PF Interest'=> number_format(round($total_pf_interest,1),2),
+    //                 'Total Deduction'=> number_format(round($total_deduction,1),2),
+    //                 'PF Loan Balance'=> number_format(round($total_balance,1),2),
+    //                 'Loan Adjust'=> number_format(round($total_loanadjust,1),2),
+    //                 'Final PF Loan Balance'=> number_format(round(($total_balance-$total_loanadjust),1),2),
     //             );
                     
     //         }
@@ -124,9 +124,9 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
     //                     'Employee type'=>$record->emp_status,
     //                     'Outstanding Amount'=>$record->loan_amount,
     //                     'Deducted Amount'=>$record->payroll_deduction,
-    //                     'Balance Amount'=>number_format($balance,2),
-    //                     'Adjust Amount'=>number_format($record->adjust_amount,2),
-    //                     'Final Balance Amount'=>number_format($balance-$record->adjust_amount,2),
+    //                     'Balance Amount'=>number_format(round($balance,1),2),
+    //                     'Adjust Amount'=>number_format(round($record->adjust_amount,1),2),
+    //                     'Final Balance Amount'=>number_format(round($balance-$record->adjust_amount,1),2),
         
     //                 );
     //                 $h++;
@@ -139,9 +139,9 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
     //                 'Employee type' => '',
     //                 'Outstanding Amount'=>$total_loan_amount,
     //                 'Deducted Amount'=>$total_installment,
-    //                 'Balance Amount'=>number_format($total_balance,2),
-    //                 'Adjust Amount'=>number_format($total_loanadjust,2),
-    //                 'Final Balance Amount'=>number_format(($total_balance-$total_loanadjust),2),
+    //                 'Balance Amount'=>number_format(round($total_balance,1),2),
+    //                 'Adjust Amount'=>number_format(round($total_loanadjust,1),2),
+    //                 'Final Balance Amount'=>number_format(round(($total_balance-$total_loanadjust),1),2),
     //             );
     
     //         }
@@ -211,13 +211,13 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                         'Employee Code'=>$employee['old_emp_code'],
                         'Employee Name'=>$employee['emp_name'],
                         'Employee type'=>$employee['emp_status'],
-                        'PF Loan Outstanding'=>number_format($employee['loan_amount'], 2),
-                        'PF Loan Deduction'=>number_format($employee['payroll_deduction'], 2),
-                        'PF Interest'=>number_format($employee['pf_interest'], 2),
-                        'Total Deduction'=>number_format($employee['payroll_deduction'] + $employee['pf_interest'], 2),
-                        'PF Loan Balance'=>number_format($employee['balance'], 2),
-                        'Loan Adjust'=>number_format($employee['loanadjust'], 2),
-                        'Final PF Loan Balance'=>number_format($employee['balance'] - $employee['loanadjust'], 2),
+                        'PF Loan Outstanding'=>number_format(round($employee['loan_amount'], 1),2),
+                        'PF Loan Deduction'=>number_format(round($employee['payroll_deduction'], 1),2),
+                        'PF Interest'=>number_format(round($employee['pf_interest'], 1),2),
+                        'Total Deduction'=>number_format(round($employee['payroll_deduction'] + $employee['pf_interest'], 1),2),
+                        'PF Loan Balance'=>number_format(round($employee['balance'], 1),2),
+                        'Loan Adjust'=>number_format(round($employee['loanadjust'], 1),2),
+                        'Final PF Loan Balance'=>number_format(round($employee['balance'] - $employee['loanadjust'], 1),2),
         
                     );
                     $h++;
@@ -230,13 +230,13 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                     'Employee Code' => 'Total',
                     'Employee Name'=> '',
                     'Employee type'=> '',
-                    'PF Loan Outstanding'=> number_format(array_sum(array_column($employeeTotals, 'loan_amount')), 2),
-                    'PF Loan Deduction'=> number_format(array_sum(array_column($employeeTotals, 'payroll_deduction')), 2),
-                    'PF Interest'=> number_format(array_sum(array_column($employeeTotals, 'pf_interest')), 2),
-                    'Total Deduction'=> number_format(array_sum(array_column($employeeTotals, 'payroll_deduction')) + array_sum(array_column($employeeTotals, 'pf_interest')), 2),
-                    'PF Loan Balance'=> number_format(array_sum(array_column($employeeTotals, 'balance')), 2) ,
-                    'Loan Adjust'=> number_format(array_sum(array_column($employeeTotals, 'loanadjust')), 2),
-                    'Final PF Loan Balance'=> number_format(array_sum(array_column($employeeTotals, 'balance')) - array_sum(array_column($employeeTotals, 'loanadjust')), 2) ,
+                    'PF Loan Outstanding'=> number_format(round(array_sum(array_column($employeeTotals, 'loan_amount')), 1),2),
+                    'PF Loan Deduction'=> number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')), 1),2),
+                    'PF Interest'=> number_format(round(array_sum(array_column($employeeTotals, 'pf_interest')), 1),2),
+                    'Total Deduction'=> number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')) + array_sum(array_column($employeeTotals, 'pf_interest')), 1),2),
+                    'PF Loan Balance'=> number_format(round(array_sum(array_column($employeeTotals, 'balance')), 1),2) ,
+                    'Loan Adjust'=> number_format(round(array_sum(array_column($employeeTotals, 'loanadjust')), 1),2),
+                    'Final PF Loan Balance'=> number_format(round(array_sum(array_column($employeeTotals, 'balance')) - array_sum(array_column($employeeTotals, 'loanadjust')), 1),2) ,
                 );
                     
             }
@@ -272,11 +272,11 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                         'Employee Code'=>$employee['old_emp_code'],
                         'Employee Name'=>$employee['emp_name'],
                         'Employee type'=>$employee['emp_status'],
-                        'Outstanding Amount'=>number_format($employee['total_loan_amount'], 2),
-                        'Deducted Amount'=>number_format($employee['total_installment'], 2),
-                        'Balance Amount'=>number_format($employee['total_balance'], 2),
-                        'Adjust Amount'=>number_format($employee['total_loanadjust'], 2),
-                        'Final Balance Amount'=>number_format($employee['total_balance'] - $employee['total_loanadjust'], 2),
+                        'Outstanding Amount'=>number_format(round(round($employee['total_loan_amount'], 1),1),2),
+                        'Deducted Amount'=>number_format(round($employee['total_installment'], 1),2),
+                        'Balance Amount'=>number_format(round($employee['total_balance'], 1),2),
+                        'Adjust Amount'=>number_format(round($employee['total_loanadjust'], 1),2),
+                        'Final Balance Amount'=>number_format(round($employee['total_balance'] - $employee['total_loanadjust'], 1),2),
         
                     );
                     $h++;
@@ -289,13 +289,13 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
                     'Employee Code' => 'Total',
                     'Employee Name' => '',
                     'Employee type' => '',
-                    'Outstanding Amount'=>number_format(array_sum(array_column($consolidatedData, 'total_loan_amount')), 2),
-                    'Deducted Amount'=>number_format(array_sum(array_column($consolidatedData, 'total_installment')), 2),
-                    'Balance Amount'=>number_format(array_sum(array_column($consolidatedData, 'total_balance')), 2),
-                    'Adjust Amount'=>number_format(array_sum(array_column($consolidatedData, 'total_loanadjust')), 2),
-                    'Final Balance Amount'=>number_format(array_sum(array_map(function($employee) {
+                    'Outstanding Amount'=>number_format(round(array_sum(array_column($consolidatedData, 'total_loan_amount')), 1),2),
+                    'Deducted Amount'=>number_format(round(array_sum(array_column($consolidatedData, 'total_installment')), 1),2),
+                    'Balance Amount'=>number_format(round(array_sum(array_column($consolidatedData, 'total_balance')), 1),2),
+                    'Adjust Amount'=>number_format(round(array_sum(array_column($consolidatedData, 'total_loanadjust')), 1),2),
+                    'Final Balance Amount'=>number_format(round(array_sum(array_map(function($employee) {
                         return $employee['total_balance'] - $employee['total_loanadjust'];
-                    }, $consolidatedData)), 2),
+                    }, $consolidatedData)), 1),2),
                 );
     
             }
