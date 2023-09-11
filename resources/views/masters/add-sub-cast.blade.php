@@ -55,20 +55,20 @@ BELLEVUE - Masters Module
 									<div class="col-md-6">
                                         <label for="text-input" class=" form-control-label">Select Caste <span>(*)</span></label>
 										<?php //print_r($getCast); exit; ?>
-									<select class="form-control" name="cast_id" required>
-	  <option value='' selected disabled>Select</option>
+                                            <select class="form-control" name="cast_id" required>
+                                            <option value='' selected disabled>Select</option>
 
-		@foreach($getCast as $cast)
-      <option value='{{ $cast->id }}'<?php if(app('request')->input('id')){ if( $getCast[0]->cast_name == $cast->cast_name ){ echo 'selected';}   }  ?> <?php if(old('cast_id') == $cast->cast_name){ echo "selected"; } ?> >{{ $cast->cast_name }}</option>
-										@endforeach
-									</select>
+                                            @foreach($getCast as $cast)
+                                            <option value='{{ $cast->id }}'<?php if(app('request')->input('id')){ if( $getCast[0]->cast_name == $cast->cast_name ){ echo 'selected';}   }  ?> <?php if(old('cast_id') == $cast->cast_name){ echo "selected"; } ?> >{{ $cast->cast_name }}</option>
+                                                @endforeach
+                                            </select>
 
 
 
 											@if ($errors->has('cast_id'))
 												<div class="error" style="color:red;">{{ $errors->first('cast_id') }}</div>
 											@endif
-										</div>
+									</div>
                                    
 
 									<div class="col-md-6">
@@ -87,7 +87,7 @@ BELLEVUE - Masters Module
                                                     <option value="inactive">Inactive</option>
                                                     </select>
 											
-					</div>
+					                 </div>
                                         
                                         <?php  } ?>
                                    </div> 
