@@ -75,8 +75,11 @@ function my_simple_crypt($string, $action = 'encrypt')
                 <div class="card">
 
                     <div class="card-header">
+                        
                     <div class="aply-lv">
+                        
                         <a href="{{ url('add-employee') }}" class="btn btn-default" style="float:right;">Add Employee Master <i class="fa fa-plus"></i></a>
+                        
                         @if(count($employee_rs)>0)
                         <form  method="post" action="{{ url('xls-export-employees') }}" enctype="multipart/form-data" >
 											<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -87,7 +90,10 @@ function my_simple_crypt($string, $action = 'encrypt')
 											<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 											<button data-toggle="tooltip" data-placement="bottom" title="Download Excel" class="btn btn-default" style="background:none !important;padding: 10px 15px;margin-top: -30px;float:right;margin-right: 15px;" type="submit">Employee Only</button>
-												</form>
+                                            
+                                        
+                                        </form>
+                                              
                         @endif
                     </div>
                     </div>
@@ -100,9 +106,19 @@ function my_simple_crypt($string, $action = 'encrypt')
                     <!-- <div class="aply-lv">
                         <a href="{{ url('add-employee') }}" class="btn btn-default">Add Employee Master <i class="fa fa-plus"></i></a>
                     </div> -->
-                    <br />
+                   
                     <div class="clear-fix">
+
+                    <div class="mx-1 mb-2 mt-1">
+                        <a href="{{route('sample-employee-excel.export')}}">
+                            <button type="submit" class="btn btn-success mx-1" title="Download Sample Excel" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Export Sample Excel</button>
+                        </a>
+                        <button type="button" class="btn btn-primary mx-1" title="Import Employees" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;" data-toggle="modal" data-target="#exampleModal">
+                          Import
+                        </button>
+                    </div>
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            
                             <thead>
                                 <tr>
                                     <th>Sl No.</th>
@@ -131,6 +147,35 @@ function my_simple_crypt($string, $action = 'encrypt')
                                 @endforeach
                             </tbody>
                         </table>
+                        <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+						  <form style='padding: 0px;' action="{{route('xls-import-employee')}}" method="post" enctype="multipart/form-data">
+							  @csrf
+							  <div class="modal-content">
+								<!--<div class="modal-header">-->
+								<!--  <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>-->
+								<!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+								<!--    <span aria-hidden="true">&times;</span>-->
+								<!--  </button>-->
+								<!--</div>-->
+								<div class="modal-body">
+								  
+									<div class="form-group">
+									  <label for="excel_file">Upload Excel</label>
+									  <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file">
+									</div>
+								  
+								</div>
+								<div class="modal-footer">
+								  <button type="button" class="btn btn-secondary" style="padding: 0px 8px;height: 32px;" data-dismiss="modal">Close</button>
+								  <button type="submit" class="btn btn-primary" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Import</button>
+								</div>
+							  </div>
+						  </form>
+						</div>
+					  </div>
+					  <!-- END -->
 
 
                     </div>

@@ -375,6 +375,9 @@ Route::get('employees', 'Employee\EmployeeController@getEmployees');
 Route::post('xls-export-employees', 'Employee\EmployeeController@employees_xlsexport');
 Route::post('xls-export-employee-only', 'Employee\EmployeeController@employees_xlsexportonly');
 
+Route::post('xls-import-employee', 'Employee\EmployeeController@employeesimport')->name('xls-import-employee');
+Route::get('xls-sample-download', 'Employee\EmployeeController@smapleExport')->name('sample-employee-excel.export');
+
 Route::get('employees/class', 'Employee\EmployeeController@employeesByClass');
 Route::get('employees/department', 'Employee\EmployeeController@employeesByDepartment');
 

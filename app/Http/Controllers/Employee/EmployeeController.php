@@ -48,7 +48,8 @@ use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
 use view;
-
+use App\Imports\ImportEmployee;
+use App\Exports\SampleEmployeeExport;
 class EmployeeController extends Controller
 {
     //
@@ -255,6 +256,31 @@ class EmployeeController extends Controller
         } else {
             return redirect('/');
         }
+    }
+
+    public function employeesimport(Request $request){
+        if (!empty(Session::get('admin'))) {
+
+            if(\Excel::import(new ImportEmployee(), $request->file('excel_file'))){
+                Session::flash('message', 'Import Successfully');
+                return redirect()->back();
+            }else{
+                Session::flash('message', 'Something Wrong');
+                return redirect()->back();
+            }
+           
+        } else {
+            return redirect('/');
+        } 
+    }
+    public function smapleExport(Request $request){
+        if (!empty(Session::get('admin'))) {
+
+            return Excel::download(new SampleEmployeeExport(), 'Employees-sample-data.xlsx');
+           
+        } else {
+            return redirect('/');
+        } 
     }
 
     public function viewAddEmployee()
