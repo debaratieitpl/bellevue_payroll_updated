@@ -71,6 +71,13 @@ Loan Information System - Loan
                             </thead>
                             <tbody>
                                 @foreach($employee_rs as $employee)
+                                <?php
+                                  if($employee->balance==null){
+                                    $total_amount = $employee->loan_amount;
+                                  }else{
+                                    $total_amount = $employee->loan_amount - $employee->balance;
+                                  }
+                                ?>
 
                                 <tr>
                                     <td>{{ $loop->iteration}}</td>
@@ -93,7 +100,7 @@ Loan Information System - Loan
                                     <td>{{ $employee->balance==null? $employee->loan_amount : $employee->loan_amount - $employee->balance }}</td>
                                     <td>{{ ($employee->deduction=='Y')?'Yes':'No' }}</td>
                                     <td>
-                                        @if($employee->adjust_date==null || $employee->adjust_date=='0000-00-00')
+                                        @if($total_amount > 0)
                                         <a class="btn btn-primary" href="{{url('loans/adjust-loan')}}/{{$employee->id}}">Adjust</a>
 
                                         @else
@@ -101,7 +108,7 @@ Loan Information System - Loan
                                         @endif
                                     </td>
                                     <td>
-                                        @if($employee->adjust_date==null || $employee->adjust_date=='0000-00-00')
+                                        @if($total_amount > 0)
                                         <a href="{{url('loans/edit-loan')}}/{{$employee->id}}"><i class="ti-pencil-alt"></i></a>
                                         @endif
                                     </td>

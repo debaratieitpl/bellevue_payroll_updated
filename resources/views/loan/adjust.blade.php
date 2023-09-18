@@ -108,7 +108,12 @@ Loan Information System - Loan
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="loan_balance">Loan Balance</label>
-                                        <input type="text" name="loan_balance" id="loan_balance" value="{{$loan_balance}}" class="form-control" readonly disabled>
+                                        @if ($loan_details->loan_type=="PF")
+                                            <input type="text" name="loan_balance" id="loan_balance" value="{{$loan_balance}}" class="form-control" readonly>
+                                        @else
+                                            <input type="text" name="loan_balance" id="loan_balance" value="{{$loan_balance}}" class="form-control">
+                                        @endif
+                                        
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -121,7 +126,11 @@ Loan Information System - Loan
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i>&nbsp;Adjust (&#8377;{{$loan_balance}})</button>
+                                    @if ($loan_details->loan_type=="PF")
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i>&nbsp;Adjust (&#8377;{{$loan_balance}})</button>
+                                    @else
+                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i>&nbsp;Adjust</button>
+                                    @endif
                                     
                                 </div>
                             </div>

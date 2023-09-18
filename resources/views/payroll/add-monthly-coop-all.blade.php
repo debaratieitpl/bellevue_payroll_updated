@@ -71,26 +71,26 @@ Payroll Information System-Payroll Generation
 
 						<option value="" selected disabled > Select </option>
 							<?php
-for ($yy = 2022; $yy <= date('Y'); $yy++) {
-    for ($mm = 1; $mm <= 12; $mm++) {
-        if ($mm < 10) {
-            $month_yr = '0' . $mm . "/" . $yy;
-        } else {
-            $month_yr = $mm . "/" . $yy;
-        }
-        ?>
+									for ($yy = 2022; $yy <= date('Y'); $yy++) {
+										for ($mm = 1; $mm <= 12; $mm++) {
+											if ($mm < 10) {
+												$month_yr = '0' . $mm . "/" . $yy;
+											} else {
+												$month_yr = $mm . "/" . $yy;
+											}
+											?>
 												<option value="<?php echo $month_yr; ?>"  @if(isset($month_yr_new) && $month_yr_new==$month_yr) selected @endif><?php echo $month_yr; ?></option>
 											<?php
 
-    }
-}
-?>
+											}
+										}
+										?>
 									</select>
 								</div>
 
 								<div class="col-md-3">
 									<button type="submit" class="btn btn-success" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;
-					height: 32px;">Go</button>
+								height: 32px;">Go</button>
 								</div>
 							</div>
 						</form>

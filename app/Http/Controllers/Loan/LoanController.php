@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Loan\Loan;
 use App\Models\Loan\LoanRecovery;
+use App\Models\Loan\LoanAdjustment;
 use App\Models\Role\Employee;
 use App\Models\Masters\Role_authorization;
 use App\Models\Payroll\Payroll_detail;
@@ -612,7 +613,7 @@ class LoanController extends Controller
                 ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
                 ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
                 ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
-                ->where('member_id', '=', $email)
+                ->where('member_id', '=', $email)  
                 ->get();
 
             //dd($request->all());
@@ -622,9 +623,13 @@ class LoanController extends Controller
             $loan_balance=$loanDetails->loan_amount-$loanRecoveries;
             $payroll_month=date('m/Y');
 
-            if($loan_balance>0 && $loanDetails->adjust_date==null){
+            // if($loan_balance>0 && $loanDetails->adjust_date==null){
+            if($loan_balance>0 && $request->loan_balance <=$loan_balance){
                 $loan = Loan::find($request->id);
-                $loan->adjust_amount = $loan_balance;
+                $emp_code = $loan['emp_code'];
+                $loan_type = $loan['loan_type'];
+                $adjustment_amount = $loan['adjust_amount'];
+                $loan->adjust_amount = $request->loan_balance + $adjustment_amount;
                 $loan->adjust_date = date('Y-m-d');
                // $loan->deduction = 'N';
                 $loan->adjust_remarks = $request->adjust_remarks;
@@ -633,16 +638,26 @@ class LoanController extends Controller
 
                 $loanRecovery = new LoanRecovery;
                 $loanRecovery->loan_id = $request->id;
-                $loanRecovery->amount = $loan_balance;
+                $loanRecovery->amount = $request->loan_balance;
                 $loanRecovery->payout_month = $payroll_month;
                 $loanRecovery->adjusted = 'Y';
                 $loanRecovery->save();
+
+                $loanAdjustment = new LoanAdjustment;
+                $loanAdjustment->loan_id = $request->id;
+                $loanAdjustment->emp_code = $emp_code;
+                $loanAdjustment->loan_type = $loan_type;
+                $loanAdjustment->amount = $request->loan_balance;
+                $loanAdjustment->payout_month = $payroll_month;
+                $loanAdjustment->remarks =$request->adjust_remarks;
+                $loanAdjustment->save();
 
                 Session::flash('message', 'Loan details adjusted successfully.');
                 return redirect('/loans/view-loans');
 
             }else{
-                Session::flash('error', 'Nothing to adjust. Loan already settled.');
+                // Session::flash('error', 'Nothing to adjust. Loan already settled.');
+                Session::flash('error', 'Nothing to adjust. Settlement amount is always less then of loan balnce or equal.');
                 return redirect('/loans/view-loans');
             }
 
