@@ -166,7 +166,7 @@ class ExcelFileExportLoanRepo implements FromCollection, WithHeadings
             ->select('employees.salutation', 'employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname','employees.emp_status','employees.emp_designation', 'employees.old_emp_code', 'employees.emp_pf_no', 'employees.emp_department', 'loans.*', DB::raw("(SELECT IFNULL(SUM(loan_recoveries.amount), IFNULL((SELECT loan_amount FROM loans WHERE loans.id = employees.emp_code), 0)) FROM loan_recoveries WHERE loan_recoveries.loan_id = loans.id AND loan_recoveries.payout_month <= '".$this->month_yr."') as recoveries"), DB::raw("(SELECT SUM(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id = loans.id AND loan_recoveries.payout_month = '".$this->month_yr."') as payroll_deduction"), DB::raw("(SELECT IFNULL(payroll_details.emp_pf_int, 0) FROM payroll_details WHERE payroll_details.employee_id = employees.emp_code AND payroll_details.month_yr = '".$this->month_yr."') as pf_interest"))
             ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $this->month_yr)
             ->where('loan_type', '=', $this->loan_type)
-            ->where('deduction', '=', 'Y')
+            // ->where('deduction', '=', 'Y')
             // ->where('loans.emp_code', '=', 2024)
             ->where('loans.loan_amount', '>', 0)
             ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
