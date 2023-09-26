@@ -50,6 +50,14 @@ Loan Information System - Loan
 
                     <br />
                     <div class="clear-fix">
+                        <div class="mx-1 mb-2 mt-1">
+                            <a href="{{asset('sampledata/loanimport.xlsx')}}">
+                                <button type="submit" class="btn btn-success mx-1" title="Download Sample Excel" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Export Sample Excel</button>
+                            </a>
+                            <button type="button" class="btn btn-primary mx-1" title="Import Loans" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;" data-toggle="modal" data-target="#exampleModal">
+                              Import
+                            </button>
+                        </div>
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -116,9 +124,31 @@ Loan Information System - Loan
                                 @endforeach
                             </tbody>
                         </table>
+                           <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <form style='padding: 0px;' action="{{url('loans/xls-import-loan')}}" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                            <label for="excel_file">Upload Excel</label>
+                                            <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file" required>
+                                            </div>
+                                        
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" style="padding: 0px 8px;height: 32px;" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Import</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                            <!-- END -->
 
 
-                    </div>
+                        </div>
 
                 </div>
 

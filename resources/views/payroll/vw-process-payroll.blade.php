@@ -149,7 +149,7 @@ Payroll Information System-Payroll Generation
 									<tbody>
 
 										<?php if (!empty($process_payroll)) {
-    foreach ($process_payroll as $processpayroll) {?>
+    									foreach ($process_payroll as $processpayroll) {?>
 												<tr>
 													<td>
 														<div class="checkbox"><label><input type="checkbox" name="payroll_id[]" value="<?php echo $processpayroll->id; ?>"></label>

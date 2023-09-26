@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExcelFileExportLoanRepo;
 use App\Exports\ExcelFileExportLoanList;
+use App\Imports\ImportLoans;
 use Illuminate\Support\Facades\DB;
 use Session;
 use View;
@@ -229,6 +230,22 @@ class LoanController extends Controller
             return redirect('/loans/view-loans');
 
 
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function import_loan(Request $request){
+        if (!empty(Session::get('admin'))) {
+
+            if(\Excel::import(new ImportLoans(), $request->file('excel_file'))){
+                Session::flash('message', 'Import Successfully');
+                return redirect()->back();
+            }else{
+                Session::flash('message', 'Something Wrong');
+                return redirect()->back();
+            }
+           
         } else {
             return redirect('/');
         }

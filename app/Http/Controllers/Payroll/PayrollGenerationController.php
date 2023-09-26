@@ -2156,6 +2156,7 @@ class PayrollGenerationController extends Controller
             $data['process_payroll'] = Payroll_detail::where('month_yr', '=', $request['month_yr'])
                 ->where('proces_status', '=', 'process')
                 ->select('payroll_details.*',DB::raw("(SELECT old_emp_code FROM employees WHERE payroll_details.employee_id=employees.emp_code) as old_emp_code"))
+                ->toSql()
                 ->get();
 
             // print_r(count($data['process_payroll']));
