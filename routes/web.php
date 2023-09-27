@@ -425,6 +425,31 @@ Route::get('servicebook', 'Employee\EmployeeServicebookController@servicebook');
 
 //******* Routes with HCM end *********//
 
+//******* Routes with requirement start *********//
+
+Route::get('recruitmentdashboard', 'Recruitment\RecruitmentController@viewdash');
+Route::get('recruitment/job-list', 'Recruitment\RecruitmentController@viewjoblist');
+Route::get('recruitment/add-job-list', 'Recruitment\RecruitmentController@viewAddNewJobList');
+Route::post('recruitment/add-job-list', 'Recruitment\RecruitmentController@saveJobListData');
+Route::get('recruitment/soccode/{id}', 'Recruitment\RecruitmentController@soccodess');
+Route::get('recruitment/job-post', 'Recruitment\RecruitmentController@viewjobpost');
+Route::get('recruitment/add-job-post', 'Recruitment\RecruitmentController@viewAddNewJobPost');
+Route::post('recruitment/add-job-post', 'Recruitment\RecruitmentController@saveJobPostData');
+// Route::get('recruitment/resume-bulk', 'Recruitment\RecruitmentController@filterDaterange');
+
+Route::get('recruitment/job-published', 'Recruitment\RecruitmentController@viewjobpublished');
+Route::get('recruitment/add-job-published', 'Recruitment\RecruitmentController@viewAddNewpublished');
+Route::post('recruitment/add-job-published', 'Recruitment\RecruitmentController@saveJobpublishedData');
+
+Route::get('recruitment/candidate', 'Recruitment\RecruitmentController@viewcandidate');
+Route::get('recruitment/edit-candidate/{candidate_id}', 'Recruitment\RecruitmentController@viewcandidatedetails');
+Route::get('career/{career_id}', 'Recruitment\CareerController@viewdash');
+
+Route::get('pis/getjobpostByIdlkkk/{empid}','Recruitment\RecruitmentController@getDepartment');
+Route::get('pis/getjobpostByIdlkkkll/{empid}/{soc}', 'Recruitment\RecruitmentController@getJobdetails');
+
+//******* Routes with requirement end *********//
+
 //******* Routes with Leave Management start *********//
 Route::get('leavemanagement/dashboard', 'LeaveManagement\LeaveTypeController@viewdashboard');
 Route::get('leave-management/new-leave-type', 'LeaveManagement\LeaveTypeController@viewAddLeaveType');

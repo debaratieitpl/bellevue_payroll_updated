@@ -38,10 +38,10 @@
             <div class="wrapper">
                 <div class="row">
                     <?php
-$rolemenu = '';
-$hcm = '';
-$config = '';
-?>
+                        $rolemenu = '';
+                        $hcm = '';
+                        $config = '';
+                    ?>
 
                     @if (!empty(Session::get('admin')))
                     <?php $admin = Session::get('admin');?>
@@ -50,21 +50,24 @@ $config = '';
                     @if( Session::get('adminusernmae')==$roles->member_id)
 
                     <?php
-if ($roles->module_name == 'Role Management') {
-    $rolemenu = 'Role_Management';
-}
-if ($roles->module_name == 'Human Capital') {
-    $hcm = 'Human_Capital';
-}
-if ($roles->module_name == 'Configuration') {
-    $config = 'Configuration';
-}
+                        if ($roles->module_name == 'Role Management') {
+                            $rolemenu = 'Role_Management';
+                        }
+                        if ($roles->module_name == 'Human Capital') {
+                            $hcm = 'Human_Capital';
+                        }
+                        if ($roles->module_name == 'Configuration') {
+                            $config = 'Configuration';
+                        }
 
-if ($roles->module_name == 'DAK Management') {
-    $dakm = 'DAK Management';
-}
+                        if ($roles->module_name == 'DAK Management') {
+                            $dakm = 'DAK Management';
+                        }
+                        if ($roles->module_name == 'Requirement Management') {
+                            $requir = 'Requirement Management';
+                        }
 
-?>
+                    ?>
 
 
                     @endif
@@ -162,7 +165,6 @@ if ($roles->module_name == 'DAK Management') {
                     </div>
 
                     @elseif($admin->user_type=='admin')
-
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                         <a href="{{ url('role/dashboard') }}">
                             <div class="box">
@@ -203,7 +205,7 @@ if ($roles->module_name == 'DAK Management') {
                     </div>
 
 
-                    <!-- <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                     {{-- <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                         <a href="{{ url('rota-dashboard') }}">
                             <div class="box green">
                                 <div class="dash-icon">
@@ -214,7 +216,20 @@ if ($roles->module_name == 'DAK Management') {
                                 </div>
                             </div>
                         </a>
-                    </div> -->
+                    </div>  --}}
+
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <a href="{{ url('recruitmentdashboard') }}">
+                            <div class="box green">
+                                <div class="dash-icon">
+                                    <img src="{{ asset('theme/main/recruitment.png') }}" alt="">
+                                </div>
+                                <div class="dash-name">
+                                    <h3>Recruitment</h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div> 
 
 
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">

@@ -27,7 +27,6 @@ class ProcessAttendanceController extends Controller
         if (!empty(Session::get('admin'))) {
 
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
-
                 ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
                 ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
                 ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
