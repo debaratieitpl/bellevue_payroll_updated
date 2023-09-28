@@ -436,15 +436,25 @@ Route::get('recruitment/job-post', 'Recruitment\RecruitmentController@viewjobpos
 Route::get('recruitment/add-job-post', 'Recruitment\RecruitmentController@viewAddNewJobPost');
 Route::post('recruitment/add-job-post', 'Recruitment\RecruitmentController@saveJobPostData');
 // Route::get('recruitment/resume-bulk', 'Recruitment\RecruitmentController@filterDaterange');
-
 Route::get('recruitment/job-published', 'Recruitment\RecruitmentController@viewjobpublished');
 Route::get('recruitment/add-job-published', 'Recruitment\RecruitmentController@viewAddNewpublished');
 Route::post('recruitment/add-job-published', 'Recruitment\RecruitmentController@saveJobpublishedData');
-
 Route::get('recruitment/candidate', 'Recruitment\RecruitmentController@viewcandidate');
 Route::get('recruitment/edit-candidate/{candidate_id}', 'Recruitment\RecruitmentController@viewcandidatedetails');
+Route::post('recruitment/edit-candidate', 'Recruitment\RecruitmentController@savecandidatedetails');
+Route::get('recruitment/send-letter-job-applied/{send_id}', 'Recruitment\RecruitmentController@viewsendcandidatedetailsjobapplied');
+Route::get('recruitment/short-listing', 'Recruitment\RecruitmentController@viewshortcandidate');
+Route::get('recruitment/edit-short-listing/{short_id}', 'Recruitment\RecruitmentController@viewshortcandidatedetails');
+Route::post('recruitment/edit-short-listing', 'Recruitment\RecruitmentController@saveshortcandidatedetails');
+Route::get('recruitment/interview', 'Recruitment\RecruitmentController@viewinterviewcandidate');
+Route::get('recruitment/edit-interview/{interview_id}', 'Recruitment\RecruitmentController@viewinterviewcandidatedetails');
+Route::post('recruitment/edit-interview', 'Recruitment\RecruitmentController@saveinterviewcandidatedetails');
+Route::get('recruitment/hired', 'Recruitment\RecruitmentController@viewhiredcandidate');
+Route::get('recruitment/edit-hired/{hired_id}', 'Recruitment\RecruitmentController@viewhiredcandidatedetails');
+Route::post('recruitment/edit-hired', 'Recruitment\RecruitmentController@savehiredcandidatedetails');
+Route::get('recruitment/offer-letter', 'Recruitment\RecruitmentController@viewsoffercandidate');
+Route::get(' recruitment/generate-letter', 'Recruitment\RecruitmentController@viewsofferlattercandidate');
 Route::get('career/{career_id}', 'Recruitment\CareerController@viewdash');
-
 Route::get('pis/getjobpostByIdlkkk/{empid}','Recruitment\RecruitmentController@getDepartment');
 Route::get('pis/getjobpostByIdlkkkll/{empid}/{soc}', 'Recruitment\RecruitmentController@getJobdetails');
 

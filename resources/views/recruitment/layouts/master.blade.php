@@ -72,6 +72,28 @@
 		.main-card form label span{color:red;}
 
     </style>
+    <style>
+        .app-form-text h5 {    
+        margin: 0;
+        color: #1572e8;
+        padding: 15px 7px;
+        }.app-form-text h5 span {
+        color: #000;
+        padding-left: 10px;
+        }.download a {
+        color: #fff;
+        text-decoration: none;
+        }
+        .form-group{
+        padding:0;
+        }
+        .row:nth-child(even) {
+        background-color: #e9e9e9;
+        }
+        .row:nth-child(odd) {
+        background-color: #f7f7f7;
+        }
+     </style>
 </head>
 <body>
 @yield('sidebar')

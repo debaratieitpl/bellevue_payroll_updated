@@ -55,14 +55,14 @@ $menuslist = array_unique($menus);
           <li><a href="{{ url('recruitment/job-post') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Job Posting</a></li>
           <li><a href="{{ url('recruitment/job-published') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Job Published</a></li>
           <li><a href="{{ url('recruitment/candidate') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Job Applied</a></li>
-          <li><a href="{{ url('attendance/add-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Short Listng</a></li>
-          <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Interview</a></li>
-          <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Hired</a></li>
-          <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Generate Offer Letter</a></li>
-          <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Search</a></li>
+          <li><a href="{{ url('recruitment/short-listing') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Short Listng</a></li>
+          <li><a href="{{ url('recruitment/interview') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Interview</a></li>
+          <li><a href="{{ url('recruitment/hired') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Hired</a></li>
+          <li><a href="{{ url('recruitment/offer-letter') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Generate Offer Letter</a></li>
+          {{-- <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Search</a></li>
           <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Status Search</a></li>
           <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Rejected</a></li>
-          <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Message Center</a></li>
+          <li><a href="{{ url('attendance/view-montly-attendance-data-all') }}"><img src="{{ asset('images/daily-att.png') }}" alt="" />Message Center</a></li> --}}
           </ul>
         </li>
         {{-- <li class="menu-item-has-children dropdown">

@@ -13,6 +13,7 @@ use App\Models\Recruitment\JobPost;
 use App\Models\Recruitment\Candidate;
 use Session;
 use DB;
+use Mail;
 
 
 class RecruitmentController extends Controller
@@ -31,7 +32,7 @@ class RecruitmentController extends Controller
                 ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
                 ->where('member_id', '=', Session::get('adminusernmae'))
                 ->get();
-            return view($this->_routePrefix.'.dashboard',$data);
+            return view('recruitment/dashboard',$data);
         } else {
             return redirect('/');
         }
@@ -48,7 +49,7 @@ class RecruitmentController extends Controller
                 ->get();
 
             $data['recruitment_job_rs'] = CompanyJobList::get();
-            return view($this->_routePrefix.'.job-list', $data);
+            return view('recruitment/job-list', $data);
         } else {
             return redirect('/');
         }
@@ -70,7 +71,7 @@ class RecruitmentController extends Controller
                 $data['recruitment_job_rs'] = CompanyJobList::where('id',$id)->first();
                }
                $data['department'] =  Department::where('department_status','active')->get();
-                return view($this->_routePrefix.'.add-new-job-list', $data);
+                return view('recruitment/add-new-job-list', $data);
         } else {
             return redirect('/');
         }
@@ -116,7 +117,7 @@ class RecruitmentController extends Controller
                     Session::flash('error', 'Something Went Wrong.'); 
                 }
             }
-            return redirect($this->_routePrefix.'.job-list');
+            return redirect('recruitment/job-list');
         } else {
             return redirect('/');
         }
@@ -136,7 +137,7 @@ class RecruitmentController extends Controller
                 ->get();
                 // dd($data['company_job_rs']);
 
-            return view($this->_routePrefix.'.job-post', $data);
+            return view('recruitment/job-post', $data);
         } else {
             return redirect('/');
         }
@@ -161,12 +162,12 @@ class RecruitmentController extends Controller
                 $data['jobs_list'] = CompanyJobList::get();
                 $data['department'] =  Department::where('department_status','active')->get();
                 //dd($data['job_details']);
-                return view($this->_routePrefix.'.add-new-job-post', $data);
+                return view('recruitment/add-new-job-post', $data);
             } else {
                 $data['job_details']='';
                 $data['jobs_list'] = CompanyJobList::get();
                 $data['department'] =  Department::where('department_status','active')->get();
-                return view($this->_routePrefix.'.add-new-job-post', $data);
+                return view('recruitment/add-new-job-post', $data);
             }
         } else {
             return redirect('/');
@@ -481,13 +482,452 @@ class RecruitmentController extends Controller
                     ->select('candidates.*', 'company_jobs.job_code')
                     ->get();
             }
-            dd($data['candidate_rs']);
             return view('recruitment/candidate-list', $data);
         } else {
             return redirect('/');
         }
     }
-  
+    public function viewcandidatedetails($candidate_id)
+    {
+        //dd(base64_decode($candidate_id));
+        if (!empty(Session::get('admin'))) {
+            $data['job'] = DB::table('candidates')->where('id', '=', base64_decode($candidate_id))->first();
+
+            $data['job_details'] = DB::table('candidate_historys')->where('user_id', '=', base64_decode($candidate_id))->orderBy('id', 'DESC')->first();
+            //dd($data);
+            return View('recruitment/candidate-edit', $data);
+        } else {
+            return redirect('/');
+        }
+
+    }
+    public function savecandidatedetails(Request $request)
+    {
+
+        if (!empty(Session::get('admin'))) {
+            $job = DB::table('candidates')->where('id', '=', $request->id)->first();
+            if(isset($request->status)){
+                $data = array(
+                    'job_id' => $request->job_id,
+                    'job_title' => $job->job_title,
+                    'user_id' => $job->id,
+                    'name' => $job->name,
+                    'gender' => $job->gender,
+                    'exp_month' => $job->exp_month,
+                    'skill_level' => $job->skill_level,
+                    'dob' => $job->dob,
+                    'email' => $job->email,
+                    'phone' => $job->phone,
+                    'cover_letter' => $job->cover_letter,
+                    'exp' => $job->exp,
+                    'cur_or' => $job->cur_or,
+                    'cur_deg' => $job->cur_deg,
+                    'country' => $job->country,
+                    'zip' => $job->zip,
+                    'location' => $job->location,
+                    'exp_sal' => $job->exp_sal,
+                    'sal' => $job->sal,
+                    'status' => $request->status,
+                    'remarks' => $request->remarks,
+                    'edu' => $job->edu,
+                    'skill' => $job->skill,
+                    'date' => date('Y-m-d', strtotime($request->date)),
+                    'date_up' => date('Y-m-d H:i:s'),
+                    'apply' => $request->apply,
+                    'resume' => $job->resume,
+                );
+    
+                DB::table('candidate_historys')->insert($data);
+                $dataupdate = array(
+                    'apply' => $request->apply,
+                    'status' => $request->status,
+                    'remarks' => $request->remarks,
+    
+                );
+                $job_d = DB::table('company_jobs')->where('id', '=', $request->job_id)->first();
+    
+                DB::table('candidates')->where('id', '=', $request->id)->update($dataupdate);
+    
+            }else{
+                $dataupdate = array(
+                   
+                    'date' => $request->application_date.' '.date('H:i:s',strtotime($job->date)),
+                   
+    
+                );
+                $job_d = DB::table('company_jobs')->where('id', '=', $request->job_id)->first();
+    
+                DB::table('candidates')->where('id', '=', $request->id)->update($dataupdate);
+
+            }
+
+            Session::flash('message', 'Candidate Information Successfully Updated.');
+
+            return redirect('recruitment/candidate');
+        } else {
+            return redirect('/');
+        }
+    }
+    public function viewshortcandidate()
+    {
+        if (!empty(Session::get('admin'))) {
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', Session::get('adminusernmae'))
+                ->get();
+
+            $data['candidate_rs'] = DB::Table('candidates')
+                ->join('company_jobs', 'candidates.job_id', '=', 'company_jobs.id')
+                ->where(function ($query) {
+                    $query->where('candidates.status', '=', 'Short listed')
+                        ->orWhere('candidates.status', '=', 'Hold');
+                })
+                ->select('candidates.*', 'company_jobs.job_code')
+                ->get();
+
+            return view('recruitment/candidate-short-list', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+    public function viewshortcandidatedetails($short_id)
+    {
+        if (!empty(Session::get('admin'))) {
+
+            $data['job'] = DB::table('candidates')->where('id', '=', base64_decode($short_id))->where(function ($query) {
+                $query->where('candidates.status', '=', 'Short listed')
+                    ->orWhere('candidates.status', '=', 'Hold');
+            })->first();
+
+            $data['job_details'] = DB::table('candidate_historys')->where('user_id', '=', base64_decode($short_id))->orderBy('id', 'DESC')->first();
+
+            return View('recruitment/short-edit', $data);
+        } else {
+            return redirect('/');
+        }
+
+    }
+    public function saveshortcandidatedetails(Request $request)
+    {
+
+        if (!empty(Session::get('admin'))) {
+            $job = DB::table('candidates')->where('id', '=', $request->id)->first();
+
+            $data = array(
+                'job_id' => $request->job_id,
+                'job_title' => $job->job_title,
+                'user_id' => $job->id,
+                'name' => $job->name,
+                'gender' => $job->gender,
+                'exp_month' => $job->exp_month,
+                'skill_level' => $job->skill_level,
+                'dob' => $job->dob,
+                'email' => $job->email,
+                'phone' => $job->phone,
+                'cover_letter' => $job->cover_letter,
+                'exp' => $job->exp,
+                'cur_or' => $job->cur_or,
+                'cur_deg' => $job->cur_deg,
+                'country' => $job->country,
+                'zip' => $job->zip,
+                'location' => $job->location,
+                'exp_sal' => $job->exp_sal,
+                'sal' => $job->sal,
+                'status' => $request->status,
+                'remarks' => $request->remarks,
+                'edu' => $job->edu,
+                'skill' => $job->skill,
+                'date' => date('Y-m-d', strtotime($request->date)),
+                'from_time' => $request->from_time,
+                'place' => $request->place,
+                'to_time' => $request->to_time,
+                'panel' => $request->panel,
+                'recruited' => $request->recruited,
+                'other' => $request->other,
+                'apply' => $job->apply,
+                'date_up' => date('Y-m-d H:i:s'),
+                'resume' => $job->resume,
+            );
+
+            DB::table('candidate_historys')->insert($data);
+            $dataupdate = array(
+                'recruited' => $request->recruited,
+                'other' => $request->other,
+                'status' => $request->status,
+                'from_time' => $request->from_time,
+                'place' => $request->place,
+                'to_time' => $request->to_time,
+                'panel' => $request->panel,
+                'remarks' => $request->remarks,
+
+            );
+            DB::table('candidates')->where('id', '=', $request->id)->update($dataupdate);
+            $job_d = DB::table('company_jobs')->where('id', '=', $request->job_id)->first();
+
+            if ($request->status != 'Interview') {
+
+            }
+            if ($request->status == 'Interview') {
+
+            }
+
+            Session::flash('message', 'Candidate Information Successfully Updated.');
+
+            return redirect('recruitment/short-listing');
+        } else {
+            return redirect('/');
+        }
+
+    }
+    public function viewinterviewcandidate()
+    {
+        if (!empty(Session::get('admin'))) {
+
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', Session::get('adminusernmae'))
+            ->get();
+
+            $data['candidate_rs'] = DB::Table('candidates')
+                ->join('company_jobs', 'candidates.job_id', '=', 'company_jobs.id')
+                ->where(function ($query) {
+                    $query->where('candidates.status', '=', 'Interview')
+                        ->orWhere('candidates.status', '=', 'Online Screen Test')
+                        ->orWhere('candidates.status', '=', 'Written Test')
+                        ->orWhere('candidates.status', '=', 'Telephone Interview')
+                        ->orWhere('candidates.status', '=', 'Face to Face Interview')
+                        ->orWhere('candidates.status', '=', 'Job Offered');
+                })
+                ->select('candidates.*', 'company_jobs.job_code')
+                ->get();
+
+            return view('recruitment/candidate-interview', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+    public function viewinterviewcandidatedetails($interview_id)
+    {
+        if (!empty(Session::get('admin'))) {
+            $data['job'] = DB::table('candidates')->where('id', '=', base64_decode($interview_id))->where(function ($query) {
+                $query->where('candidates.status', '=', 'Interview')
+                    ->orWhere('candidates.status', '=', 'Online Screen Test')
+                    ->orWhere('candidates.status', '=', 'Written Test')
+                    ->orWhere('candidates.status', '=', 'Telephone Interview')
+                    ->orWhere('candidates.status', '=', 'Face to Face Interview')
+                    ->orWhere('candidates.status', '=', 'Job Offered');
+            })
+                ->first();
+
+            $data['job_details'] = DB::table('candidate_historys')->where('user_id', '=', base64_decode($interview_id))->orderBy('id', 'DESC')->first();
+
+            return View('recruitment/interview-edit', $data);
+        } else {
+            return redirect('/');
+        }
+
+    }
+    public function saveinterviewcandidatedetails(Request $request)
+    {
+        if (!empty(Session::get('admin'))) {
+            $job = DB::table('candidates')->where('id', '=', $request->id)->first();
+            if ($request->has('upload_sh')) {
+
+                $file_per_doc = $request->file('upload_sh');
+                $extension_per_doc = $request->upload_sh->extension();
+                $path_per_doc = $request->upload_sh->store('candidate_up_doc', 'public');
+
+            } else {
+
+                $path_per_doc = '';
+
+            }
+            $data = array(
+                'job_id' => $request->job_id,
+                'job_title' => $job->job_title,
+                'user_id' => $job->id,
+                'name' => $job->name,
+                'gender' => $job->gender,
+                'exp_month' => $job->exp_month,
+                'skill_level' => $job->skill_level,
+                'upload_sh' => $path_per_doc,
+                'email' => $job->email,
+                'phone' => $job->phone,
+                'cover_letter' => $job->cover_letter,
+                'dob' => $job->dob,
+                'exp' => $job->exp,
+                'cur_or' => $job->cur_or,
+                'cur_deg' => $job->cur_deg,
+                'country' => $job->country,
+                'zip' => $job->zip,
+                'location' => $job->location,
+                'exp_sal' => $job->exp_sal,
+                'sal' => $job->sal,
+                'status' => $request->status,
+                'remarks' => $request->remarks,
+                'edu' => $job->edu,
+                'skill' => $job->skill,
+                'date' => date('Y-m-d', strtotime($request->date)),
+                'apply' => $job->apply,
+                'recruited' => $job->recruited,
+                'other' => $job->other,
+                'resume' => $job->resume,
+                'date_up' => date('Y-m-d H:i:s'),
+            );
+
+            DB::table('candidate_historys')->insert($data);
+            $dataupdate = array(
+
+                'status' => $request->status,
+                'remarks' => $request->remarks,
+
+            );
+            if ($request->has('upload_sh')) {
+
+                $file_visa_doc = $request->file('upload_sh');
+                $extension_visa_doc = $request->upload_sh->extension();
+                $path_visa_doc = $request->upload_sh->store('candidate_up_doc', 'public');
+                $dataimgvis = array(
+                    'upload_sh' => $path_visa_doc,
+                );
+
+                DB::table('candidates')->where('id', '=', $request->id)
+                    ->update($dataimgvis);
+
+            }
+
+            $job_d = DB::table('company_jobs')->where('id', '=', $request->job_id)->first();
+
+            if ($request->status == 'Rejected') {
+
+            } else {
+
+            }
+
+            DB::table('candidates')->where('id', '=', $request->id)->update($dataupdate);
+
+            Session::flash('message', 'Candidate Information Successfully Updated.');
+
+            return redirect('recruitment/interview');
+        } else {
+            return redirect('/');
+        }
+
+    }
+    public function viewhiredcandidate()
+    {
+        if (!empty(Session::get('admin'))) {
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', Session::get('adminusernmae'))
+            ->get();    
+            $data['candidate_rs'] = DB::Table('candidates')
+                ->join('company_jobs', 'candidates.job_id', '=', 'company_jobs.id')
+                ->where('candidates.status', '=', 'Hired')
+                ->select('candidates.*', 'company_jobs.job_code')
+                ->get();
+            return view('recruitment/candidate-hired', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function viewhiredcandidatedetails($hired_id)
+    {
+        if (!empty(Session::get('admin'))) {
+            $data['job'] = DB::table('candidates')->where('id', '=', base64_decode($hired_id))->where('status', '=', 'Hired')->first();
+
+            $data['job_details'] = DB::table('candidate_historys')->where('user_id', '=', base64_decode($hired_id))->orderBy('id', 'DESC')->first();
+
+            return View('recruitment/hired-edit', $data);
+        } else {
+            return redirect('/');
+        }
+
+    }
+    public function viewsoffercandidate()
+    {
+
+        if (!empty(Session::get('admin'))) {
+
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', Session::get('adminusernmae'))
+            ->get();
+
+            $data['candidate_rs'] = DB::Table('candidate_offers')
+                ->join('company_jobs', 'candidate_offers.job_id', '=', 'company_jobs.id')
+                ->where('candidate_offers.status', '=', 'Hired')
+                ->select('candidate_offers.*', 'company_jobs.job_code')
+                ->get();
+
+            return view('recruitment/candidate-offer', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+    public function viewsofferlattercandidate()
+    {
+        if (!empty(Session::get('emp_email'))) {
+
+            $email = Session::get('emp_email');
+            $Roledata = DB::table('registration')->where('status', '=', 'active')
+
+                ->where('email', '=', $email)
+                ->first();
+            $data['Roledata'] = DB::table('registration')->where('status', '=', 'active')
+
+                ->where('email', '=', $email)
+                ->first();
+            $data['employeeslist'] = DB::Table('candidate')
+                ->join('company_job', 'candidate.job_id', '=', 'company_job.id')
+
+                ->where('company_job.emid', '=', $Roledata->reg)
+                ->where(function ($query) {
+                    $query->where('candidate.status', '=', 'Hired')
+                        ->orWhere('candidate.status', '=', 'Job Offered');
+                })
+
+                ->select('candidate.*', 'company_job.job_code')
+                ->get();
+
+            $data['candidate_rs'] = DB::table('candidate_offer')->join('candidate', 'candidate_offer.user_id', '=', 'candidate.id')
+                ->join('company_job', 'candidate_offer.job_id', '=', 'company_job.id')
+
+                ->where('company_job.emid', '=', $Roledata->reg)
+
+                ->select('candidate_offer.*')->get();
+
+            $userlist = array();
+            foreach ($data['candidate_rs'] as $user) {
+                $userlist[] = $user->user_id;
+            }
+
+            $data['employees'] = array();
+            foreach ($data['employeeslist'] as $employee) {
+                if (in_array($employee->id, $userlist)) {
+
+                } else {
+                    $data['employees'][] = (object) array("user_id" => $employee->id, "name" => $employee->name);
+                }
+
+            }
+            $data['employeelists'] = DB::table('employee')->where('emid', '=', $Roledata->reg)->get();
+            return view('recruitment/candidate-add-offer', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
+
 
 
     //Ajax fetch function
