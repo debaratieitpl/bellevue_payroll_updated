@@ -339,7 +339,7 @@ class EmployeeController extends Controller
     {
         if (!empty(Session::get('admin'))) {
 
-             //dd($request->all());
+             dd($request->all());
 
             date_default_timezone_set('Asia/Kolkata');
 
