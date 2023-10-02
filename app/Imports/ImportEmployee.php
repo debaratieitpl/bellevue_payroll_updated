@@ -97,6 +97,11 @@ class ImportEmployee implements ToModel, WithStartRow
         //     'emp_pf_inactuals' => isset($row[25]) ? $row[25] : 'Y',
         //     'emp_pension' => isset($row[26]) ? $row[26] : 'Y',
         // ]);
+
+         DB::table('employee_pay_structures')->insert([
+            'employee_code' => $row[0],
+
+        ]);
        
         // DB::table('employee_pay_structures')->insert([
         //     'employee_code' => $employeeId,

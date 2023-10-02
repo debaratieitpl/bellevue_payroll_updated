@@ -629,7 +629,7 @@ Employee Information System-Employees
                                     </div>
                                     <div class="col-md-4">
                                        <label>Pin Code <span>(*)</span> </label>
-                                       <input id="parmenent_pincode" name="emp_pr_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pr_pincode;}?>" type="text" class="form-control" required >
+                                       <input id="parmenent_pincode" name="emp_pr_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pr_pincode;}?>" type="text" class="form-control"  >
                                     </div>
                                  </div>
                                  <div class="row form-group">
@@ -639,7 +639,7 @@ Employee Information System-Employees
                                     </div>
                                     <div class="col-md-4">
                                        <label>State <span>(*)</span></label>
-                                       <select name="emp_pr_state" id="parmenent_state" class="form-control" required>
+                                       <select name="emp_pr_state" id="parmenent_state" class="form-control" >
                                           <option value="" label="Select">Select</option>
                                           <?php foreach ($states as $state) {?>
                                           <option value="<?php echo $state->state_name; ?>" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_pr_state == $state->state_name) {echo 'selected';}}?>><?php echo $state->state_name; ?></option>
@@ -685,7 +685,7 @@ Employee Information System-Employees
                                     </div>
                                     <div class="col-md-4">
                                        <label>Pin Code <span>(*)</span></label>
-                                       <input type="text" name="emp_ps_pincode" id="present_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_ps_pincode;}?>" class="form-control" required>
+                                       <input type="text" name="emp_ps_pincode" id="present_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_ps_pincode;}?>" class="form-control" >
                                     </div>
                                  </div>
                                  <div class="row form-group">
@@ -695,7 +695,7 @@ Employee Information System-Employees
                                     </div>
                                     <div class="col-md-4">
                                        <label>State <span>(*)</span></label>
-                                       <select name="emp_ps_state" id="present_state" class="form-control" required>
+                                       <select name="emp_ps_state" id="present_state" class="form-control" >
                                           <option value="" label="Select">Select</option>
                                           <?php foreach ($states as $state) {?>
                                           <option value="<?php echo $state->state_name; ?>" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_ps_state == $state->state_name) {echo 'selected';}}?>><?php echo $state->state_name; ?></option>

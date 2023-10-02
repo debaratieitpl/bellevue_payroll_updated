@@ -49,6 +49,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Session;
 use view;
 use App\Imports\ImportEmployee;
+use App\Imports\ImportPayDetails;
 use App\Exports\SampleEmployeeExport;
 class EmployeeController extends Controller
 {
@@ -262,6 +263,21 @@ class EmployeeController extends Controller
         if (!empty(Session::get('admin'))) {
 
             if(\Excel::import(new ImportEmployee(), $request->file('excel_file'))){
+                Session::flash('message', 'Import Successfully');
+                return redirect()->back();
+            }else{
+                Session::flash('message', 'Something Wrong');
+                return redirect()->back();
+            }
+           
+        } else {
+            return redirect('/');
+        } 
+    }
+    public function paydetailimport(Request $request){
+        if (!empty(Session::get('admin'))) {
+
+            if(\Excel::import(new ImportPayDetails(), $request->file('excel_file'))){
                 Session::flash('message', 'Import Successfully');
                 return redirect()->back();
             }else{

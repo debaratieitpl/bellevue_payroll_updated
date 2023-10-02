@@ -116,6 +116,9 @@ function my_simple_crypt($string, $action = 'encrypt')
                         <button type="button" class="btn btn-primary mx-1" title="Import Employees" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;" data-toggle="modal" data-target="#exampleModal">
                           Import
                         </button>
+                        <button type="button" class="btn btn-primary mx-1" title="Import Pay Details" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;" data-toggle="modal" data-target="#exampleModal1">
+                            Import Pay Details
+                          </button>
                     </div>
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             
@@ -163,6 +166,36 @@ function my_simple_crypt($string, $action = 'encrypt')
 								  
 									<div class="form-group">
 									  <label for="excel_file">Upload Excel</label>
+									  <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file">
+									</div>
+								  
+								</div>
+								<div class="modal-footer">
+								  <button type="button" class="btn btn-secondary" style="padding: 0px 8px;height: 32px;" data-dismiss="modal">Close</button>
+								  <button type="submit" class="btn btn-primary" style="color: #fff;background-color: #0884af;border-color: #0884af;padding: 0px 8px;height: 32px;">Import</button>
+								</div>
+							  </div>
+						  </form>
+						</div>
+					  </div>
+					  <!-- END -->
+
+                       <!-- Modal -->
+                    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+						  <form style='padding: 0px;' action="{{route('xls-import-paydetails')}}" method="post" enctype="multipart/form-data">
+							  @csrf
+							  <div class="modal-content">
+								<!--<div class="modal-header">-->
+								<!--  <h5 class="modal-title" id="exampleModalLabel">Import Excel</h5>-->
+								<!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+								<!--    <span aria-hidden="true">&times;</span>-->
+								<!--  </button>-->
+								<!--</div>-->
+								<div class="modal-body">
+								  
+									<div class="form-group">
+									  <label for="excel_file">Upload PayDetails Excel</label>
 									  <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file">
 									</div>
 								  
