@@ -23,9 +23,9 @@ class ExcelFileExportLoanList implements FromCollection, WithHeadings
     {
         $employee_rs = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
         ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'loans.*',DB::raw('(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id) as balance'))
-        ->orderBy('loans.id', 'desc')
-            ->get();
-
+        // ->where('loans.emp_code', 3019)  
+        ->orderBy('loans.loan_type', 'desc')
+        ->get();
         $h = 1;
         $customer_array = array();
         
@@ -63,7 +63,7 @@ class ExcelFileExportLoanList implements FromCollection, WithHeadings
                 $customer_array[] = array(
                     'Sl No' => $h,
                     'Employee ID'=>$record->emp_code,
-                    'Employee Code'=>$record->old_emp_code,
+                    // 'Employee Code'=>$record->old_emp_code,
                     'Employee Name'=>$record->salutation.' '.$record->emp_fname.' '.$record->emp_mname.' '.$record->emp_lname,
                     'Designation'=>$record->emp_designation,
                     'Loan ID'=>$record->loan_id,
@@ -86,7 +86,7 @@ class ExcelFileExportLoanList implements FromCollection, WithHeadings
     {
         return [
             'Sl No',
-            'Employee ID',
+            // 'Employee ID',
             'Employee Code',
             'Employee Name',
             'Designation',

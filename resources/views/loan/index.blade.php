@@ -62,7 +62,7 @@ Loan Information System - Loan
                             <thead>
                                 <tr>
                                     <th>Sl No.</th>
-                                    <th>Employee ID</th>
+                                    {{-- <th>Employee ID</th> --}}
                                     <th>Employee Code</th>
                                     <th>Employee Name</th>
                                     <th>Designation</th>
@@ -89,7 +89,7 @@ Loan Information System - Loan
 
                                 <tr>
                                     <td>{{ $loop->iteration}}</td>
-                                    <td>{{ $employee->emp_code}}</td>
+                                    {{-- <td>{{ $employee->emp_code}}</td> --}}
                                     <td>{{ $employee->old_emp_code}}</td>
                                     <td>{{ $employee->emp_fname." ".$employee->emp_mname." ".$employee->emp_lname }}</td>
                                     <td>{{ $employee->emp_designation }}</td>
