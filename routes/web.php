@@ -121,6 +121,12 @@ Route::post('masters/save-employee-type', 'Masters\EmployeeTypeController@saveEm
 Route::get('masters/edit-employee-type/{id}', 'Masters\EmployeeTypeController@getTypeById');
 Route::post('masters/update-employee-type', 'Masters\EmployeeTypeController@updateEmployeeType');
 
+Route::get('masters/vw-employee-mode', 'Masters\MOdeOfEmployeeController@getEmployeeMode');
+Route::get('masters/add-employee-mode', 'Masters\MOdeOfEmployeeController@addEmployeeMode');
+Route::post('masters/save-employee-mode', 'Masters\MOdeOfEmployeeController@saveEmployeeMode');
+Route::get('masters/edit-employee-mode/{id}', 'Masters\MOdeOfEmployeeController@getModeById');
+Route::post('masters/update-employee-mode', 'Masters\MOdeOfEmployeeController@updateModeType');
+
 Route::get('masters/vw-grade', 'Masters\GradeController@getGrades');
 Route::get('masters/add-grade', 'Masters\GradeController@viewAddGrade');
 Route::post('masters/save-grade', 'Masters\GradeController@saveGrade');

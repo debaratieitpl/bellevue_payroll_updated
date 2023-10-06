@@ -46,6 +46,7 @@
                         <li><a href="{{ url('masters/vw-department') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" style="margin-top:10px;"> Department</a></li>
                         <li><a href="{{ url('masters/vw-designation') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" style="margin-top:10px;"> Designation</a></li>
                         <li><a href="{{ url('masters/vw-employee-type') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Type</a></li>
+                        <li><a href="{{ url('masters/vw-employee-mode') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Mode</a></li>
                         <!-- <li><a href="{{ url('masters/vw-grade') }}"><img src="{{ asset('images/grade.png') }}" alt="" /> Pay Level</a></li> -->
                         <li><a href="{{ url('masters/vw-religion') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" style="margin-top:10px;"> Religion</a></li>
                         <li><a href="{{ url('masters/vw-sub-cast') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" style="margin-top:10px;"> Sub Caste</a></li>
