@@ -36,7 +36,9 @@ use App\Imports\MonthlyEmployeeCooperativeImport;
 use App\Exports\MonthlyEmployeeTaxExport;
 use App\Imports\MonthlyEmployeeTaxImport;
 use App\Exports\MonthlyEmployeeOvertimeExport;
+use App\Exports\ExcelMonthlyAllowanceExport;
 use App\Imports\MonthlyEmployeeOvertimeImport;
+use App\Imports\MonthlyAllowanceImport;
 use Session;
 use View;
 use DB;
@@ -4774,6 +4776,8 @@ class PayrollGenerationController extends Controller
         }
     }
 
+
+
     public function UpdateAllowancesAll(Request $request)
     {
 
@@ -5384,6 +5388,25 @@ class PayrollGenerationController extends Controller
             }
 
             return redirect('payroll/vw-montly-overtime');
+        } else {
+            return redirect('/');
+        }
+    }
+
+    //Export Monthly allowance
+    public function getMonthlyAllowancesExport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            $excelName = 'monthly-allowance.xlsx';
+            return \Excel::download(new ExcelMonthlyAllowanceExport($request->month), $excelName); //Export Query
+        } else {
+            return redirect('/');
+        }
+    }
+    public function getMonthlyAllowancesImport(Request $request) {
+        if (!empty(Session::get('admin'))) {
+            \Excel::import(new MonthlyAllowanceImport(), $request->file('excel_file'));
+            Session::flash('message', 'Record Successfully Updated.');
+            return redirect('payroll/vw-montly-allowances');
         } else {
             return redirect('/');
         }

@@ -791,6 +791,10 @@ Route::post('payroll/vw-add-allowances-all', 'Payroll\PayrollGenerationControlle
 Route::post('payroll/save-allowances-all', 'Payroll\PayrollGenerationController@SaveAllowancesAll');
 Route::post('payroll/update-allowances-all', 'Payroll\PayrollGenerationController@UpdateAllowancesAll');
 
+
+Route::get('payroll/vw-montly-allowances/export', 'Payroll\PayrollGenerationController@getMonthlyAllowancesExport')->name('payroll.vw-montly-allowances.export');
+Route::post('payroll/vw-montly-allowances/import', 'Payroll\PayrollGenerationController@getMonthlyAllowancesImport')->name('payroll.vw-montly-allowances.import');
+
 //generate all payslips
 Route::get('payroll/vw-all-payslips', 'Payroll\EmployeeWisePayslipController@getMonthlyPaySlips');
 Route::post('payroll/vw-all-payslips', 'Payroll\EmployeeWisePayslipController@getAllPayslips');

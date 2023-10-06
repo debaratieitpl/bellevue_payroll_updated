@@ -10,6 +10,7 @@ Attendance Information System
 
 @section('header')
 	@include('attendance.partials.header')
+	<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 @endsection
 
 
@@ -174,8 +175,10 @@ for ($yy = 2022; $yy <= date('Y'); $yy++) {
 @endsection
 
 @section('scripts')
+
 @include('payroll.partials.scripts')
 <script>
+	 $(document).ready(function() {
 	var clicked = false;
     $(".checkall").on("click", function() {
     // $(".checkhour").prop("checked", !clicked);
@@ -240,9 +243,10 @@ function calculate_days(empcode){
     var absent_day=$('#n_absentd_'+empcode).val();
 
     $('#n_salaryd_'+empcode).val(eval(working_day)-eval(absent_day));
-    //alert(working_day);
+    alert(working_day);
 
 }
+});
 
 
 </script>
