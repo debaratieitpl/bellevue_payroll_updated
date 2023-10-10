@@ -10,10 +10,12 @@ class MonthlyEmployeeOvertimeImport implements WithHeadingRow, ToModel
 {
     public function model(array $row)
     {
+        //dd($row);
         \DB::table('monthly_employee_overtimes')
         ->where('emp_code', $row['employee_id'])
         ->where('month_yr', $row['month'])
         ->update([
+            'pay_structure_basic' => $row['basic'],
             'last_month_ot_hrs' => $row['last_month_ot_hrs'],
             'current_month_ot_hrs' => $row['current_month_ot_hrs'],
             'last_month_ot' => $row['last_month_ot'],

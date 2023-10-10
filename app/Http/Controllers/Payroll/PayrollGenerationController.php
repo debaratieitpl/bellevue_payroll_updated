@@ -5060,9 +5060,13 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="text" style="width:100%;" class="form-control sm_basic" id="basic_' . $emcode->emp_code . '" name="basic' . $emcode->emp_code . '" value="' . $calculate_basic_salary . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');" readonly></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:100%;" class="form-control sm_lm_ot_hrs" id="lm_ot_hrs_' . $emcode->emp_code . '" name="lm_ot_hrs' . $emcode->emp_code . '" value="0" onkeyup="calculate_ot(' . $emcode->emp_code . ');"></td>';
+                // $result .= '<td><input type="number" step="any" style="width:100%;" class="form-control sm_lm_ot_hrs" id="lm_ot_hrs_' . $emcode->emp_code . '" name="lm_ot_hrs' . $emcode->emp_code . '" value="0" onkeyup="calculate_ot(' . $emcode->emp_code . ');"></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:100%;" class="form-control sm_cm_ot_hrs" id="cm_ot_hrs_' . $emcode->emp_code . '" name="cm_ot_hrs' . $emcode->emp_code . '" value="0" onkeyup="calculate_ot(' . $emcode->emp_code . ');"></td>';
+                // $result .= '<td><input type="number" step="any" style="width:100%;" class="form-control sm_cm_ot_hrs" id="cm_ot_hrs_' . $emcode->emp_code . '" name="cm_ot_hrs' . $emcode->emp_code . '" value="0" onkeyup="calculate_ot(' . $emcode->emp_code . ');"></td>';
+
+                $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_lm_ot_hrs" id="lm_ot_hrs_' . $emcode->emp_code . '" name="lm_ot_hrs' . $emcode->emp_code . '" value="0" onkeyup="calculate_ot(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');"></td>';
+
+                $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_cm_ot_hrs" id="cm_ot_hrs_' . $emcode->emp_code . '" name="cm_ot_hrs' . $emcode->emp_code . '" value="0" onkeyup="calculate_ot(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');"></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100%;" class="form-control sm_lm_ot" id="lm_ot_' . $emcode->emp_code . '" name="lm_ot' . $emcode->emp_code . '" value="0" readonly></td>';
 
@@ -5257,7 +5261,7 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<tr id="' . $emcode->emp_code . '">
 								<td><div class="checkbox"><label><input type="checkbox" name="empcode_check[]" id="chk_' . $emcode->emp_code . '" value="' . $emcode->emp_code . '" class="checkhour"></label></div></td>
-								<td><input type="text" readonly class="form-control sm_emp_code" name="emp_code' . $emcode->emp_code . '" style="width:50px;" value="' . $emcode->emp_code . '"><input type="hidden" readonly class="form-control sm_curr_mdays" name="curr_mdays' . $emcode->emp_code . '" style="width:100%;" id="curr_mdays_' . $emcode->emp_code . '" value="' . $current_month_days . '"><input type="hidden" readonly class="form-control sm_prev_mdays" name="prev_mdays' . $emcode->emp_code . '" style="width:100%;" id="prev_mdays_' . $emcode->emp_code . '" value="' . $previous_month_days . '"></td>
+								<td><input type="text" readonly class="form-control sm_emp_code" name="emp_code' . $emcode->emp_code . '" style="width:50px;" value="' . $emcode->emp_code . '"><input type="hidden" readonly class="form-control sm_curr_mdays" name="curr_mdays' . $emcode->emp_code . '" style="width:100%;" id="curr_mdays_' . "$emcode->emp_code" . '" value="' . $current_month_days . '"><input type="hidden" readonly class="form-control sm_prev_mdays" name="prev_mdays' . $emcode->emp_code . '" style="width:100%;" id="prev_mdays_' . $emcode->emp_code . '" value="' . $previous_month_days . '"></td>
                                 <td>' . $emcode->old_emp_code . '</td>
 								<td><input type="text" readonly class="form-control sm_emp_name" name="emp_name' . $emcode->emp_code . '" style="width:100px;" value="' . $emcode->emp_fname . ' ' . $emcode->emp_mname . ' ' . $emcode->emp_lname . '"></td>
 								<td><input type="text" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100px;" value="' . $emcode->emp_designation . '"></td>
@@ -5265,9 +5269,9 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="text" style="width:100px;" class="form-control sm_basic" id="basic_' . $emcode->emp_code . '" name="basic' . $emcode->emp_code . '" value="' . $emcode->pay_structure_basic . '"   readonly></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_lm_ot_hrs" id="lm_ot_hrs_' . $emcode->emp_code . '" name="lm_ot_hrs' . $emcode->emp_code . '" value="' . $emcode->last_month_ot_hrs . '" onkeyup="calculate_ot(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_lm_ot_hrs" id="lm_ot_hrs_' . $emcode->emp_code . '" name="lm_ot_hrs' . $emcode->emp_code . '" value="' . $emcode->last_month_ot_hrs . '" onkeyup="calculate_ot(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');"></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_cm_ot_hrs" id="cm_ot_hrs_' . $emcode->emp_code . '" name="cm_ot_hrs' . $emcode->emp_code . '" value="' . $emcode->current_month_ot_hrs . '" onkeyup="calculate_ot(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_cm_ot_hrs" id="cm_ot_hrs_' . $emcode->emp_code . '" name="cm_ot_hrs' . $emcode->emp_code . '" value="' . $emcode->current_month_ot_hrs . '" onkeyup="calculate_ot(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');"></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_lm_ot" id="lm_ot_' . $emcode->emp_code . '" name="lm_ot' . $emcode->emp_code . '" value="' . $emcode->last_month_ot . '" readonly></td>';
 
@@ -5276,9 +5280,10 @@ class PayrollGenerationController extends Controller
                 $result .= '<td><input type="number" style="width:100px;" class="form-control sm_e_overtime" name="e_overtime' . $emcode->emp_code . '" step="any" value="' . $emcode->ot_alws . '" id="e_overtime_' . $emcode->emp_code . '" readonly></td>';
 
             }
-
+           
             $data['result'] = $result;
             $data['month_yr_new'] = $request->month;
+            // dd($data);
             return view('payroll/monthly-overtime', $data);
         } else {
             return redirect('/');

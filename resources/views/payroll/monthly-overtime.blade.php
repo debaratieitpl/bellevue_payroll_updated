@@ -284,7 +284,7 @@ function map_controls(){
 }
 
 function calculate_ot(empcode){
-
+    // console.log(empcode);
     var curr_mdays=$('#curr_mdays_'+empcode).val();
     if(curr_mdays=='') 
         curr_mdays=0;
