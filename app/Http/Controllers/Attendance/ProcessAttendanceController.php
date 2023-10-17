@@ -317,7 +317,6 @@ class ProcessAttendanceController extends Controller
     }
     public function listAttendanceAllemployee(Request $request)
     {
-
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
             $Roledata = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
@@ -365,7 +364,22 @@ class ProcessAttendanceController extends Controller
                                 <td>' . $emcode->old_emp_code . '</td>
 								<td><input type="text" readonly class="form-control sm_emp_name" name="emp_name' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_fname . ' ' . $emcode->emp_mname . ' ' . $emcode->emp_lname . '"><input type="hidden" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_designation . '"></td>
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request['month_yr'] . '"></td>
-								<td><input type="number" class="form-control sm_n_workingd" name="n_workingd' . $emcode->emp_code . '" style="width:100%;" value="' . $current_month_days . '" id="n_workingd_' . $emcode->emp_code . '" readonly></td><td><input type="number" class="form-control sm_n_presentd" name="n_presentd' . $emcode->emp_code . '" style="width:100%;" value="' . $current_month_days . '" id="n_presentd_' . $emcode->emp_code . '" onkeyup="calculate_days(' . $emcode->emp_code . ');"></td><td><input type="number" class="form-control sm_n_leaved" name="n_leaved' . $emcode->emp_code . '" style="width:100%;" value="0" id="n_leaved_' . $emcode->emp_code . '" onkeyup="calculate_days(' . $emcode->emp_code . ');"></td><td><input type="number" class="form-control sm_n_absentd" name="n_absentd' . $emcode->emp_code . '" style="width:100%;" value="0" id="n_absentd_' . $emcode->emp_code . '" readonly></td><td><input type="number" class="form-control sm_n_salaryd" name="n_salaryd' . $emcode->emp_code . '" style="width:100%;" value="' . $current_month_days . '" id="n_salaryd_' . $emcode->emp_code . '" readonly ></td><td><input type="number" class="form-control sm_n_salaryadjd" name="n_salaryadjd' . $emcode->emp_code . '" style="width:100%;" value="0" id="n_salaryadjd_' . $emcode->emp_code . '"  ></td>';
+
+								<td><input type="number" class="form-control sm_n_workingd" name="n_workingd' . $emcode->emp_code . '" style="width:100%;" value="' . $current_month_days . '" id="n_workingd_' . $emcode->emp_code . '" readonly></td>
+
+                                <td><input type="number" class="form-control sm_n_presentd" name="n_presentd' . $emcode->emp_code . '" style="width:100%;" value="' .$current_month_days . '" id="n_presentd_' . $emcode->emp_code . '" onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');"></td>
+
+                                <td>
+                                    <input type="number" class="form-control sm_n_leaved" name="n_leaved' . $emcode->emp_code . '" style="width:100%;" 
+                                    value="0" id="n_leaved_' . $emcode->emp_code . '" 
+                                    onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                                </td>
+
+                                <td><input type="number" class="form-control sm_n_absentd" name="n_absentd' . $emcode->emp_code . '" style="width:100%;" value="0" id="n_absentd_' . $emcode->emp_code . '" readonly></td>
+                                
+                                <td><input type="number" class="form-control sm_n_salaryd" name="n_salaryd' . $emcode->emp_code . '" style="width:100%;" value="' . $current_month_days . '" id="n_salaryd_' . $emcode->emp_code . '" readonly ></td>
+
+                                <td><input type="number" class="form-control sm_n_salaryadjd" name="n_salaryadjd' . $emcode->emp_code . '" style="width:100%;" value="0" id="n_salaryadjd_' . $emcode->emp_code . '"  ></td>';
 
             }
 
@@ -515,7 +529,7 @@ class ProcessAttendanceController extends Controller
                 ->where('employees.emp_status', '!=', 'EX-EMPLOYEE')
                 ->where('employees.emp_status', '!=', 'EX- EMPLOYEE')
             // ->where('employees.emp_code', '=', '1831')
-                ->orderBy('employees.emp_fname', 'asc')
+                ->orderBy('employees.old_emp_code', 'asc')
                 ->get();
 
             if (count($emplist) == 0) {
@@ -531,7 +545,21 @@ class ProcessAttendanceController extends Controller
                                 <td>' . $emcode->old_emp_code . '</td>
 								<td><input type="text" readonly class="form-control sm_emp_name" name="emp_name' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_fname . ' ' . $emcode->emp_mname . ' ' . $emcode->emp_lname . '"><input type="hidden" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->emp_designation . '"></td>
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request['month_yr'] . '"></td>
-								<td><input type="number" class="form-control sm_n_workingd" name="n_workingd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_working_days . '" id="n_workingd_' . $emcode->emp_code . '" readonly></td><td><input type="number" class="form-control sm_n_presentd" name="n_presentd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_present . '" id="n_presentd_' . $emcode->emp_code . '" onkeyup="calculate_days(' . $emcode->emp_code . ');"></td><td><input type="number" class="form-control sm_n_leaved" name="n_leaved' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_days_leave_taken . '" id="n_leaved_' . $emcode->emp_code . '" onkeyup="calculate_days(' . $emcode->emp_code . ');"></td><td><input type="number" class="form-control sm_n_absentd" name="n_absentd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_days_absent . '" id="n_absentd_' . $emcode->emp_code . '" readonly></td><td><input type="number" class="form-control sm_n_salaryd" name="n_salaryd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_days_salary . '" id="n_salaryd_' . $emcode->emp_code . '" readonly ></td><td><input type="number" class="form-control sm_n_salaryadjd" name="n_salaryadjd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_sal_adjust_days . '" id="n_salaryadjd_' . $emcode->emp_code . '"  ></td>';
+								<td><input type="number" class="form-control sm_n_workingd" name="n_workingd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_working_days . '" id="n_workingd_' . $emcode->emp_code . '" readonly></td>
+
+                                <td>
+                                    <input type="number" class="form-control sm_n_presentd" name="n_presentd' . $emcode->emp_code . '" style="width:100%;" 
+                                    value="' . $emcode->no_of_present . '" id="n_presentd_' . $emcode->emp_code . '" 
+                                    onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                               </td>
+                                
+                               <td>
+                                    <input type="number" class="form-control sm_n_leaved" name="n_leaved' . $emcode->emp_code . '" style="width:100%;" 
+                                    value="' . $emcode->no_of_days_leave_taken . '" id="n_leaved_' . $emcode->emp_code . '" 
+                                    onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                               </td>
+                                
+                                <td><input type="number" class="form-control sm_n_absentd" name="n_absentd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_days_absent . '" id="n_absentd_' . $emcode->emp_code . '" readonly></td><td><input type="number" class="form-control sm_n_salaryd" name="n_salaryd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_of_days_salary . '" id="n_salaryd_' . $emcode->emp_code . '" readonly ></td><td><input type="number" class="form-control sm_n_salaryadjd" name="n_salaryadjd' . $emcode->emp_code . '" style="width:100%;" value="' . $emcode->no_sal_adjust_days . '" id="n_salaryadjd_' . $emcode->emp_code . '"  ></td>';
 
             }
 

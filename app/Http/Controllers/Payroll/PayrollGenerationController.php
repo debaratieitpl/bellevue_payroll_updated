@@ -684,7 +684,7 @@ class PayrollGenerationController extends Controller
             $effective_pfloan_interest_rate = $this->getEffectivePFLoanInterestRate($request['month_yr']);
             
             if(isset($effective_pfloan_interest_rate) && $effective_pfloan_interest_rate==''){
-                $effective_pfloan_interest_rate=9.1;
+                $effective_pfloan_interest_rate=9.15;
             }
            
 
@@ -4505,19 +4505,32 @@ class PayrollGenerationController extends Controller
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100px;" value="' . $request['month_yr'] . '"></td>
                                 <td><input type="hidden" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100px;" value="' . $employee_rs->emp_designation . '"><div class="row"><div class="col-md-6"><input type="text" readonly class="form-control sm_no_of_present" name="no_of_present' . $emcode->emp_code . '" style="width:70px;" value="' . $no_of_present . '"></div><div class="col-md-6"><a title="'.$infoTitle.'"><i class="fa fa-info" style="padding-top:7px;"></i></a></div></div></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff" id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '" value="' . $emcode->no_of_present . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff" 
+                                id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_of_present . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                                </td>';
 
                 $result .= '<td><input type="text" style="width:100%;" class="form-control sm_et_tiffalw" id="et_tiffalw_' . $emcode->emp_code . '" name="et_tiffalw' . $emcode->emp_code . '" value="' . $e_tiffalw . '" readonly></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_tiffalw" id="e_tiffalw_' . $emcode->emp_code . '" name="e_tiffalw' . $emcode->emp_code . '" value="' . $cal_tiff_alw . '" readonly></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv" id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '" value="' . $emcode->no_of_present . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv" 
+                                id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_of_present . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                            </td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_et_convalw" id="et_convalw_' . $emcode->emp_code . '" name="et_convalw' . $emcode->emp_code . '" value="' . $e_conv . '" readonly></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_conv" name="e_conv' . $emcode->emp_code . '" value="' . $cal_conv_alw . '" id="e_conv_' . $emcode->emp_code . '" ' . $e_conv_show . '></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc" id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '" value="' . $emcode->no_of_present . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc" 
+                                id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_of_present . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                            </td>';
+
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_et_miscalw" id="et_miscalw_' . $emcode->emp_code . '" name="et_miscalw' . $emcode->emp_code . '" value="' . $e_miscalw . '" readonly></td>';
 
@@ -4525,7 +4538,11 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_extra_misc_alw" name="e_extra_misc_alw' . $emcode->emp_code . '" value="' . $e_extra_misc_alw . '" id="e_extra_misc_alw_' . $emcode->emp_code . '" ' . $e_extra_misc_alw_show . '></td>';
                 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other" id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '" value="' . $emcode->no_of_present . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other" 
+                                id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_of_present . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                            </td>';
 
                 $result .= '<td><input type="text" style="width:100%;" class="form-control sm_et_otheralw" id="et_otheralw_' . $emcode->emp_code . '" name="et_otheralw' . $emcode->emp_code . '" value="' . $e_other_allw . '" readonly></td>';
 
@@ -4737,19 +4754,33 @@ class PayrollGenerationController extends Controller
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100px;" value="' . $emcode->month_yr . '"></td>
                                 <td><input type="hidden" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100px;" value="' . $emcode->emp_designation . '"><div class="row"><div class="col-md-6"><input type="text" readonly class="form-control sm_no_of_present" name="no_of_present' . $emcode->emp_code . '" style="width:70px;" value="' . $no_of_present . '"></div><div class="col-md-6"><a title="'.$infoTitle.'"><i class="fa fa-info" style="padding-top:7px;"></i></a></div></div></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff" id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '" value="' . $emcode->no_days_tiffalw . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff" 
+                                                id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '" 
+                                                value="' . $emcode->no_days_tiffalw . '"  
+                                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                                            </td>';
 
                 $result .= '<td><input type="text" style="width:100px;" class="form-control sm_et_tiffalw" id="et_tiffalw_' . $emcode->emp_code . '" name="et_tiffalw' . $emcode->emp_code . '" value="' . $emcode->pay_structure_tiff_alw . '" readonly></td>';
 
                 $result .= '<td><input type="text" style="width:100px;" class="form-control sm_e_tiffalw" id="e_tiffalw_' . $emcode->emp_code . '" name="e_tiffalw' . $emcode->emp_code . '" value="' . $emcode->tiffin_alw . '" readonly></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv" id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '" value="' . $emcode->no_days_convalw . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv" 
+                                id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_days_convalw . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                            </td>';
+
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_et_convalw" id="et_convalw_' . $emcode->emp_code . '" name="et_convalw' . $emcode->emp_code . '" value="' . $emcode->pay_structure_conv_alw. '" readonly></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_conv" name="e_conv' . $emcode->emp_code . '" value="' . $emcode->convence_alw . '" id="e_conv_' . $emcode->emp_code . '" readonly ></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc" id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '" value="' . $emcode->no_days_miscalw . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc" 
+                                id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_days_miscalw . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                            </td>';
+
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_et_miscalw" id="et_miscalw_' . $emcode->emp_code . '" name="et_miscalw' . $emcode->emp_code . '" value="' . $emcode->pay_structure_misc_alw . '" readonly></td>';
 
@@ -4757,7 +4788,12 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_extra_misc_alw" name="e_extra_misc_alw' . $emcode->emp_code . '" value="' . $emcode->extra_misc_alw . '" id="e_extra_misc_alw_' . $emcode->emp_code . '" ></td>';
                 // other_allw
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other" id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '" value="' . $emcode->no_days_otheralw . '"  onkeyup="calculate_days(' . $emcode->emp_code . ');"></td>';
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other" 
+                                id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '" 
+                                value="' . $emcode->no_days_otheralw . '"  
+                                onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
+                            </td>';
+            
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_et_otheralw" id="et_otheralw_' . $emcode->emp_code . '" name="et_otheralw' . $emcode->emp_code . '" value="' . $emcode->pay_structure_other_alw . '" readonly></td>';
 
@@ -5496,7 +5532,7 @@ class PayrollGenerationController extends Controller
         if(isset($interest->interest)){
             return $interest->interest;
         }else{
-            return "9.1";
+            return "9.15";
         }        
     }
 
@@ -5658,7 +5694,13 @@ class PayrollGenerationController extends Controller
                                 <td>' . $employee_rs->old_emp_code . '</td>
 								<td>' . $employee_rs->emp_fname . ' ' . $employee_rs->emp_mname . ' ' . $employee_rs->emp_lname . '</td>
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request['year'] . '"></td>
-								<td><input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;" value="'.$applicable_basic.'" id="basic_' . $emcode->emp_code . '" onkeyup="calBonus('.$emcode->emp_code.','.$currentBonusRate.')"></td>
+
+                                <td>
+                                    <input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;" 
+                                    value="'.$applicable_basic.'" id="basic_' . $emcode->emp_code . '" 
+                                    onkeyup="calBonus(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\','.$currentBonusRate.')">
+                                </td>
+                                
                                 <td><input type="number" step="any" class="form-control sm_bonus" name="bonus' . $emcode->emp_code . '" style="width:100%;" value="'.$calculate_bonus.'" id="bonus_' . $emcode->emp_code . '" readonly></td>
                                 <td><input type="number" step="any" class="form-control sm_exgratia" name="exgratia' . $emcode->emp_code . '" style="width:100%;" value="0" id="exgratia_' . $emcode->emp_code . '"></td>
                                 <td><input type="number" step="any" class="form-control sm_deduction" name="deduction' . $emcode->emp_code . '" style="width:100%;" value="0" id="deduction_' . $emcode->emp_code . '"></td>';
@@ -5783,7 +5825,13 @@ class PayrollGenerationController extends Controller
                 <td>' . $emcode->old_emp_code . '</td>
                 <td>' . $emcode->emp_fname . ' ' . $emcode->emp_mname . ' ' . $emcode->emp_lname . '</td>
                 <td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request['year'] . '"></td>
-                <td><input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;" value="'.$emcode->basic.'" id="basic_' . $emcode->emp_code . '" onkeyup="calBonus('.$emcode->emp_code.','.$currentBonusRate.')"></td>
+
+                <td>
+                    <input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;" 
+                    value="'.$emcode->basic.'" id="basic_' . $emcode->emp_code . '" 
+                    onkeyup="calBonus(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\','.$currentBonusRate.')">
+                </td>
+
                 <td><input type="number" step="any" class="form-control sm_bonus" name="bonus' . $emcode->emp_code . '" style="width:100%;" value="'.$emcode->bonus.'" id="bonus_' . $emcode->emp_code . '" readonly></td>
                 <td><input type="number" step="any" class="form-control sm_exgratia" name="exgratia' . $emcode->emp_code . '" style="width:100%;" value="'.$emcode->exgratia.'" id="exgratia_' . $emcode->emp_code . '"></td>
                 <td><input type="number" step="any" class="form-control sm_deduction" name="deduction' . $emcode->emp_code . '" style="width:100%;" value="'.$emcode->deduction.'" id="deduction_' . $emcode->emp_code . '"></td>';
