@@ -696,7 +696,7 @@ class PayrollGenerationController extends Controller
                 ->where('employees.emp_status', '!=', 'TEMPORARY')
                 ->where('employees.emp_status', '!=', 'EX-EMPLOYEE')
                 ->where('employees.emp_status', '!=', 'EX- EMPLOYEE')
-            // ->where('employees.emp_code', '=', '7218')
+                // ->where('employees.emp_code', '=', '0937')
                 ->whereNotIn('employees.emp_code', $process_attendance_emp)
                 // ->whereNotIn('employees.emp_code', $already_payroll_generated)
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
@@ -1005,7 +1005,9 @@ class PayrollGenerationController extends Controller
                     }
 
                     //hra
+                    //dd($process_payroll[3][$j]->rate_id);
                     if ($process_payroll[3][$j]->rate_id == '3') {
+                        // dd($process_payroll[0]);
                         if ($process_payroll[0]->hra == '1') {
                             if ($process_payroll[3][$j]->inpercentage != '0') {
                                 $emp_hra = ($calculate_basic_salary * $process_payroll[3][$j]->inpercentage / 100);
@@ -1323,6 +1325,7 @@ class PayrollGenerationController extends Controller
                                 $valc = ($calculate_basic_salary * $process_payroll[3][$j]->inpercentage / 100);
                                 $valc = round($valc,2);
                                 $d_pfint = $valc;
+                                // dd($d_pfint);
                             } else {
                                 if (($calculate_basic_salary <= $process_payroll[3][$j]->max_basic) && ($calculate_basic_salary >= $process_payroll[3][$j]->min_basic)) {
                                     $d_pfint = $process_payroll[3][$j]->inrupees;
