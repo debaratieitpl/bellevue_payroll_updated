@@ -29,7 +29,7 @@ Loan Information System - Loan Report
 	}
     .card-icon form {
     padding: 10px 0;
-    
+
 }
 </style>
 <!-- Content -->
@@ -57,7 +57,7 @@ Loan Information System - Loan Report
 			<div class="main-card">
 				<div class="card">
                     <div class="card-header">
-                       
+
                         @include('include.messages')
                     </div>
 
@@ -128,7 +128,7 @@ Loan Information System - Loan Report
 											<th style="width:5%;">Loan ID</th>
 											<th style="width:5%;">Employee type</th>
 											<th style="width:5%;">PF Number</th>
-											
+
 											<th style="width:5%;">PF Loan Outstanding </th>
 											<th style="width:5%;">PF Loan Deduction </th>
 											<th style="width:5%;">PF Interest </th>
@@ -142,15 +142,15 @@ Loan Information System - Loan Report
 									<tbody>
 										<?php //print_r($result);?>
                                         @php
-                                            
+
                                             $total_loan_amount=0;
-                                           
+
                                             $total_balance=0;
                                             $total_installment=0;
                                             $total_pf_interest=0;
                                             $total_deduction=0;
                                             $total_loanadjust=0;
-                                            
+
                                         @endphp
 
                                         @foreach ($result as $index=>$record)
@@ -162,37 +162,37 @@ Loan Information System - Loan Report
                                             }else{
                                                 $balance = $record->loan_amount-$record->recoveries;
                                             }
-                                            
+
                                             $total_loan_amount=$total_loan_amount+$record->loan_amount;
                                             $total_installment=$total_installment+$record->payroll_deduction;
                                             $total_pf_interest=$total_pf_interest+$record->pf_iterest;
                                             $total_deduction=$total_deduction+$record->payroll_deduction+$record->pf_iterest;
-                                           
+
                                             $total_balance=$total_balance+$balance;
                                             $total_loanadjust=$total_loanadjust+$record->adjust_amount;
 
 											$pf_interest=$record->pf_iterest;
-                                            
+
                                         @endphp
 
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
-											
+
 											<td>{{$record->old_emp_code}}</td>
 											<td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
 											<td>{{ucwords($record->loan_id)}}</td>
 											<td>{{ucwords($record->emp_status)}}</td>
 											<td>{{ucwords($record->emp_pf_no)}}</td>
 											<td>{{$record->loan_amount}}</td>
-											
+
 											<td>{{$record->payroll_deduction}}</td>
-											
+
 											<td>{{$pf_interest}}</td>
 											<td>{{ number_format($record->payroll_deduction+$pf_interest,2) }}</td>
 											<td>{{ number_format($balance,2) }}</td>
 											<td>{{ number_format($record->adjust_amount,2) }}</td>
 											<td>{{ number_format($balance-$record->adjust_amount,2) }}</td>
-											
+
                                         </tr>
                                         @endforeach
 									</tbody>
@@ -201,11 +201,11 @@ Loan Information System - Loan Report
 											<td colspan="6" style="font-weight:700;">
 											Grand Total
 											</td>
-											
+
 											<td>
                                                 <div class="total_loan_amount" style="font-weight:700;">{{number_format($total_loan_amount,2)}}</div>
                                             </td>
-											
+
 											<td>
                                                 <div class="total_balance" style="font-weight:700;">{{number_format($total_installment,2)}}</div>
                                             </td>
@@ -224,9 +224,9 @@ Loan Information System - Loan Report
 											<td>
                                                 <div class="total_balance" style="font-weight:700;">{{number_format(($total_balance-$total_loanadjust),2)}}</div>
                                             </td>
-											
-											
-                                            
+
+
+
 										</tr>
 									</tfoot>
 
@@ -252,15 +252,15 @@ Loan Information System - Loan Report
 									</thead>
 
 									<tbody>
-										
+
                                         @php
-                                            
+
                                             $total_loan_amount=0;
-                                           
+
                                             $total_balance=0;
                                             $total_loanadjust=0;
 											$total_installment=0;
-                                            
+
                                         @endphp
 
                                         @foreach ($result as $index=>$record)
@@ -271,13 +271,13 @@ Loan Information System - Loan Report
                                             }else{
                                                 $balance = $record->loan_amount-$record->recoveries;
                                             }
-                                            
+
                                             $total_loan_amount=$total_loan_amount+$record->loan_amount;
-                                           
+
                                             $total_balance=$total_balance+$balance;
 											$total_installment=$total_installment+$record->payroll_deduction;
 											$total_loanadjust=$total_loanadjust+$record->adjust_amount;
-                                            
+
                                         @endphp
 
                                         <tr>
@@ -291,7 +291,7 @@ Loan Information System - Loan Report
 											<td>{{ number_format($balance,2) }}</td>
 											<td>{{ number_format($record->adjust_amount,2) }}</td>
 											<td>{{ number_format($balance-$record->adjust_amount,2) }}</td>
-											
+
                                         </tr>
                                         @endforeach
 									</tbody>
@@ -300,11 +300,11 @@ Loan Information System - Loan Report
 											<td colspan="5" style="font-weight:700;">
 											Grand Total
 											</td>
-											
+
 											<td>
                                                 <div class="total_loan_amount" style="font-weight:700;">{{number_format($total_loan_amount,2)}}</div>
                                             </td>
-											
+
 											<td>
                                                 <div class="total_balance" style="font-weight:700;">{{number_format($total_installment,2)}}</div>
                                             </td>
@@ -317,14 +317,14 @@ Loan Information System - Loan Report
 											<td>
                                                 <div class="total_balance" style="font-weight:700;">{{number_format(($total_balance-$total_loanadjust),2)}}</div>
                                             </td>
-											
-											
-                                            
+
+
+
 										</tr>
 									</tfoot>
 
 
-								</table>							
+								</table>
 							@endif
 						</div>
 					</div>

@@ -590,7 +590,7 @@ Route::post('loans/save-loan', 'Loan\LoanController@saveLoan');
 Route::get('loans/edit-loan/{id}', 'Loan\LoanController@editLoan');
 Route::post('loans/update-loan', 'Loan\LoanController@updateLoan');
 
-//loan export import 
+//loan export import
 Route::post('loans/xls-export-loan-list', 'Loan\LoanController@loan_list_xlsexport');
 Route::post('loans/xls-import-loan', 'Loan\LoanController@import_loan');
 

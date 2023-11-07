@@ -39,7 +39,7 @@ class LoanController extends Controller
                 ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'loans.*',
                 DB::raw('(SELECT  Sum(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id =  loans.id) as balance'))
                 //->where('loans.month_yr', $request->month)
-                //->where('loans.emp_code', 7210)        
+                //->where('loans.emp_code', 7210)
                 ->orderBy('loans.id', 'desc')
                 ->get();
             //dd($data);
@@ -245,7 +245,7 @@ class LoanController extends Controller
                 Session::flash('message', 'Something Wrong');
                 return redirect()->back();
             }
-           
+
         } else {
             return redirect('/');
         }
@@ -438,7 +438,7 @@ class LoanController extends Controller
             //     ->groupBy('employees.emp_code')
             //     ->get();
 
-          
+
 
 
 
@@ -630,7 +630,7 @@ class LoanController extends Controller
                 ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
                 ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
                 ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
-                ->where('member_id', '=', $email)  
+                ->where('member_id', '=', $email)
                 ->get();
 
             //dd($request->all());
