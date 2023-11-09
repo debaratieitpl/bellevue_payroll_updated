@@ -955,7 +955,7 @@ if ($edu->qualification == $educ->id) {
 				<div class="col-md-3">
 				<label>APF Deduction Rate (%) <span>(*)</span></label>
 				<input type="number" step="any" id="emp_apf_percent" name="emp_apf_percent" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->apf_percent;}?>" class="form-control" required>
-                  
+
 
 				</div>
 
@@ -2105,7 +2105,7 @@ if ($value->id == '1') {
 
 			});
 		}
-		
+
 
 		function calculateDor(){
 			var emp_dob = $("#emp_dob").val();

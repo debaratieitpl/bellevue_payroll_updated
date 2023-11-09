@@ -269,10 +269,10 @@ class EmployeeController extends Controller
                 Session::flash('message', 'Something Wrong');
                 return redirect()->back();
             }
-           
+
         } else {
             return redirect('/');
-        } 
+        }
     }
     public function paydetailimport(Request $request){
         if (!empty(Session::get('admin'))) {
@@ -284,19 +284,19 @@ class EmployeeController extends Controller
                 Session::flash('message', 'Something Wrong');
                 return redirect()->back();
             }
-           
+
         } else {
             return redirect('/');
-        } 
+        }
     }
     public function smapleExport(Request $request){
         if (!empty(Session::get('admin'))) {
 
             return Excel::download(new SampleEmployeeExport(), 'Employees-sample-data.xlsx');
-           
+
         } else {
             return redirect('/');
-        } 
+        }
     }
 
     public function viewAddEmployee()
@@ -310,8 +310,8 @@ class EmployeeController extends Controller
                 ->where('member_id', '=', $email)
                 ->get();
 
-            $data['employee_code'] = rand(1000, 10000);
-
+            //$data['employee_code'] = rand(1000, 10000);
+            $data['employee_code'] = $this->generateUniqueEmployeeCode();
             $data['department'] = Department::where('department_status', '=', 'active')->get();
             $data['salutations'] = Salutation::pluck('name'); //dd($data['salutations']);
             $data['designation'] = Designation::where('designation_status', '=', 'active')->get();
@@ -351,11 +351,18 @@ class EmployeeController extends Controller
         //return view('pis/employee-master')->with(['company'=>$company,'employee'=>$employee_type]);
     }
 
+    private function generateUniqueEmployeeCode()
+    {
+        do {
+            $code = str_pad(mt_rand(1000, 9999), 4, '0', STR_PAD_LEFT);
+        } while (Employee::where('emp_code', $code)->exists());
+
+        return $code;
+    }
+
     public function saveEmployee(Request $request)
     {
         if (!empty(Session::get('admin'))) {
-
-            //  dd($request->all());
 
             date_default_timezone_set('Asia/Kolkata');
 
@@ -579,7 +586,7 @@ class EmployeeController extends Controller
                 Session::flash('message', 'Record has been successfully updated');
                 return redirect('employees');
             } else {
-                //insert new data 
+                //insert new data
                 $retiredate = $request->emp_retirement_date;
                 $date = str_replace('/', '-', $retiredate);
                 $retirementdate = date_create($date);
@@ -622,7 +629,7 @@ class EmployeeController extends Controller
                 $pay['created_at'] = date('Y-m-d h:i:s');
                 $pay['updated_at'] = date('Y-m-d h:i:s');
                 //dd($request->name_earn);
- 
+
                 //calculate the total all earning values , accept hra(hra not calculate)
                 if ($request->name_earn && count($request->name_earn) != 0) {
                     $arr_un = count(array_unique($request->name_earn));
@@ -630,22 +637,22 @@ class EmployeeController extends Controller
                         Session::flash('error', 'Pay Structure Earning Head Must be unique');
                         return redirect('employees');
                     }
-                
+
                     $totalEarningValue = 0; // Initialize total earning value
-                
+
                     for ($i = 0; $i < count($request->name_earn); $i++) {
                         if ($request->name_earn[$i] != '') {
                             // Check if the earning name is not 'hra'
                             if ($request->name_earn[$i] !== 'hra') {
                                 $totalEarningValue += intval($request->value[$i]);
                             }
-                
+
                             $pay[$request->name_earn[$i]] = $request->value[$i];
                             $pay[$request->name_earn[$i] . '_type'] = $request->head_type[$i];
                         }
                     }
                 }
-                
+
                 //dd($request->name_deduct);
                 if ($request->name_deduct && count($request->name_deduct) != 0) {
                     $arr_un = count(array_unique($request->name_deduct));
@@ -676,15 +683,15 @@ class EmployeeController extends Controller
                         }else{
                          $pay['pf'] ="1800";
                         }
-                        
+
                     } else {
                         $pay['pf'] ="0";
                     }
-    
+
                   }
 
               }
-             
+
 
                 $data = array(
                     'emp_code' => $request->emp_code,
@@ -1069,16 +1076,16 @@ class EmployeeController extends Controller
                     Session::flash('error', 'Pay Structure Earning Head Must be unique');
                     return redirect('employees');
                 }
-            
+
                 $totalEarningValue = 0; // Initialize total earning value
-            
+
                 for ($i = 0; $i < count($request->name_earn); $i++) {
                     if ($request->name_earn[$i] != '') {
                         // Check if the earning name is not 'hra'
                         if ($request->name_earn[$i] !== 'hra') {
                             $totalEarningValue += intval($request->value[$i]);
                         }
-            
+
                         $payupdate[$request->name_earn[$i]] = $request->value[$i];
                         $payupdate[$request->name_earn[$i] . '_type'] = $request->head_type[$i];
                     }
@@ -1108,7 +1115,7 @@ class EmployeeController extends Controller
           if(isset($payupdate['pf_type']) && $payupdate['pf_type'] == 'F'){
             if(isset($request->emp_basic_pay) && $request->emp_basic_pay <= 15000) {
                 if (array_key_exists('pf', $payupdate)) {
-                    
+
                     $rate_details = Rate_details::leftJoin('rate_masters', 'rate_masters.id', '=', 'rate_details.rate_id')
                 ->select('rate_details.*', 'rate_masters.head_name', 'rate_masters.head_type')
                 // ->where('rate_details.from_date', '>=', date('Y-01-01'))
@@ -1124,7 +1131,7 @@ class EmployeeController extends Controller
                     }else{
                      $payupdate['pf'] ="1800";
                     }
-                    
+
                 } else {
                     $payupdate['pf'] ="0";
                 }

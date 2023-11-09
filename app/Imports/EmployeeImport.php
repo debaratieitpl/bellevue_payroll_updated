@@ -61,7 +61,7 @@ class EmployeeImport implements WithHeadingRow, ToModel
     }
     private function generateUniqueEmployeeCode()
     {
-        $code = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        $code = str_pad(mt_rand(1000, 9999), 4, '0', STR_PAD_LEFT);
 
         // Check if the generated code is unique in the database
         while (\DB::table('employee')->where('emp_code', $code)->exists()) {

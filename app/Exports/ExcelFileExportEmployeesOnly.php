@@ -11,21 +11,22 @@ use DB;
 
 class ExcelFileExportEmployeesOnly implements FromCollection, WithHeadings
 {
-    
-    
+
+
     /**
      * @return \Illuminate\Support\Collection
      */
     public function __construct()
     {
-        
-       
-        
+
+
+
     }
     public function collection()
     {
+        //dd('check');
         $record_rs = Employee::select('employees.*')
-                        
+
                         ->where('employees.emp_status', '!=', 'EX-EMPLOYEE')
                         ->where('employees.emp_status', '!=', 'EX- EMPLOYEE')
                         ->where('employees.emp_status', '!=', 'TEMPORARY')
@@ -35,7 +36,7 @@ class ExcelFileExportEmployeesOnly implements FromCollection, WithHeadings
 
         $h = 1;
         $collection_array = array();
-        
+
         //dd($record_rs[0]);
 
         if (count($record_rs) != 0) {
@@ -66,7 +67,7 @@ class ExcelFileExportEmployeesOnly implements FromCollection, WithHeadings
                     'Bank'=>$record->master_bank_name,
                     'IFSC Code'=>$record->emp_ifsc_code,
                     'Account No.'=>$record->emp_account_no,
-                    
+
                     'emp_pf_inactuals'=>$record->emp_pf_inactuals,
                     'emp_pension'=>$record->emp_pension,
 
@@ -105,7 +106,7 @@ class ExcelFileExportEmployeesOnly implements FromCollection, WithHeadings
             'Bank',
             'IFSC Code',
             'Account No.',
-            
+
             'emp_pf_inactuals',
             'emp_pension',
 
