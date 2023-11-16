@@ -43,10 +43,10 @@
                         <!-- <div class="card-header"> <strong>Employeewise Payslip</strong> </div> -->
                         @include('include.messages')
                         <div class="card-body card-block">
-                            
+
                             <!--Search Payslip-->
                             <form style="padding: 5px 10px 15px 20px !important;" action="{{ url('payroll/vw-employeewise-view-payslip') }}" method="post">
-                              <h5 class="card-title">Employee Wise Payslip</h5>  
+                              <h5 class="card-title">Employee Wise Payslip</h5>
                               <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <div class="row form-group">
                                     <div class="col-md-4">

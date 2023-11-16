@@ -224,7 +224,7 @@ Payroll Information System-Payroll Generation
                                     <input type="text" name="emp_tour_leave" id="emp_tour_leave" readonly
                                         class="form-control">
                                 </div>
-                                
+
                             </div>
 
                             <div class="row form-group">
@@ -262,7 +262,7 @@ Payroll Information System-Payroll Generation
                                 </div>
                                 <div class="col-md-3">
                                     <label>CONV</label>
-                                    <input type="number" id="emp_conv" name="emp_conv" class="form-control" 
+                                    <input type="number" id="emp_conv" name="emp_conv" class="form-control"
                                         onblur="OnblurCalculateAddition();"  value="0" step="any">
                                 </div>
                                 <div class="col-md-3">
@@ -465,7 +465,9 @@ function getEmpCode() {
     var d = new Date(month_yr);
 
     var currentMonth = (d.getMonth() + 1);
-    var monthCount = currentMonth.toString().length;
+
+    var monthCount = currentMonth;
+    //var monthCount = currentMonth.toString().length;
 
     var current_month_days = new Date(d.getFullYear(), (d.getMonth() + 1), 0).getDate();
     //alert(current_month_days);
@@ -498,7 +500,7 @@ function getEmpCode() {
                 alert('Please generate attendance for the month before generating payroll.');
                 return;
             }
-            
+
 
             var basicpay = obj[0].basic_pay;
             var apf_rate = obj[0].apf_percent;
@@ -766,7 +768,7 @@ function getEmpCode() {
                             emp_hra=obj[0].hra;
                             var perDayHRA=emp_hra / current_month_days;
                             perDayHRA=Math.round((perDayHRA + Number.EPSILON) * 100) / 100;
-                            
+
                             var days_present=no_of_working_days - no_of_days_absent;
                             console.log('Perday HRA='+perDayHRA);
                             var calculate_hra =eval(perDayHRA)*eval(days_present);
@@ -780,12 +782,12 @@ function getEmpCode() {
                         }else{
 
                             if (obj[3][j].inpercentage != '0') {
-    
+
                                 emp_hra = (basic * obj[3][j].inpercentage / 100);
                                 emp_hra = Math.round(emp_hra);
                                 $("#emp_hra").val(emp_hra);
                             } else {
-    
+
                                 if ((basic <= obj[3][j].max_basic) && (basic >= obj[3][j].min_basic)) {
                                         $("#emp_hra").val(obj[3][j].inrupees);
                                 }else{
@@ -834,7 +836,7 @@ function getEmpCode() {
                             }
 
                         }
-                       
+
                     } else if (obj[0].others_alw != null && obj[0].others_alw != '') {
                         // $("#emp_others_alw").val(obj[0].others_alw);
                         // $("#emp_others_alw").prop("readonly", false);
@@ -1099,7 +1101,7 @@ function getEmpCode() {
                     if (obj[0].pf == '1') {
                         if (obj[3][j].inpercentage != '0') {
                             emp_pf = Math.round(basic * obj[3][j].inpercentage / 100);
-                            
+
                             $("#emp_pf").val(emp_pf);
 
                             // $("#emp_pf").val('1800');
@@ -1417,7 +1419,7 @@ function getEmpCode() {
                     }
 
 
-                    
+
 
                 } else if (obj[3][j].rate_id == '23') {
                     if (obj[0].hrd == '1') {
@@ -1590,7 +1592,7 @@ function getEmpCode() {
             var gross_salary = parseFloat(basic) + parseFloat($('#emp_da').val()) + parseFloat($('#emp_vda').val())+ parseFloat($('#emp_hra').val())+ parseFloat($('#emp_tiff_alw').val())+ parseFloat($('#emp_others_alw').val())+ parseFloat($('#emp_conv').val())+ parseFloat($('#emp_medical').val()) + parseFloat($('#emp_misc_alw').val())+parseFloat($('#emp_over_time').val())+ parseFloat($('#emp_bouns').val()) + parseFloat($('#emp_leave_inc').val())+ parseFloat($('#emp_hta').val())+ parseFloat($('#other_addition').val()) ;
 
                 gross_salary = Math.round((gross_salary + Number.EPSILON) * 100) / 100;
-                
+
                 console.log('Gross='+gross_salary);
 
             for (var j = 0; j < obj[3].length; j++) {
@@ -1658,7 +1660,7 @@ function getEmpCode() {
                             if(obj[0].pf>0){
                                 console.log('-----PF greater zero----');
                                 console.log('-----basic----'+basic);
-                                
+
                                 if (obj[3][j].inpercentage != '0') {
                                     if(basic>15000){
                                         if(obj[0].emp_pf_inactuals=='Y'){
@@ -1684,15 +1686,15 @@ function getEmpCode() {
                                                 console.log('Normal calculation less than 15k.');
                                                 //emp_pf = Math.round(basic * obj[3][j].inpercentage / 100);
                                             }
-        
+
                                         }
-        
+
                                         $("#emp_pf").val(emp_pf);
                                     }
                                     //$("#emp_pf").val('1800');
                                     console.log('hello percent LP');
-        
-        
+
+
                                 } else {
                                     console.log('hello not percent');
                                     if ((basic <= obj[3][j].max_basic) && (basic >= obj[3][j].min_basic)) {
@@ -1725,12 +1727,12 @@ function getEmpCode() {
                         if(emp_pf>0){
                             var perDayPF=emp_pf / current_month_days;
                             perDayPF=Math.round((perDayPF + Number.EPSILON) * 100) / 100;
-                            
+
                             var days_present=no_of_working_days - no_of_days_absent;
                             console.log('Perday PF='+perDayPF);
                             var calculate_pf =eval(perDayPF)*eval(days_present);
                             console.log('PF Present days='+days_present);
-                           
+
 
                             emp_pf = Math.round(calculate_pf);
                             console.log('PF Calc='+emp_pf);
@@ -1771,7 +1773,7 @@ function getEmpCode() {
             $("#emp_net_salary").val(net_salary);
 
             OnblurCalculateAddition();
-            
+
 
         }
 

@@ -364,6 +364,8 @@ class EmployeeController extends Controller
     {
         if (!empty(Session::get('admin'))) {
 
+             dd($request->all());
+
             date_default_timezone_set('Asia/Kolkata');
 
             if (strtotime($request->emp_dob) > strtotime(date('Y-m-d'))) {
@@ -603,9 +605,15 @@ class EmployeeController extends Controller
                     }
                 }
 
+                //education load dynamically
                 if (isset($request->discipline)) {
                     for ($i = 0; $i < count($request->discipline); $i++) {
                         if ($request->qualification[$i] != '') {
+                            // Handle image upload
+                            $image = $request->file('aimage')[$i];
+                            $imageName = time() . '_' . $image->getClientOriginalName();
+                            $image->move(public_path('education'), $imageName);
+
                             $education[$i] = array(
                                 'employee_code' => $request->emp_code,
                                 'qualification' => $request->qualification[$i],
@@ -615,10 +623,15 @@ class EmployeeController extends Controller
                                 'year_of_passing' => $request->year_of_passing[$i],
                                 'percentage' => $request->percentage[$i],
                                 'grade' => $request->grade[$i],
+                                'aimage' => 'education/' . $imageName,
                             );
                         }
                     }
                 }
+
+                //professional record dynamivally
+                //personal record dynamivally
+                //misc record dynamivally
 
                 // print_r($education);
                 // die();
@@ -724,6 +737,7 @@ class EmployeeController extends Controller
                     'marital_date' => date('Y-m-d', strtotime($request->marital_date)),
                     'emp_doj' => $request->emp_doj,
                     'emp_retirement_date' => $retire_date,
+                    'emp_retirement_bvc_date' => date("Y-m-d", strtotime($request->emp_retirement_bvc_date)),
                     'emp_next_increament_date' => date("Y-m-d", strtotime($request->emp_next_increment_date)),
                     'emp_status' => $request->emp_status,
                     'emp_shift_group' => $request->emp_sift_grp,
@@ -826,7 +840,7 @@ class EmployeeController extends Controller
                     'emp_bonus' => $request->emp_bonus,
                 );
                 //dd($totalEarningValue);
-                //dd($data);
+                dd($data);
                 //dd($education);
                 //dd($pay);
                 Employee_pay_structure::insert($pay);
@@ -2121,7 +2135,6 @@ class EmployeeController extends Controller
 
     public function ajaxAddRow($row)
     {
-
         $data['education'] = Education_master::get();
         // $data['education'] = Education_master::get();
         $row = $row + 1;
@@ -2148,10 +2161,75 @@ class EmployeeController extends Controller
         <td><input type="text" name="year_of_passing[]" value="" class="form-control"></td>
         <td><input type="text" name="percentage[]" value="" class="form-control"></td>
         <td><input type="text" name="grade[]" value="" class="form-control"></td>
+        <td><input type="file" name="aimage[]" value="" class="form-control"></td>
 
 
           <td><button class="btn-success" style="margin-bottom: 5px;" type="button" id="add' . $row . '" onClick="addnewrow(' . $row . ')" data-id="' . $row . '"> <i class="ti-plus"></i> </button>
          <button class="btn-danger deleteButton" style="background-color:#E70B0E; border-color:#E70B0E;" type="button" id="del' . $row . '"  onClick="delRow(' . $row . ')"> <i class="ti-minus"></i> </button></td>
+      </tr>';
+
+        echo $result;
+    }
+
+    public function ajaxAddRowDoc($row)
+    {
+        $row = $row + 1;
+
+        $result = ' <tr class="itemslotdoc" id="' . $row . '" >
+					    <td>' . $row . '</td>
+
+        <td><select class="form-control" name="pdoc[]">
+                <option>Aadhar Card</option>
+                <option>Voter Card</option>
+                <option>Pan Card</option>
+                <option>Driving License</option>
+                <option>Passport</option>
+            </select>
+        </td>
+        <td><input type="file" name="pimage[]" value="" class="form-control"></td>
+          <td><button class="btn-success" style="margin-bottom: 5px;" type="button" id="adddoc' . $row . '" onClick="addnewrowdoc(' . $row . ')" data-id="' . $row . '"> <i class="ti-plus"></i> </button>
+         <button class="btn-danger deleteButtondoc" style="background-color:#E70B0E; border-color:#E70B0E;" type="button" id="del' . $row . '"  onClick="delRowDoc(' . $row . ')"> <i class="ti-minus"></i> </button></td>
+      </tr>';
+
+        echo $result;
+    }
+
+    public function ajaxAddRowPrec($row)
+    {
+        $row = $row + 1;
+
+        $result = ' <tr class="itemslotprec" id="' . $row . '" >
+					    <td>' . $row . '</td>
+
+                        <td><input type="text" name="precqualification[]" value="" class="form-control"></td>
+                        <td><input type="text" name="precdesignation[]" value="" class="form-control"></td>
+                        <td><input type="date" name="precfromdate[]" value="" class="form-control"></td>
+                        <td><input type="date" name="prectodate[]" value="" class="form-control"></td>
+                        <td><input type="file" name="precimage[]" value="" class="form-control"></td>
+                        <td><button class="btn-success" style="margin-bottom: 5px;" type="button" id="addprec' . $row . '" onClick="addnewrowprec(' . $row . ')" data-id="' . $row . '"> <i class="ti-plus"></i> </button>
+                        <button class="btn-danger deleteButtonprec" style="background-color:#E70B0E; border-color:#E70B0E;" type="button" id="del' . $row . '"  onClick="delRowprec(' . $row . ')"> <i class="ti-minus"></i> </button></td>
+      </tr>';
+
+        echo $result;
+    }
+    public function ajaxAddRowMrec($row)
+    {
+        $row = $row + 1;
+
+        $result = ' <tr class="itemslotmrec" id="' . $row . '" >
+					    <td>' . $row . '</td>
+
+                        <td>
+                        <select name="mreccategory[]" id="" class="form-control">
+                            <option value="">Select</option>
+                            <option>Traning</option>
+                            <option>Legal</option>
+                            <option>Others</option>
+                        </select>
+                        </td>
+                        <td><input type="file" name="mrecimage[]" value="" class="form-control"></td>
+                        <td><button class="btn-success" style="margin-bottom: 5px;" type="button" id="addmrec' . $row . '" onClick="addnewrowmrec(' . $row . ')" data-id="' . $row . '"> <i class="ti-plus"></i> </button>
+                        <button class="btn-danger deleteButtonmrec" style="background-color:#E70B0E; border-color:#E70B0E;" type="button" id="del' . $row . '"  onClick="delRowmrec(' . $row . ')"> <i class="ti-minus"></i> </button></td>
       </tr>';
 
         echo $result;

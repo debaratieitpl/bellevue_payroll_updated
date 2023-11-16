@@ -402,6 +402,10 @@ Route::get('settings/get-add-row-item/{row}', 'Employee\EmployeeController@ajaxA
 Route::get('settings/get-add-row-earn/{row}', 'Employee\EmployeeController@ajaxAddRowearn');
 Route::get('settings/get-add-row-deduct/{row}', 'Employee\EmployeeController@ajaxAddRowdeduct');
 Route::get('settings/get-earn/{headname}/{val}/{emp_basic_pay}', 'Employee\EmployeeController@ajaxAddvalue');
+// new requiremwnt add
+Route::get('settings/get-add-row-docs/{row}', 'Employee\EmployeeController@ajaxAddRowDoc');
+Route::get('settings/get-add-row-prec/{row}', 'Employee\EmployeeController@ajaxAddRowPrec');
+Route::get('settings/get-add-row-mrec/{row}', 'Employee\EmployeeController@ajaxAddRowMrec');
 
 Route::get('attendance/get-employee-bank/{emp_bank_id}', 'Employee\EmployeeController@empBankID');
 Route::get('attendance/get-employee-bank-ifsc-code/{emp_branch_id}', 'Employee\EmployeeController@empBranchID');

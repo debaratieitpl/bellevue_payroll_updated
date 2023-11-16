@@ -125,7 +125,7 @@ class EmployeeWisePayslipController extends Controller
                 ->get();
 
             $data['result'] = '';
-            
+
             $data['employeeslist'] = Employee::get();
             $Payroll_details_rs = '';
 
@@ -138,7 +138,7 @@ class EmployeeWisePayslipController extends Controller
 
     public function showEmployeePayCard(Request $request){
 
-       
+
 
         if (!empty(Session::get('admin'))) {
 
@@ -150,8 +150,8 @@ class EmployeeWisePayslipController extends Controller
                 ->where('member_id', '=', $email)
                 ->get();
 
-           // dd($request->all());          
-            
+           // dd($request->all());
+
             $data['from_my']=$from_my=$request->monthyr_from;
             $data['to_my']= $to_my=$request->monthyr_to;
 
@@ -168,10 +168,10 @@ class EmployeeWisePayslipController extends Controller
 
             $data['empInfo']=$empInfo=Employee::where('emp_code','=',$emp_code)->first();
 
-            
 
 
-            
+
+
 
             return view('payroll.employee-paycard-details', $data);
         } else {

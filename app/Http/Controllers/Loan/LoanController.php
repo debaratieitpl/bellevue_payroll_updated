@@ -638,7 +638,7 @@ class LoanController extends Controller
             $loanDetails=Loan::where('id', '=', $request->id)->first();
             $loanRecoveries=LoanRecovery::where('loan_id','=',$request->id)->sum('amount');
             $loan_balance=$loanDetails->loan_amount-$loanRecoveries;
-            $payroll_month=date('m/Y');
+            $payroll_month=$request->month_yr;
 
             // if($loan_balance>0 && $loanDetails->adjust_date==null){
             if($loan_balance>0 && $request->loan_balance <=$loan_balance){

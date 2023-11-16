@@ -93,7 +93,7 @@ Loan Information System - Loan
                                         <input type="hidden" name="no_installments" id="no_installments" value="{{ old('no_installments') }}" class="form-control" readonly>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="deduction">Deduction <span>(*)</span></label>
@@ -113,17 +113,42 @@ Loan Information System - Loan
                                         @else
                                             <input type="text" name="loan_balance" id="loan_balance" value="{{$loan_balance}}" class="form-control">
                                         @endif
-                                        
+
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="adjust_remarks">Adjustment Remarks</label>
-                                        
-                                        <textarea name="adjust_remarks" id="adjust_remarks"  rows="3" class="form-control" required></textarea>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="loan_balance">Payout Month</label>
+                                            <select class="form-control" name="month_yr" id="month_yr" required>
+
+                                                <option value="" selected disabled> Select </option>
+                                                <?php
+                                                    for ($yy = 2022; $yy <= date('Y'); $yy++) {
+                                                        for ($mm = 1; $mm <= 12; $mm++) {
+                                                            if ($mm < 10) {
+                                                                $month_yr = '0' . $mm . "/" . $yy;
+                                                            } else {
+                                                                $month_yr = $mm . "/" . $yy;
+                                                            }
+                                                            ?>
+                                                            <option value="<?php echo $month_yr; ?>" @if(isset($month_yr_new) &&
+                                                            $month_yr_new==$month_yr) selected @endif><?php echo $month_yr; ?></option>
+                                                            <?php
+
+                                                        }
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="adjust_remarks">Adjustment Remarks</label>
+
+                                            <textarea name="adjust_remarks" id="adjust_remarks"  rows="3" class="form-control" required></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     @if ($loan_details->loan_type=="PF")
@@ -131,7 +156,7 @@ Loan Information System - Loan
                                     @else
                                      <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i>&nbsp;Adjust</button>
                                     @endif
-                                    
+
                                 </div>
                             </div>
 							<p>(*) marked fields are mandatory</p>

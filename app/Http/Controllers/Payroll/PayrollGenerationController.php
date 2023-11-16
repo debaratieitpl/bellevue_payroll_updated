@@ -32,7 +32,7 @@ use App\Models\Masters\BonusRate;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExcelFileExportPayrollEntry;
 use App\Exports\MonthlyEmployeeCooperativeExport;
-use App\Imports\MonthlyEmployeeCooperativeImport; 
+use App\Imports\MonthlyEmployeeCooperativeImport;
 use App\Exports\MonthlyEmployeeTaxExport;
 use App\Imports\MonthlyEmployeeTaxImport;
 use App\Exports\MonthlyEmployeeOvertimeExport;
@@ -199,7 +199,7 @@ class PayrollGenerationController extends Controller
 
             $data['payroll_rs'] = PayrollDummy::join('employees', 'employees.emp_code', '=', 'payroll_dummies.employee_id')
                 ->select('employees.old_emp_code', 'payroll_dummies.*')
-                
+
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
 
@@ -623,7 +623,7 @@ class PayrollGenerationController extends Controller
                 ->where('process_attendances.no_sal_adjust_days', '>', 0)
                 ->where('process_attendances.month_yr', '=', $request['month_yr'])
                 ->pluck('employee_code');
-           
+
 
             //Get Monthly Attandance count
             $process_attendance_count = Process_attendance::join('employees', 'employees.emp_code', '=', 'process_attendances.employee_code')
@@ -635,7 +635,7 @@ class PayrollGenerationController extends Controller
                  ->whereNotIn('process_attendances.employee_code', $process_attendance_emp)
                 // ->whereNotIn('process_attendances.employee_code', $already_payroll_generated)
                 ->count();
-               
+
 
             //Get Monthly Cooperative count
             $process_cooperative_count = MonthlyEmployeeCooperative::join('employees', 'employees.emp_code', '=', 'monthly_employee_cooperatives.emp_code')
@@ -647,8 +647,8 @@ class PayrollGenerationController extends Controller
                  ->whereNotIn('monthly_employee_cooperatives.emp_code', $process_attendance_emp)
                 //  ->whereNotIn('monthly_employee_cooperatives.emp_code', $already_payroll_generated)
                 ->count();
-               
-                
+
+
 
             //Get Monthly incometax count
             $process_incometax_count = MonthlyEmployeeItax::join('employees', 'employees.emp_code', '=', 'monthly_employee_itaxes.emp_code')
@@ -684,11 +684,11 @@ class PayrollGenerationController extends Controller
             ->count();
 
             $effective_pfloan_interest_rate = $this->getEffectivePFLoanInterestRate($request['month_yr']);
-            
+
             if(isset($effective_pfloan_interest_rate) && $effective_pfloan_interest_rate==''){
                 $effective_pfloan_interest_rate=9.15;
             }
-           
+
 
             $result = '';
 
@@ -701,7 +701,7 @@ class PayrollGenerationController extends Controller
                 // ->whereNotIn('employees.emp_code', $already_payroll_generated)
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
-            
+
                 // dd('empcount:'.count($emplist).' Attanndance Count:'.$process_attendance_count.' coop count:'.$process_cooperative_count.' itax count:'.$process_incometax_count.' alw count:'.$process_allowances_count.' ot count:'.$process_overtimes_count.' Ajust:'.count($process_attendance_emp));
 
                 // dd(count($emplist));
@@ -790,7 +790,7 @@ class PayrollGenerationController extends Controller
                     ->orderBy('month_yr', 'desc')
                     ->first();
 
-                                    
+
 
                 $tot_cl = $tot_el = $tot_hpl = $tot_rh = $tot_cml = $tot_eol = $tot_ml = $tot_pl = $tot_ccl = $tot_tl = 0;
                 foreach ($leave_rs as $ky => $val) {
@@ -1020,7 +1020,7 @@ class PayrollGenerationController extends Controller
                             }
                             $e_hra_show = "readonly";
                         } else if ($process_payroll[0]->hra != null && $process_payroll[0]->hra != '') {
-                            
+
                             //$e_hra_show = "";
                             if($process_payroll[0]->hra_type=='V'){
                                // $emp_hra = 0;
@@ -1035,7 +1035,7 @@ class PayrollGenerationController extends Controller
                                }else{
                                     $e_hra = 0;
                                }
-                               
+
                             }else{
 
                                 if ($process_payroll[3][$j]->inpercentage != '0') {
@@ -1086,7 +1086,7 @@ class PayrollGenerationController extends Controller
                                     // $e_hra_show = "readonly";
                                 }
                             }else{
- 
+
                                 if ($process_payroll[3][$j]->inpercentage != '0') {
                                     $valc = ($calculate_basic_salary * $process_payroll[3][$j]->inpercentage / 100);
                                     $valc = round($valc,2);
@@ -1098,7 +1098,7 @@ class PayrollGenerationController extends Controller
                                 }
                                 $e_othalw_show = "readonly";
                             }
- 
+
                         } else {
                             $valc = 0;
                             $e_othalw = $valc;
@@ -1314,8 +1314,8 @@ class PayrollGenerationController extends Controller
                     // }
 
                     //pf_int
-                   
-                    
+
+
                     if ($process_payroll[3][$j]->rate_id == '16') {
                         // return "okk0";
                         // return $process_payroll[0]->pf_int;
@@ -1340,7 +1340,7 @@ class PayrollGenerationController extends Controller
                             $d_pfint = $valc;
                             $d_pfint_show = "readonly";
                         }
-                        
+
                     }
 
                     //apf
@@ -1396,8 +1396,8 @@ class PayrollGenerationController extends Controller
                         }
                         // echo  $d_itax=$process_incometax;
                         $d_itax = @$process_incometax->itax_amount;
-                 
-                       
+
+
                     }
 
                     //insu_prem
@@ -1614,7 +1614,7 @@ class PayrollGenerationController extends Controller
                 }
                 //dd($process_allowances);
 
-                
+
                 //set tiffin allowance from generation
                 if (isset($process_allowances->tiffin_alw)) {
                     $e_tiffalw = $process_allowances->tiffin_alw;
@@ -1630,17 +1630,17 @@ class PayrollGenerationController extends Controller
                 //set misc. allowance from generation
                 if (isset($process_allowances->misc_alw)) {
                     $e_miscalw = $process_allowances->misc_alw + $process_allowances->extra_misc_alw;
-                    
+
                     $e_miscalw = round($e_miscalw,2);
                 }
-                
+
                 //set other. allowance from generation
                 if (isset($process_allowances->other_alw)) {
                     $e_othalw = $process_allowances->other_alw;
                     $e_othalw = round($e_othalw,2);
                 }
-                
-                
+
+
                 //set over_time. allowance from generation
                 if (isset($process_overtimes->ot_alws)) {
                     $e_overtime = $process_overtimes->ot_alws;
@@ -1652,13 +1652,13 @@ class PayrollGenerationController extends Controller
                 $d_pfloan=0;
                 $d_pfint =0;
 
-               
+
                // echo $emcode->emp_code.'<br>';
                 $salary_adv_loan=$this->getLoanDeductionValue($emcode->emp_code,'SA',$request['month_yr']);
                 $pf_loan=$this->getLoanDeductionValue($emcode->emp_code,'PF',$request['month_yr']);
                 $pf_loan_balance=$this->getTotalLoanBalanceValue($emcode->emp_code,'PF',$request['month_yr']);
-            
-                //dd($salary_adv_loan);  
+
+                //dd($salary_adv_loan);
 
                 if(!empty($salary_adv_loan)){
                    // echo $emcode->emp_code.'<br>';
@@ -1690,13 +1690,13 @@ class PayrollGenerationController extends Controller
                     }
 
                     // return $emp_pf_loan_balance;
-                    
+
                     // return $effective_pfloan_interest_rate;
-                    
+
                     $d_pfint = (($emp_pf_loan_balance * $effective_pfloan_interest_rate) / 100)/12;
                     $d_pfint = round($d_pfint,2);
                     // print_r($d_pfint);
-                    
+
                 }
 
 
@@ -1745,7 +1745,7 @@ class PayrollGenerationController extends Controller
                                     $d_proftax = $process_payroll[3][$j]->inrupees;
                                 }
                             }
-                            
+
                             //                            $d_proftax_show = "";
                         } else {
                             $emp_hra = 0;
@@ -1806,9 +1806,9 @@ class PayrollGenerationController extends Controller
                                                 if($valc>1800){
                                                     $valc = 1800;
                                                 }
-                                                
-                                            }     
-                                            $d_pf = $valc;                                       
+
+                                            }
+                                            $d_pf = $valc;
                                         }
                                     }else{
                                         if (($calculate_basic_salary <= $process_payroll[3][$j]->max_basic) && ($calculate_basic_salary >= $process_payroll[3][$j]->min_basic)) {
@@ -1847,18 +1847,18 @@ class PayrollGenerationController extends Controller
                                 //             $d_pf = $valc;
                                 //         }
                                 //     }
-                                    
+
                                 // } else {
                                 //     if (($calculate_basic_salary <= $process_payroll[3][$j]->max_basic) && ($calculate_basic_salary >= $process_payroll[3][$j]->min_basic)) {
                                 //         $d_pf = $process_payroll[3][$j]->inrupees;
                                 //     }
                                 // }
-    
+
                                 if ($process_payroll[0]->pf_type != 'F') {
-                                    
+
                                     $d_pf_show = "";
                                 }else{
-                                   
+
                                     $d_pf_show = "readonly";
                                 }
                             } else {
@@ -1882,30 +1882,30 @@ class PayrollGenerationController extends Controller
                             $d_pf = $valc;
                             $d_pf_show = "readonly";
 
-                        }    
+                        }
                         $d_pf=round($d_pf,0);
                     }
 
                 }
-                
-                
-                $total_deduction1 = 0; 
-                $total_deduction2 = 0; 
-                $total_deduction3 = 0; 
-                $total_deduction4 = 0; 
-                $total_deduction5 = 0; 
-                $total_deduction6 = 0; 
-                $total_deduction7 = 0; 
-                $total_deduction8 = 0; 
-                $total_deduction9 = 0; 
-                $total_deduction10 = 0; 
-                $total_deduction11 = 0; 
-                $total_deduction12 = 0; 
-                $total_deduction13 = 0; 
-                $total_deduction14 = 0; 
-                $total_deduction15 = 0; 
-                
-                
+
+
+                $total_deduction1 = 0;
+                $total_deduction2 = 0;
+                $total_deduction3 = 0;
+                $total_deduction4 = 0;
+                $total_deduction5 = 0;
+                $total_deduction6 = 0;
+                $total_deduction7 = 0;
+                $total_deduction8 = 0;
+                $total_deduction9 = 0;
+                $total_deduction10 = 0;
+                $total_deduction11 = 0;
+                $total_deduction12 = 0;
+                $total_deduction13 = 0;
+                $total_deduction14 = 0;
+                $total_deduction15 = 0;
+
+
                 $remain_salary = 0;
                 $remain_salary1 = 0;
                 $remain_salary2 = 0;
@@ -1921,10 +1921,10 @@ class PayrollGenerationController extends Controller
                 $remain_salary12 = 0;
                 $remain_salary13 = 0;
                 $remain_salary14 = 0;
-                
+
                 if($calculate_basic_salary > ($d_proftax + $d_pf)){
                     $total_deduction1 = $d_proftax + $d_pf;
-                    
+
                     $remain_salary = $total_gross - $total_deduction1;
                 }else{
                     $total_deduction1 =0;
@@ -1947,90 +1947,90 @@ class PayrollGenerationController extends Controller
                 }else{
                     $total_deduction4 = 0;
                 }
-                
+
                 if($remain_salary3 > $d_adv){
                     $total_deduction5 = $d_adv;
                     $remain_salary4 = $remain_salary3 - $total_deduction5;
                 }else{
                     $total_deduction5 = 0;
                 }
-                
+
                 if($remain_salary4 > $d_coop){
                     $total_deduction6 = $d_coop;
                     $remain_salary5 = $remain_salary4 - $total_deduction6;
                 }else{
                     $total_deduction6 = 0;
                 }
-                
+
                 if($remain_salary5 > $d_esi){
                     $total_deduction7 = $d_esi;
                     $remain_salary6 = $remain_salary5 - $total_deduction7;
                 }else{
                     $total_deduction7 = 0;
                 }
-                
+
                 if($remain_salary6 > $d_hrd){
                     $total_deduction8 = $d_hrd;
                     $remain_salary7 = $remain_salary6 - $total_deduction8;
                 }else{
                     $total_deduction8 = 0;
                 }
-                
+
                 if($remain_salary7 > $d_furniture){
                     $total_deduction9 = $d_furniture;
                     $remain_salary8 = $remain_salary7 - $total_deduction9;
                 }else{
                     $total_deduction9 = 0;
                 }
-                
+
                 if($remain_salary8 > $d_pf_employer){
                     $total_deduction10 = $d_pf_employer;
                     $remain_salary9 = $remain_salary8 - $total_deduction10;
                 }else{
                     $total_deduction10 = 0;
                 }
-                
-                
+
+
                 if($remain_salary9 > $d_pfint){
                     $total_deduction11 = $d_pfint;
                     $remain_salary10 = $remain_salary9 - $total_deduction11;
                 }else{
                     $total_deduction11 = 0;
                 }
-                
+
                 if($remain_salary10 > $d_apf){
                     $total_deduction12 = $d_apf;
                     $remain_salary11 = $remain_salary10 - $total_deduction12;
                 }else{
                     $total_deduction12 = 0;
                 }
-                
-                
+
+
                 if($remain_salary11 > $d_miscded){
                     $total_deduction13 = $d_miscded;
                     $remain_salary12 = $remain_salary11 - $total_deduction13;
                 }else{
                     $total_deduction13 = 0;
                 }
-                
+
                 if($remain_salary12 > $d_incometax){
                     $total_deduction14 = $d_incometax;
                     $remain_salary13 = $remain_salary12 - $total_deduction14;
                 }else{
                     $total_deduction14 = 0;
                 }
-                
-                
-                
+
+
+
                 if($remain_salary13 > $d_others){
                     $total_deduction15 = $d_others;
                     $remain_salary14 = $remain_salary13 - $total_deduction15;
                 }else{
                     $total_deduction15 = 0;
                 }
-                
 
-                $total_deduction = ($total_deduction1  + $total_deduction2 + $total_deduction3 + $total_deduction4 + 
+
+                $total_deduction = ($total_deduction1  + $total_deduction2 + $total_deduction3 + $total_deduction4 +
                     $total_deduction5 + $total_deduction6 + $total_deduction7 + $total_deduction8 + $total_deduction9
                     + $total_deduction10 + $total_deduction11 + $total_deduction12 + $total_deduction13 + $total_deduction14 + $total_deduction15);
                 // $total_deduction = ($d_proftax + $d_pf + $d_pfint + $d_apf + $d_itax + $d_insuprem + $d_pfloan + $d_esi + $d_adv + $d_hrd + $d_coop + $d_furniture + $d_miscded + $d_incometax + $d_others + $d_pf_employer);
@@ -2113,8 +2113,8 @@ class PayrollGenerationController extends Controller
                 $result .= '<td><input type="text" class="form-control sm_emp_total_gross" name="emp_total_gross' . $emcode->emp_code . '" style="width:120px;" value="' . $total_gross . '" id="emp_total_gross_' . $emcode->emp_code . '" readonly ></td>
 								<td><input type="text" class="form-control sm_emp_total_deduction" name="emp_total_deduction' . $emcode->emp_code . '" style="width:120px;" value="' . $total_deduction . '" id="emp_total_deduction_' . $emcode->emp_code . '" readonly></td>
 								<td><input type="text" class="form-control sm_emp_net_salary" name="emp_net_salary' . $emcode->emp_code . '" style="width:120px;" value="' . $netsalary . '" id="emp_net_salary_' . $emcode->emp_code . '" readonly></td>
-							<input type="hidden" class="form-control sm_emp_d_status_co" name="status_co' . $emcode->emp_code . '" style="width:100px;" id="status_co_' . $emcode->emp_code . '">	
-								
+							<input type="hidden" class="form-control sm_emp_d_status_co" name="status_co' . $emcode->emp_code . '" style="width:100px;" id="status_co_' . $emcode->emp_code . '">
+
 					</tr> ';
                 // print_r($result);
                 // die();
@@ -2331,9 +2331,9 @@ class PayrollGenerationController extends Controller
 
             if (isset($request->deleteme) && $request->deleteme == 'yes') {
 
-            
+
                 LoanRecovery::where('payout_month','=',$request->deletemy)->delete();
-                               
+
 
 
                 Payroll_detail::where('month_yr', $request->deletemy)->delete();
@@ -2379,7 +2379,7 @@ class PayrollGenerationController extends Controller
 
             $monthyr = $request->month_yr;
             $mnt_yr = date('m/Y', strtotime("$monthyr"));
-        
+
             $data['employee_id'] = $request->empname;
             $data['emp_name'] = $request->emp_name;
             $data['emp_designation'] = $request->emp_designation;
@@ -2445,26 +2445,26 @@ class PayrollGenerationController extends Controller
                 Session::flash('error', 'salary not genereated due to insufficient attendance "' .$mnt_yr . '". ');
             }else{
                 if (!empty($employee_pay_structure)) {
-                    
+
                     Payroll_detail::where('month_yr', $mnt_yr)->where('employee_id', $request->empname)->update($data);
                     MonthlyEmployeeCooperative::where('month_yr', $mnt_yr)->where('emp_code', $request->empname)->update($status);
 
                     Session::flash('message', 'Record Successfully updated.');
-    
+
                 //   Session::flash('message', 'Payroll for this employee already generated for the month of "' . date('m-Y') . '". ');
                 }
-                
+
                 else {
-                    
-    
+
+
                     Payroll_detail::insert($data);
                     MonthlyEmployeeCooperative::where('month_yr', $mnt_yr)->where('emp_code', $request->empname)->update($status);
 
                      $salary_adv_loan=$this->getLoanDeductionValue($request->empname,'SA',$mnt_yr);
                     $pf_loan=$this->getLoanDeductionValue($request->empname,'PF',$mnt_yr);
                      $pf_loan_balance=$this->getTotalLoanBalanceValue($request->empname,'PF',$mnt_yr);
-                    
-    
+
+
                     if(!empty($salary_adv_loan)){
                         foreach($salary_adv_loan as $rec){
                             $loanRecovery = new LoanRecovery;
@@ -2474,7 +2474,7 @@ class PayrollGenerationController extends Controller
                             $loanRecovery->save();
                         }
                     }
-    
+
                     if(!empty($pf_loan)){
                         foreach($pf_loan as $rec){
                             $loanRecovery = new LoanRecovery;
@@ -2484,15 +2484,15 @@ class PayrollGenerationController extends Controller
                             $loanRecovery->save();
                         }
                     }
-    
-    
+
+
                     $check_gpf = $this->checkGpfEligibility($data['employee_id']);
-    
+
                     if (isset($check_gpf->pf) && $check_gpf->pf == '1') {
                         //$this->npsMonthlyEnty($data);
                         $this->gpfMonthlyEnty($data);
                     }
-    
+
                     Session::flash('message', 'Payroll Information Successfully Saved.');
                 }
             }
@@ -2874,7 +2874,7 @@ class PayrollGenerationController extends Controller
 
                     //$data['emp_net_salary'] = $request['emp_net_salary' . $value];
                     $data['emp_net_salary'] = $sm_emp_net_salary_ctrl[$index];
-                    
+
                     $status['status_of_co_op'] = $sm_emp_d_status_co_ctrl[$index];
 
                     $data['proces_status'] = 'process';
@@ -2887,28 +2887,28 @@ class PayrollGenerationController extends Controller
                         ->first();
 
                     if (!empty($employee_pay_structure)) {
-                        
+
                         Payroll_detail::where('month_yr', $data['month_yr'])->where('employee_id', $data['employee_id'])->update($data);
-                        
+
                         MonthlyEmployeeCooperative::where('month_yr', $data['month_yr'])->where('emp_code', $data['employee_id'])->update($status);
-                        
+
                         Session::flash('message', 'Record Successfully updated.');
                         // Session::flash('message', 'Payroll already generated for said period');
                     } else {
                         if($data['emp_present_days'] > 0){
 
                             Payroll_detail::insert($data);
-                            
+
                             MonthlyEmployeeCooperative::where('month_yr', $data['month_yr'])->where('emp_code', $data['employee_id'])->update($status);
-                            
+
                             $salary_adv_loan=$this->getLoanDeductionValue($data['employee_id'],'SA',$data['month_yr']);
                             $pf_loan=$this->getLoanDeductionValue($data['employee_id'],'PF',$data['month_yr']);
                             //dd( $salary_adv_loan);
-                            
+
                             // if start for adv non diducated if salary balance 0
-                            
+
                             if($data['emp_gross_salary'] > $data['emp_adv'] ){
-                            
+
                                 if(!empty($salary_adv_loan)){
                                     //echo('****SA*****');
                                     foreach($salary_adv_loan as $rec){
@@ -2922,9 +2922,9 @@ class PayrollGenerationController extends Controller
                                 }
                             }
                             // if end for adv non diducated if salary balance 0
-                            
+
                             // if start for pfloan non diducated if salary balance 0
-                            
+
                             if($data['emp_gross_salary'] > $data['emp_pf_loan'] ){
                                 if(!empty($pf_loan)){
                                     //echo('***PF LOAN*****');
@@ -2942,7 +2942,7 @@ class PayrollGenerationController extends Controller
                         }
                         //dd($data);
                         //echo 'Before:::: '.$data['employee_id'].'<br>';
-                        
+
                          // if end for pfloan non diducated if salary balance 0
 
                         //echo 'After:::: '.$data['employee_id'].'<br>';
@@ -3139,11 +3139,11 @@ class PayrollGenerationController extends Controller
             $allloans=Loan::where('emp_code', '=', $emp_dtl->employee_id)
                 ->where('deduction', '=', 'Y')
                 ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $emp_dtl->month_yr)
-                ->get(); 
+                ->get();
 
             foreach($allloans as $loan){
                 LoanRecovery::where('loan_id','=',$loan->id)->where('payout_month','=',$emp_dtl->month_yr)->delete();
-            }                         
+            }
 
 
             $result = Payroll_detail::where('id', $paystructure_id)->delete();
@@ -3328,7 +3328,7 @@ class PayrollGenerationController extends Controller
             return redirect('/');
         }
     }
-    
+
     //Export Monthly Coop
     public function getMonthlyCoopDeductionExport(Request $request) {
         if (!empty(Session::get('admin'))) {
@@ -3338,7 +3338,7 @@ class PayrollGenerationController extends Controller
             return redirect('/');
         }
     }
-    
+
     //Import Monthly Updated Coop
     public function getMonthlyCoopDeductionImport(Request $request) {
         if (!empty(Session::get('admin'))) {
@@ -3434,7 +3434,7 @@ class PayrollGenerationController extends Controller
             // if (count($employee_rs) > 0) {
             //     $data['result'] = $employee_rs;
             // }
-            
+
             // if (count($employee_rs) > 0) {
             //     Session::flash('error', 'Cooperative for the month ' . $request->month . ' already generated.');
             //     return redirect('payroll/vw-montly-coop');
@@ -3546,7 +3546,7 @@ class PayrollGenerationController extends Controller
                             $d_insuprem = $valc;
                             $d_insuprem_show = "readonly";
                         }
-                        
+
                     }
 
                 }
@@ -3705,7 +3705,7 @@ class PayrollGenerationController extends Controller
                 $sm_d_coop_ctrl = explode(',', $request->sm_d_coop_ctrl);
                 $sm_d_insup_ctrl = explode(',', $request->sm_d_insup_ctrl);
                 $sm_d_misc_ctrl = explode(',', $request->sm_d_misc_ctrl);
-                
+
 
                 foreach ($request->empcode_check as $key => $value) {
 
@@ -4168,12 +4168,12 @@ class PayrollGenerationController extends Controller
             return redirect('/');
         }
     }
-    
+
     //Import Monthly Updated Tax
     public function getMonthlyTaxDeductionImport(Request $request) {
        // dd($request->all());
         if (!empty(Session::get('admin'))) {
-            
+
             //return back();
             $email = Session::get('adminusernmae');
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
@@ -4346,7 +4346,7 @@ class PayrollGenerationController extends Controller
                 $e_extra_misc_alw_show = '';
                 $e_other_allw = 0;
                 $e_other_allw_show = '';
-                
+
 
                 $calculate_basic_salary = $employee_rs->basic_pay;
 
@@ -4439,9 +4439,9 @@ class PayrollGenerationController extends Controller
                     //         $e_overtime_show = "readonly";
                     //     }
                     // }
-                    
+
                     // other_allowence
-                    
+
                     if ($process_payroll[3][$j]->rate_id == '5') {
                         if ($process_payroll[0]->others_alw == '1') {
                             if ($process_payroll[3][$j]->inpercentage != '0') {
@@ -4495,12 +4495,12 @@ class PayrollGenerationController extends Controller
                 $cal_misc_alw = $e_miscalw;
                 $perday_miscalw = $e_miscalw / $tot_wdays;
                 $cal_misc_alw = round(($perday_miscalw * $no_of_present), 2);
-                
+
                 $cal_other_alw = $e_other_allw;
                 $perday_otheralw = $e_other_allw / $tot_wdays;
                 $cal_other_alw = round(($perday_otheralw * $no_of_present), 2);
-                
-                
+
+
 
                 $result .= '<tr id="' . $emcode->emp_code . '">
 								<td><div class="checkbox"><label><input type="checkbox" name="empcode_check[]" id="chk_' . $emcode->emp_code . '" value="' . $emcode->emp_code . '" class="checkhour"></label></div></td>
@@ -4510,9 +4510,9 @@ class PayrollGenerationController extends Controller
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100px;" value="' . $request['month_yr'] . '"></td>
                                 <td><input type="hidden" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100px;" value="' . $employee_rs->emp_designation . '"><div class="row"><div class="col-md-6"><input type="text" readonly class="form-control sm_no_of_present" name="no_of_present' . $emcode->emp_code . '" style="width:70px;" value="' . $no_of_present . '"></div><div class="col-md-6"><a title="'.$infoTitle.'"><i class="fa fa-info" style="padding-top:7px;"></i></a></div></div></td>';
 
-                                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff" 
-                                id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_of_present . '"  
+                                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff"
+                                id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '"
+                                value="' . $emcode->no_of_present . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                                 </td>';
 
@@ -4520,9 +4520,9 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_tiffalw" id="e_tiffalw_' . $emcode->emp_code . '" name="e_tiffalw' . $emcode->emp_code . '" value="' . $cal_tiff_alw . '" readonly></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv" 
-                                id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_of_present . '"  
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv"
+                                id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '"
+                                value="' . $emcode->no_of_present . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                             </td>';
 
@@ -4530,9 +4530,9 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_conv" name="e_conv' . $emcode->emp_code . '" value="' . $cal_conv_alw . '" id="e_conv_' . $emcode->emp_code . '" ' . $e_conv_show . '></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc" 
-                                id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_of_present . '"  
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc"
+                                id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '"
+                                value="' . $emcode->no_of_present . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                             </td>';
 
@@ -4542,10 +4542,10 @@ class PayrollGenerationController extends Controller
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_miscalw" name="e_miscalw' . $emcode->emp_code . '" value="' . $cal_misc_alw . '" id="e_miscalw_' . $emcode->emp_code . '" ' . $e_miscalw_show . '></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_extra_misc_alw" name="e_extra_misc_alw' . $emcode->emp_code . '" value="' . $e_extra_misc_alw . '" id="e_extra_misc_alw_' . $emcode->emp_code . '" ' . $e_extra_misc_alw_show . '></td>';
-                
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other" 
-                                id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_of_present . '"  
+
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other"
+                                id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '"
+                                value="' . $emcode->no_of_present . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                             </td>';
 
@@ -4594,9 +4594,9 @@ class PayrollGenerationController extends Controller
 
                 $sm_et_miscalw_ctrl = explode(',', $request->sm_et_miscalw_ctrl);
                 $sm_e_miscalw_ctrl = explode(',', $request->sm_e_miscalw_ctrl);
-                
+
                 $sm_e_extra_misc_alw_ctrl = explode(',', $request->sm_e_extra_misc_alw_ctrl);
-               
+
                 $sm_et_otheralw_ctrl = explode(',', $request->sm_et_otheralw_ctrl);
                 $sm_e_otheralw_ctrl = explode(',', $request->sm_e_otheralw_ctrl);
 
@@ -4630,7 +4630,7 @@ class PayrollGenerationController extends Controller
                     $data['tiffin_alw'] = $sm_e_tiffalw_ctrl[$index];
                     $data['convence_alw'] = $sm_e_conv_ctrl[$index];
                     $data['misc_alw'] = $sm_e_miscalw_ctrl[$index];
-                   
+
 
                     $data['extra_misc_alw'] = $sm_e_extra_misc_alw_ctrl[$index];
                     $data['other_alw'] = $sm_e_otheralw_ctrl[$index];
@@ -4660,7 +4660,7 @@ class PayrollGenerationController extends Controller
                         //dd($monthlyEmployeeAllowance);
 
                         if (!empty($monthlyEmployeeAllowance)) {
-                            
+
                             MonthlyEmployeeAllowance::where('month_yr',  $sm_month_yr_ctrl[$index])->where('emp_code',$value)->update($data);
                             Session::flash('message', 'Record Successfully updated.');
                             // Session::flash('error', 'Record Already provided for said period for employee - ' . $value);
@@ -4759,9 +4759,9 @@ class PayrollGenerationController extends Controller
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100px;" value="' . $emcode->month_yr . '"></td>
                                 <td><input type="hidden" readonly class="form-control sm_emp_designation" name="emp_designation' . $emcode->emp_code . '" style="width:100px;" value="' . $emcode->emp_designation . '"><div class="row"><div class="col-md-6"><input type="text" readonly class="form-control sm_no_of_present" name="no_of_present' . $emcode->emp_code . '" style="width:70px;" value="' . $no_of_present . '"></div><div class="col-md-6"><a title="'.$infoTitle.'"><i class="fa fa-info" style="padding-top:7px;"></i></a></div></div></td>';
 
-                                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff" 
-                                                id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '" 
-                                                value="' . $emcode->no_days_tiffalw . '"  
+                                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_tiff"
+                                                id="no_d_tiff_' . $emcode->emp_code . '" name="no_d_tiff' . $emcode->emp_code . '"
+                                                value="' . $emcode->no_days_tiffalw . '"
                                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                                             </td>';
 
@@ -4769,9 +4769,9 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="text" style="width:100px;" class="form-control sm_e_tiffalw" id="e_tiffalw_' . $emcode->emp_code . '" name="e_tiffalw' . $emcode->emp_code . '" value="' . $emcode->tiffin_alw . '" readonly></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv" 
-                                id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_days_convalw . '"  
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_conv"
+                                id="no_d_conv_' . $emcode->emp_code . '" name="no_d_conv' . $emcode->emp_code . '"
+                                value="' . $emcode->no_days_convalw . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                             </td>';
 
@@ -4780,9 +4780,9 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_conv" name="e_conv' . $emcode->emp_code . '" value="' . $emcode->convence_alw . '" id="e_conv_' . $emcode->emp_code . '" readonly ></td>';
 
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc" 
-                                id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_days_miscalw . '"  
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_misc"
+                                id="no_d_misc_' . $emcode->emp_code . '" name="no_d_misc' . $emcode->emp_code . '"
+                                value="' . $emcode->no_days_miscalw . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                             </td>';
 
@@ -4793,18 +4793,18 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_extra_misc_alw" name="e_extra_misc_alw' . $emcode->emp_code . '" value="' . $emcode->extra_misc_alw . '" id="e_extra_misc_alw_' . $emcode->emp_code . '" ></td>';
                 // other_allw
-                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other" 
-                                id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '" 
-                                value="' . $emcode->no_days_otheralw . '"  
+                $result .= '<td><input type="number" step="any" style="width:80px;" class="form-control sm_no_d_other"
+                                id="no_d_other_' . $emcode->emp_code . '" name="no_d_other' . $emcode->emp_code . '"
+                                value="' . $emcode->no_days_otheralw . '"
                                 onkeyup="calculate_days(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\');">
                             </td>';
-            
+
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_et_otheralw" id="et_otheralw_' . $emcode->emp_code . '" name="et_otheralw' . $emcode->emp_code . '" value="' . $emcode->pay_structure_other_alw . '" readonly></td>';
 
                 $result .= '<td><input type="number" step="any" style="width:100px;" class="form-control sm_e_otheralw" name="e_otheralw' . $emcode->emp_code . '" value="' . $emcode->other_alw . '" id="e_otheralw_' . $emcode->emp_code . '" readonly ></td>';
 
-        
+
             }
 
             $data['result'] = $result;
@@ -4895,11 +4895,11 @@ class PayrollGenerationController extends Controller
                     $data['tiffin_alw'] = $sm_e_tiffalw_ctrl[$index];
                     $data['convence_alw'] = $sm_e_conv_ctrl[$index];
                     $data['misc_alw'] = $sm_e_miscalw_ctrl[$index];
-                   
+
 
                     $data['extra_misc_alw'] = $sm_e_extra_misc_alw_ctrl[$index];
                     $data['other_alw'] = $sm_e_otheralw_ctrl[$index];
-                    
+
                     $data['status'] = $request->status==''?'process':$request->status;
                     $data['updated_at'] = date('Y-m-d');
 
@@ -5003,7 +5003,7 @@ class PayrollGenerationController extends Controller
             //$current_month_days = cal_days_in_month(CAL_GREGORIAN, $payrolldate[0], $payrolldate[1]);
             //dd($current_month_days);
             $datestring = $payrolldate[1] . '-' . $payrolldate[0] . '-01';
-            
+
 
             $prevYear=$payrolldate[1];
             $prevMonth=$payrolldate[0];
@@ -5012,13 +5012,13 @@ class PayrollGenerationController extends Controller
                 $prevMonth='12';
             }else{
                 $prevYear=$payrolldate[1];
-                $prevMonth=$payrolldate[0]-1; 
+                $prevMonth=$payrolldate[0]-1;
                 if($prevMonth<10){
                     $prevMonth=str_pad($prevMonth,2,"0",STR_PAD_LEFT );
-                }               
+                }
             }
             $datestring_prev = $prevYear . '-' . $prevMonth . '-01';
-            
+
             // Converting string to date
             $date = strtotime($datestring);
             $current_month_days = date("t", strtotime(date("Y-m-t", $date)));
@@ -5072,7 +5072,7 @@ class PayrollGenerationController extends Controller
 
                 $calculate_basic_salary = $employee_rs->basic_pay;
 
-                
+
 
 
 
@@ -5117,14 +5117,14 @@ class PayrollGenerationController extends Controller
 
                 $result .= '<td><input type="number" step="any" style="width:100%;" class="form-control sm_e_overtime" name="e_overtime' . $emcode->emp_code . '" value="0" id="e_overtime_' . $emcode->emp_code . '" readonly></td>';
 
-                
-                
+
+
                 // print_r($result);
                 // die();
             }
             // print_r($result);
             // die();
-            
+
             $month_yr_new = $request['month_yr'];
             return view('payroll/add-monthly-overtimes-all', compact('result', 'Roledata', 'month_yr_new','current_month_days','previous_month_days'));
         } else {
@@ -5251,7 +5251,7 @@ class PayrollGenerationController extends Controller
             //$current_month_days = cal_days_in_month(CAL_GREGORIAN, $payrolldate[0], $payrolldate[1]);
             //dd($current_month_days);
             $datestring = $payrolldate[1] . '-' . $payrolldate[0] . '-01';
-            
+
 
             $prevYear=$payrolldate[1];
             $prevMonth=$payrolldate[0];
@@ -5260,13 +5260,13 @@ class PayrollGenerationController extends Controller
                 $prevMonth='12';
             }else{
                 $prevYear=$payrolldate[1];
-                $prevMonth=$payrolldate[0]-1; 
+                $prevMonth=$payrolldate[0]-1;
                 if($prevMonth<10){
                     $prevMonth=str_pad($prevMonth,2,"0",STR_PAD_LEFT );
-                }               
+                }
             }
             $datestring_prev = $prevYear . '-' . $prevMonth . '-01';
-            
+
             // Converting string to date
             $date = strtotime($datestring);
             $current_month_days = date("t", strtotime(date("Y-m-t", $date)));
@@ -5323,7 +5323,7 @@ class PayrollGenerationController extends Controller
                 $result .= '<td><input type="number" style="width:100px;" class="form-control sm_e_overtime" name="e_overtime' . $emcode->emp_code . '" step="any" value="' . $emcode->ot_alws . '" id="e_overtime_' . $emcode->emp_code . '" readonly></td>';
 
             }
-           
+
             $data['result'] = $result;
             $data['month_yr_new'] = $request->month;
             // dd($data);
@@ -5411,7 +5411,7 @@ class PayrollGenerationController extends Controller
                         ->first();
 
                     if (!empty($employee_pay_structure)) {
-                        
+
                          Session::flash('error', 'Payroll already generated for said period against Employee Code - '.$employee_pay_structure->old_emp_code);
                     } else {
 
@@ -5480,15 +5480,15 @@ class PayrollGenerationController extends Controller
                 ->where('loan_type', '=', $loan_type)
                 ->where('deduction', '=', 'Y')
                 ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $paroll_month)
-                ->get(); 
+                ->get();
 
         $loanDetails=array();
 
         foreach($allloans as $loan){
-            
+
             // $loan_recoveries_count = LoanRecovery::where('loan_id','=',$loan->id)->count();
             $loanRecoveries=LoanRecovery::where('loan_id','=',$loan->id)->sum('amount');
-           
+
         //   if($loan_recoveries_count > 0){
                if($loan->loan_amount > $loanRecoveries){
                     $ele=array();
@@ -5508,11 +5508,11 @@ class PayrollGenerationController extends Controller
         //         $ele['installment_amount']=$loan->installment_amount;
         //         array_push($loanDetails,$ele);
         //   }
-           
-            
+
+
         }
 
-        return $loanDetails;               
+        return $loanDetails;
     }
 
     function getTotalLoanBalanceValue($emp_code,$loan_type,$paroll_month){
@@ -5525,9 +5525,9 @@ class PayrollGenerationController extends Controller
         $loanDetails=array();
 
         foreach($allloans as $loan){
-            
+
             $loanRecoveries=LoanRecovery::where('loan_id','=',$loan->id)->sum('amount');
-           
+
             if($loan->loan_amount > $loanRecoveries){
                 $ele=array();
                 $ele['id']=$loan->id;
@@ -5538,7 +5538,7 @@ class PayrollGenerationController extends Controller
             }
         }
 
-        return $loanDetails;               
+        return $loanDetails;
     }
 
     function getEffectivePFLoanInterestRate($paroll_month){
@@ -5559,7 +5559,7 @@ class PayrollGenerationController extends Controller
             return $interest->interest;
         }else{
             return "9.15";
-        }        
+        }
     }
 
     function getEffectiveBonustRate($paroll_month){
@@ -5580,7 +5580,7 @@ class PayrollGenerationController extends Controller
             return $interest->interest;
         }else{
             return "8.33";
-        }        
+        }
     }
 
     public function getYearlyBonus()
@@ -5597,7 +5597,7 @@ class PayrollGenerationController extends Controller
             $data['yearlist'] = YearlyEmployeeBonus::select('year')->distinct('year')->get();
             //dd($data);
             $data['result'] = '';
-            
+
 
             return view('payroll/yearly-bonus', $data);
         } else {
@@ -5677,7 +5677,7 @@ class PayrollGenerationController extends Controller
             //dd($qArr);
             //dd($reportFinancialYear . " ===== " . $prevFinancialYear);
 
-            
+
             $result = '';
 
             $emplist = Employee::where('status', '=', 'active')
@@ -5689,7 +5689,7 @@ class PayrollGenerationController extends Controller
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
 
-            $currentBonusRate=$this->getEffectiveBonustRate($request->year);  
+            $currentBonusRate=$this->getEffectiveBonustRate($request->year);
 
             foreach ($emplist as $mainkey => $emcode) {
 
@@ -5704,13 +5704,13 @@ class PayrollGenerationController extends Controller
                     ->where('payroll_details.employee_id', '=', $emcode->emp_code)
                     ->whereIn('payroll_details.month_yr',$qArr)
                     ->first('payroll_details.employee_id');
-    
+
                     //dd($q);
                 $applicable_basic=0;
                 if(isset($q->emp_basic_ly)){
                     $applicable_basic=$q->emp_basic_ly;
                 }
-    
+
 
                 $calculate_bonus = round((($applicable_basic*$currentBonusRate)/100),2);
 
@@ -5722,11 +5722,11 @@ class PayrollGenerationController extends Controller
 								<td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request['year'] . '"></td>
 
                                 <td>
-                                    <input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;" 
-                                    value="'.$applicable_basic.'" id="basic_' . $emcode->emp_code . '" 
+                                    <input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;"
+                                    value="'.$applicable_basic.'" id="basic_' . $emcode->emp_code . '"
                                     onkeyup="calBonus(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\','.$currentBonusRate.')">
                                 </td>
-                                
+
                                 <td><input type="number" step="any" class="form-control sm_bonus" name="bonus' . $emcode->emp_code . '" style="width:100%;" value="'.$calculate_bonus.'" id="bonus_' . $emcode->emp_code . '" readonly></td>
                                 <td><input type="number" step="any" class="form-control sm_exgratia" name="exgratia' . $emcode->emp_code . '" style="width:100%;" value="0" id="exgratia_' . $emcode->emp_code . '"></td>
                                 <td><input type="number" step="any" class="form-control sm_deduction" name="deduction' . $emcode->emp_code . '" style="width:100%;" value="0" id="deduction_' . $emcode->emp_code . '"></td>';
@@ -5762,7 +5762,7 @@ class PayrollGenerationController extends Controller
 
                 $show_month=$request->showmon;
 
-                $currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));  
+                $currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));
 
                 foreach ($request->empcode_check as $key => $value) {
 
@@ -5771,7 +5771,7 @@ class PayrollGenerationController extends Controller
                     $data['emp_code'] = $value;
 
                     $data['year'] = $sm_month_yr_ctrl[$index];
-                   
+
                     $byear=explode('/',$data['year']);
                     $repoYear = $byear[1];
 
@@ -5827,7 +5827,7 @@ class PayrollGenerationController extends Controller
 
             $data['req_year'] = $request->year;
 
-            $currentBonusRate=$this->getEffectiveBonustRate($request->year);  
+            $currentBonusRate=$this->getEffectiveBonustRate($request->year);
 
             $employee_rs = YearlyEmployeeBonus::join('employees', 'employees.emp_code', '=', 'yearly_employee_bonuses.emp_code')
                 ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'yearly_employee_bonuses.*')
@@ -5853,8 +5853,8 @@ class PayrollGenerationController extends Controller
                 <td><input type="text" readonly class="form-control sm_month_yr" name="month_yr' . $emcode->emp_code . '" style="width:100%;" value="' . $request['year'] . '"></td>
 
                 <td>
-                    <input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;" 
-                    value="'.$emcode->basic.'" id="basic_' . $emcode->emp_code . '" 
+                    <input type="number" step="any" class="form-control sm_basic" name="basic' . $emcode->emp_code . '" style="width:100%;"
+                    value="'.$emcode->basic.'" id="basic_' . $emcode->emp_code . '"
                     onkeyup="calBonus(\''.str_pad($emcode->emp_code, 4, '0', STR_PAD_LEFT).'\','.$currentBonusRate.')">
                 </td>
 
@@ -5875,14 +5875,14 @@ class PayrollGenerationController extends Controller
     {
 
         if (!empty(Session::get('admin'))) {
-            
+
 
             $request->status=$request->statusme;
             //  dd($request->status);
 
             if (isset($request->deleteme) && $request->deleteme == 'yes') {
                 // dd($request->all());
-                
+
                 YearlyEmployeeBonus::where('year', $request->deletemy)->delete();
                 Session::flash('message', 'All generated records deleted successfully.');
                 return redirect('payroll/vw-yearly-bonus');
@@ -5898,8 +5898,8 @@ class PayrollGenerationController extends Controller
                 $sm_bonus_ctrl = explode(',', $request->sm_bonus_ctrl);
                 $sm_exgratia_ctrl = explode(',', $request->sm_exgratia_ctrl);
                 $sm_deduction_ctrl = explode(',', $request->sm_deduction_ctrl);
-                $currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));  
-                
+                $currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));
+
 
                 foreach ($request->empcode_check as $key => $value) {
 
@@ -5947,7 +5947,7 @@ class PayrollGenerationController extends Controller
             $data['yearlist'] = YearlyEmployeeLencHta::select('year')->distinct('year')->get();
             //dd($data);
             $data['result'] = '';
-            
+
 
             return view('payroll/yearly-encash', $data);
         } else {
@@ -5989,7 +5989,7 @@ class PayrollGenerationController extends Controller
                 ->get();
 
 
-            
+
             $result = '';
 
             $emplist = Employee::where('status', '=', 'active')
@@ -6001,7 +6001,7 @@ class PayrollGenerationController extends Controller
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
 
-            //$currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));  
+            //$currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));
 
             foreach ($emplist as $mainkey => $emcode) {
 
@@ -6050,9 +6050,9 @@ class PayrollGenerationController extends Controller
                 $sm_basic_ctrl = explode(',', $request->sm_basic_ctrl);
                 $sm_leaveenc_ctrl = explode(',', $request->sm_leaveenc_ctrl);
                 $sm_hta_ctrl = explode(',', $request->sm_hta_ctrl);
-                
 
-                //$currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));  
+
+                //$currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));
 
                 foreach ($request->empcode_check as $key => $value) {
 
@@ -6061,15 +6061,15 @@ class PayrollGenerationController extends Controller
                     $data['emp_code'] = $value;
 
                     $data['year'] = $sm_month_yr_ctrl[$index];
-                   
+
                     $byear=explode('/',$data['year']);
                     $repoYear = $byear[1];
 
                     $data['basic'] = $sm_basic_ctrl[$index];
                     $data['leave_enc'] = $sm_leaveenc_ctrl[$index];
-                    
+
                     $data['hta'] = $sm_hta_ctrl[$index];
-                    
+
                     $data['status'] = 'process';
                     $data['created_at'] = date('Y-m-d');
 
@@ -6118,9 +6118,9 @@ class PayrollGenerationController extends Controller
             if (!empty($yearlyEmployeeEncashment)) {
                 Session::flash('message', 'Encashment Record Already provided for said period for employee - ' . $request->emp_code);
             } else {
-                
+
                 $model = new YearlyEmployeeLencHta;
-                
+
                 $model->emp_code = $request->emp_code;
                 $model->year = $request->year;
                 $model->leave_enc = $request->leave_enc;
@@ -6130,14 +6130,14 @@ class PayrollGenerationController extends Controller
                 $model->other_perks = $request->other_perks;
                 $model->medical_reimbersement = $request->medical_reimbersement;
                 $model->status = 'process';
-                
+
                 $model->save();
-    
+
                 Session::flash('message', 'Record Successfully Saved.');
             }
 
 
-            
+
             return redirect('payroll/vw-yearly-encashment');
         } else {
             return redirect('/');
@@ -6161,7 +6161,7 @@ class PayrollGenerationController extends Controller
 
             $data['req_year'] = $request->year;
 
-            //$currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));  
+            //$currentBonusRate=$this->getEffectiveBonustRate(date('m/Y'));
 
             $employee_rs = YearlyEmployeeLencHta::join('employees', 'employees.emp_code', '=', 'yearly_employee_lenc_htas.emp_code')
                 ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'yearly_employee_lenc_htas.*')
@@ -6212,7 +6212,7 @@ class PayrollGenerationController extends Controller
                 ->where('member_id', '=', $email)
                 ->get();
 
-            
+
             $data['Employee'] = Employee::where('status', '=', 'active')->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')->get();
 
             $data['records']= YearlyEmployeeLencHta::find($id);
@@ -6245,10 +6245,10 @@ class PayrollGenerationController extends Controller
             if (!empty($yearlyEmployeeEncashment)) {
                 Session::flash('message', 'Encashment Record Already provided for said period for employee - ' . $request->emp_code);
             } else {
-                
-                
+
+
                 $model = YearlyEmployeeLencHta::find($request->id);
-                
+
                 // $model->emp_code = $request->emp_code;
                 $model->year = $request->year;
                 $model->leave_enc = $request->leave_enc;
@@ -6258,14 +6258,14 @@ class PayrollGenerationController extends Controller
                 $model->status = $request->status;
                 $model->other_perks = $request->other_perks;
                 $model->medical_reimbersement = $request->medical_reimbersement;
-                
+
                 $model->save();
-    
+
                 Session::flash('message', 'Record Successfully Updated.');
             }
 
 
-            
+
             return redirect('payroll/vw-yearly-encashment');
         } else {
             return redirect('/');
@@ -6277,14 +6277,14 @@ class PayrollGenerationController extends Controller
     {
 
         if (!empty(Session::get('admin'))) {
-            
+
 
             $request->status=$request->statusme;
             //  dd($request->status);
 
             if (isset($request->deleteme) && $request->deleteme == 'yes') {
                 // dd($request->all());
-                
+
                 YearlyEmployeeLencHta::where('year', $request->deletemy)->delete();
                 Session::flash('message', 'All generated records deleted successfully.');
                 return redirect('payroll/vw-yearly-encashment');
@@ -6298,8 +6298,8 @@ class PayrollGenerationController extends Controller
                 $sm_month_yr_ctrl = explode(',', $request->sm_month_yr_ctrl);
                 $sm_basic_ctrl = explode(',', $request->sm_basic_ctrl);
                 $sm_leaveenc_ctrl = explode(',', $request->sm_leaveenc_ctrl);
-                $sm_hta_ctrl = explode(',', $request->sm_hta_ctrl); 
-                
+                $sm_hta_ctrl = explode(',', $request->sm_hta_ctrl);
+
 
                 foreach ($request->empcode_check as $key => $value) {
 
@@ -6312,7 +6312,7 @@ class PayrollGenerationController extends Controller
 
                     $data['basic'] = $sm_basic_ctrl[$index];
                     $data['leave_enc'] = $sm_leaveenc_ctrl[$index];
-                    
+
                     $data['hta'] = $sm_hta_ctrl[$index];
                     $data['status'] = $request->status==''?'process':$request->status;
                     $data['updated_at'] = date('Y-m-d');

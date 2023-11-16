@@ -321,17 +321,14 @@ Employee Information System-Employees
                                     <div class="row form-group">
                                     <div class="col-md-3">
                                        <label>Date of Retirement </label>
-                                       <input type="text" name="emp_retirement_date" id="emp_retirement_date"  value="<?php if (request()->get('q') != '') {
+                                       <input type="text" name="emp_retirement_date" id="emp_retirement_date" data-date-format="DD MMMM YYYY"  value="<?php if (request()->get('q') != '') {
                                           $date_of_retire = date_create($employee_rs[0]->emp_retirement_date);
                                           echo date_format($date_of_retire, 'd/m/Y');
                                           }?>" class="form-control" readonly>
                                     </div>
                                     <div class="col-md-3">
                                         <label>Date of Retirement BVC</label>
-                                        <input type="text" name="emp_retirement_bvc_date" id="emp_retirement_bvc_date"  value="<?php if (request()->get('q') != '') {
-                                           $date_of_retire = date_create($employee_rs[0]->emp_retirement_bvc_date);
-                                           echo date_format($date_of_retire, 'd/m/Y');
-                                           }?>" class="form-control" readonly>
+                                        <input type="text" name="emp_retirement_bvc_date" id="emp_retirement_bvc_date" class="form-control" readonly>
                                      </div>
 
 
@@ -341,13 +338,13 @@ Employee Information System-Employees
                                     </div>
                                     <div class="col-md-3">
                                        <label>Confirmation Date</label>
-                                       <input type="date" name="emp_from_date" id="emp_from_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_from_date;}?>" class="form-control">
+                                       <input type="date" name="emp_from_date" id="emp_from_date" data-date-format="DD MMMM YYYY"  value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_from_date;}?>" class="form-control">
                                     </div>
                                 </div>
                                     <div class="row form-group">
                                     <div class="col-md-3">
                                        <label>Next Increment Date </label>
-                                       <input type="date" name="emp_next_increment_date" id="emp_next_increment_date"  value="" class="form-control" >
+                                       <input type="date" name="emp_next_increment_date" id="emp_next_increment_date"  data-date-format="DD MMMM YYYY" value="" class="form-control" >
                                     </div>
                                     <div class="col-md-3">
                                        <label>Eligible for Promotion</label>
@@ -442,7 +439,7 @@ Employee Information System-Employees
                                           <th>Year of Passing</th>
                                           <th>Percentage</th>
                                           <th>Grade/Division</th>
-                                          <!--						<th>Action</th>-->
+                                          <th>Image</th>
                                        </tr>
                                     </thead>
                                     <tbody id="marksheet">
@@ -463,6 +460,7 @@ Employee Information System-Employees
                                           <td><input type="text" name="year_of_passing[]" value="" class="form-control"></td>
                                           <td><input type="text" name="percentage[]" value="" class="form-control"></td>
                                           <td><input type="text" name="grade[]" value="" class="form-control"></td>
+                                          <td><input type="file" name="aimage[]" value="" class="form-control"></td>
                                           <td><button class="btn-success" type="button" id="add<?php echo ($tr_id + 1); ?>" onClick="addnewrow(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
                                        </tr>
                                     </tbody>
@@ -475,39 +473,86 @@ Employee Information System-Employees
                                     <thead>
                                        <tr>
                                           <th>Sl.No.</th>
-                                          <th>Qualification</th>
-                                          <th>Discipline</th>
-                                          <th>Institute Name</th>
-                                          <th>Board/University</th>
-                                          <th>Year of Passing</th>
-                                          <th>Percentage</th>
-                                          <th>Grade/Division</th>
-                                          <!--						<th>Action</th>-->
+                                          <th>Doc type</th>
+                                          <th>File</th>
                                        </tr>
                                     </thead>
-                                    <tbody id="marksheet">
+                                    <tbody id="marksheetdoc">
                                        <?php $tr_id = 0;?>
-                                       <tr class="itemslot" id="<?php echo $tr_id; ?>">
+                                       <tr class="itemslotdoc" id="<?php echo $tr_id; ?>">
                                           <td>1</td>
                                           <td>
-                                             <select class="form-control" name="qualification[]">
-                                                <option value='' selected>Select</option>
-                                                @foreach($education as $educ)
-                                                <option value='{{ $educ->id }}'>{{ $educ->education }}</option>
-                                                @endforeach
+                                             <select class="form-control" name="pdoctype[]">
+                                                <option value='' >Select</option>
+                                                <option>Aadhar card</option>
+                                                <option>Voter Id</option>
+                                                <option>Pan card</option>
+                                                <option>Driving License</option>
+                                                <option>Passport</option>
                                              </select>
                                           </td>
-                                          <td><input type="text" name="discipline[]" value="" class="form-control"></td>
-                                          <td><input type="text" name="institute_name[]" value="" class="form-control"></td>
-                                          <td><input type="text" name="university[]" value="" class="form-control"></td>
-                                          <td><input type="text" name="year_of_passing[]" value="" class="form-control"></td>
-                                          <td><input type="text" name="percentage[]" value="" class="form-control"></td>
-                                          <td><input type="text" name="grade[]" value="" class="form-control"></td>
-                                          <td><button class="btn-success" type="button" id="add<?php echo ($tr_id + 1); ?>" onClick="addnewrow(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                                          <td><input type="file" name="pdocimage[]" value="" class="form-control"></td>
+                                          <td><button class="btn-success" type="button" id="adddoc<?php echo ($tr_id + 1); ?>" onClick="addnewrowdoc(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
                                        </tr>
                                     </tbody>
                                  </table>
                                  {{-- document end --}}
+                                {{-- Personal Record upload --}}
+                                <legend>Professional Records</legend>
+                                <table border="1" class="table table-bordered table-responsove" style="border-collapse:collapse;overflow-x:scroll;">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl.No.</th>
+                                            <th>Qualification</th>
+                                            <th>Designation</th>
+                                            <th>From Date</th>
+                                            <th>To date</th>
+                                            <th>File</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="marksheetprec">
+                                        <?php $tr_id = 0;?>
+                                        <tr class="itemslotprec" id="<?php echo $tr_id; ?>">
+                                            <td>1</td>
+                                            <td><input type="text" name="precqualification[]" value="" class="form-control"></td>
+                                            <td><input type="text" name="precdesignation[]" value="" class="form-control"></td>
+                                            <td><input type="date" name="precfromdate[]" value="" class="form-control"></td>
+                                            <td><input type="date" name="prectodate[]" value="" class="form-control"></td>
+                                            <td><input type="file" name="precimage[]" value="" class="form-control"></td>
+                                            <td><button class="btn-success" type="button" id="addprec<?php echo ($tr_id + 1); ?>" onClick="addnewrowprec(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {{-- Personal record end --}}
+                                 {{-- Misc Record upload --}}
+                                 <legend>Misc. Documents</legend>
+                                 <table border="1" class="table table-bordered table-responsove" style="border-collapse:collapse;overflow-x:scroll;">
+                                     <thead>
+                                         <tr>
+                                             <th>Sl.No.</th>
+                                             <th>Category</th>
+                                             <th>File</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody id="marksheetmrec">
+                                         <?php $tr_id = 0;?>
+                                         <tr class="itemslotmrec" id="<?php echo $tr_id; ?>">
+                                             <td>1</td>
+                                             <td>
+                                                <select name="mreccategory[]" id="" class="form-control">
+                                                    <option value="">Select</option>
+                                                    <option>Traning</option>
+                                                    <option>Legal</option>
+                                                    <option>Others</option>
+                                                </select>
+                                             </td>
+                                             <td><input type="file" name="mrecimage[]" value="" class="form-control"></td>
+                                             <td><button class="btn-success" type="button" id="addmrec<?php echo ($tr_id + 1); ?>" onClick="addnewrowmrec(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                                 {{-- Misc record end --}}
+
                                  <div class="clearfix" style="height: 10px;clear: both;"></div>
                                  <div class="form-group">
                                     <button class="btn btn-warning back2" type="button"><i class="ti-arrow-left"></i> Back</button>
@@ -1967,16 +2012,10 @@ Employee Information System-Employees
 
    function addnewrow(rowid)
    	{
-
-
-
    		if (rowid != ''){
    				$('#add'+rowid).attr('disabled',true);
 
    		}
-
-
-
    		$.ajax({
 
    				url:'{{url('settings/get-add-row-item')}}/'+rowid,
@@ -1989,8 +2028,59 @@ Employee Information System-Employees
    				}
    			});
    	}
+    function addnewrowdoc(rowid){
+        if (rowid != ''){
+   				$('#adddoc'+rowid).attr('disabled',true);
 
+   		}
+   		$.ajax({
 
+   				url:'{{url('settings/get-add-row-docs')}}/'+rowid,
+   				type: "GET",
+
+   				success: function(response) {
+
+   					$("#marksheetdoc").append(response);
+
+   				}
+   			});
+    }
+    function addnewrowprec(rowid){
+        if (rowid != ''){
+   				$('#addprec'+rowid).attr('disabled',true);
+
+   		}
+   		$.ajax({
+
+   				url:'{{url('settings/get-add-row-prec')}}/'+rowid,
+   				type: "GET",
+
+   				success: function(response) {
+
+   					$("#marksheetprec").append(response);
+
+   				}
+   			});
+
+    }
+    function addnewrowmrec(rowid){
+        if (rowid != ''){
+   				$('#addmrec'+rowid).attr('disabled',true);
+
+   		}
+   		$.ajax({
+
+   				url:'{{url('settings/get-add-row-mrec')}}/'+rowid,
+   				type: "GET",
+
+   				success: function(response) {
+
+   					$("#marksheetmrec").append(response);
+
+   				}
+   			});
+
+    }
    	function delRow(rowid)
    	{
    		var lastrow = $(".itemslot:last").attr("id");
@@ -2002,6 +2092,37 @@ Employee Information System-Employees
            });
 
    	}
+       function delRowDoc(rowid)
+   	{
+   		var lastrowdoc = $(".itemslotdoc:last").attr("id");
+           //alert(lastrow);
+           var active_div = (lastrowdoc-1);
+           $('#adddoc'+active_div).attr('disabled',false);
+           $(document).on('click','.deleteButtondoc',function() {
+               $(this).closest("tr.itemslotdoc").remove();
+           });
+
+   	}
+    function delRowprec(rowid){
+        var lastrowprec = $(".itemslotprec:last").attr("id");
+           //alert(lastrow);
+           var active_div = (lastrowprec-1);
+           $('#addprec'+active_div).attr('disabled',false);
+           $(document).on('click','.deleteButtonprec',function() {
+               $(this).closest("tr.itemslotprec").remove();
+           });
+
+    }
+    function delRowmrec(rowid){
+        var lastrowprec = $(".itemslotmrec:last").attr("id");
+           //alert(lastrow);
+           var active_div = (lastrowprec-1);
+           $('#addmrec'+active_div).attr('disabled',false);
+           $(document).on('click','.deleteButtonmrec',function() {
+               $(this).closest("tr.itemslotmrec").remove();
+           });
+
+    }
 
     function checkdepart(emp_department){
    	   	$.ajax({
