@@ -580,7 +580,6 @@ class PayrollGenerationController extends Controller
     public function listPayrollallemployee(Request $request)
     {
 
-
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
             $Roledata = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
@@ -697,12 +696,12 @@ class PayrollGenerationController extends Controller
                 ->where('employees.emp_status', '!=', 'TEMPORARY')
                 ->where('employees.emp_status', '!=', 'EX-EMPLOYEE')
                 ->where('employees.emp_status', '!=', 'EX- EMPLOYEE')
-                //  ->where('employees.emp_code', '=', '0848')
+                // ->where('employees.emp_code', '=', '0937')
                 ->whereNotIn('employees.emp_code', $process_attendance_emp)
                 // ->whereNotIn('employees.emp_code', $already_payroll_generated)
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
-                //dd($emplist);
+
                 // dd('empcount:'.count($emplist).' Attanndance Count:'.$process_attendance_count.' coop count:'.$process_cooperative_count.' itax count:'.$process_incometax_count.' alw count:'.$process_allowances_count.' ot count:'.$process_overtimes_count.' Ajust:'.count($process_attendance_emp));
 
                 // dd(count($emplist));
@@ -1613,6 +1612,7 @@ class PayrollGenerationController extends Controller
                     }
 
                 }
+                //dd($process_allowances);
 
 
                 //set tiffin allowance from generation
@@ -1799,13 +1799,8 @@ class PayrollGenerationController extends Controller
                                             // echo $console_text=$console_text." acc-pf=".$valc;
                                             $d_pf = $valc;
                                             if($process_payroll[0]->emp_pf_inactuals=='Y'){
-                                                //change logic by abbas
-                                                $acc_salary=$total_gross-$e_hra-$e_overtime;
-                                                $valc = ($acc_salary * $process_payroll[3][$j]->inpercentage / 100);
+                                                $valc = ($calculate_basic_salary * $process_payroll[3][$j]->inpercentage / 100);
                                                 $valc = round($valc,2);
-                                                if($valc>1800){
-                                                    $valc = 1800;
-                                                }
                                                 //$d_pf = $valc;
                                             }else{
                                                 if($valc>1800){
@@ -1888,7 +1883,6 @@ class PayrollGenerationController extends Controller
                             $d_pf_show = "readonly";
 
                         }
-                        //change logic by abbas
                         $d_pf=round($d_pf,0);
                     }
 
@@ -1961,57 +1955,51 @@ class PayrollGenerationController extends Controller
                     $total_deduction5 = 0;
                 }
 
-                // if($remain_salary4 > $d_coop){
-                //     $total_deduction6 = $d_coop;
-                //     $remain_salary5 = $remain_salary4 - $total_deduction6;
-                // }else{
-                //     $total_deduction6 = 0;
-                // }
-
-                if($remain_salary4 > $d_esi){
-                    $total_deduction6 = $d_esi;
+                if($remain_salary4 > $d_coop){
+                    $total_deduction6 = $d_coop;
                     $remain_salary5 = $remain_salary4 - $total_deduction6;
                 }else{
                     $total_deduction6 = 0;
                 }
 
-                if($remain_salary5 > $d_hrd){
-                    $total_deduction7 = $d_hrd;
+                if($remain_salary5 > $d_esi){
+                    $total_deduction7 = $d_esi;
                     $remain_salary6 = $remain_salary5 - $total_deduction7;
                 }else{
                     $total_deduction7 = 0;
                 }
 
-                if($remain_salary6 > $d_furniture){
-                    $total_deduction8 = $d_furniture;
+                if($remain_salary6 > $d_hrd){
+                    $total_deduction8 = $d_hrd;
                     $remain_salary7 = $remain_salary6 - $total_deduction8;
                 }else{
                     $total_deduction8 = 0;
                 }
 
-                if($remain_salary7 > $d_pf_employer){
-                    $total_deduction9 = $d_pf_employer;
+                if($remain_salary7 > $d_furniture){
+                    $total_deduction9 = $d_furniture;
                     $remain_salary8 = $remain_salary7 - $total_deduction9;
                 }else{
                     $total_deduction9 = 0;
                 }
 
-
-                if($remain_salary8 > $d_pfint){
-                    $total_deduction10 = $d_pfint;
+                if($remain_salary8 > $d_pf_employer){
+                    $total_deduction10 = $d_pf_employer;
                     $remain_salary9 = $remain_salary8 - $total_deduction10;
                 }else{
                     $total_deduction10 = 0;
                 }
 
-                if($remain_salary9 > $d_apf){
-                    $total_deduction11 = $d_apf;
+
+                if($remain_salary9 > $d_pfint){
+                    $total_deduction11 = $d_pfint;
                     $remain_salary10 = $remain_salary9 - $total_deduction11;
                 }else{
                     $total_deduction11 = 0;
                 }
-                 if($remain_salary10 > $d_coop){
-                    $total_deduction12 = $d_coop;
+
+                if($remain_salary10 > $d_apf){
+                    $total_deduction12 = $d_apf;
                     $remain_salary11 = $remain_salary10 - $total_deduction12;
                 }else{
                     $total_deduction12 = 0;
@@ -2047,7 +2035,6 @@ class PayrollGenerationController extends Controller
                     + $total_deduction10 + $total_deduction11 + $total_deduction12 + $total_deduction13 + $total_deduction14 + $total_deduction15);
                 // $total_deduction = ($d_proftax + $d_pf + $d_pfint + $d_apf + $d_itax + $d_insuprem + $d_pfloan + $d_esi + $d_adv + $d_hrd + $d_coop + $d_furniture + $d_miscded + $d_incometax + $d_others + $d_pf_employer);
                 $total_deduction = round($total_deduction,2);
-                //dd($total_deduction);
 
                 /* $ptax = 0;
                 foreach ($rate_rs as $ratekey => $rateval) {

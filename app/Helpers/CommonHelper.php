@@ -35,7 +35,7 @@ class CommonHelper
             //->where('yearly_employee_bonuses.status', '=', 'process')
             ->where('yearly_employee_bonuses.emp_code', '=', $emp_code)
             ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
-            ->first();            
+            ->first();
 
         $encashments = YearlyEmployeeLencHta::join('employees', 'employees.emp_code', '=', 'yearly_employee_lenc_htas.emp_code')
             ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'yearly_employee_lenc_htas.*')
@@ -43,7 +43,7 @@ class CommonHelper
             //->where('yearly_employee_lenc_htas.status', '=', 'process')
             ->where('yearly_employee_lenc_htas.emp_code', '=', $emp_code)
             ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
-            ->first();            
+            ->first();
 
         $response=['payroll'=>$payroll_details,'dimmies'=>$payroll_dummies,'bonus_rs'=>$bonus,'encashment_rs'=>$encashments];
         return json_encode($response);
@@ -95,16 +95,16 @@ class CommonHelper
                 //->where('yearly_employee_bonuses.status', '=', 'process')
                 ->where('yearly_employee_bonuses.emp_code', '=', $emp_code)
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
-                ->first();            
-    
+                ->first();
+
             $encashments = YearlyEmployeeLencHta::join('employees', 'employees.emp_code', '=', 'yearly_employee_lenc_htas.emp_code')
                 ->select('employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname', 'employees.emp_designation', 'employees.old_emp_code', 'yearly_employee_lenc_htas.*')
                 ->where('yearly_employee_lenc_htas.year', '=', $monthyr)
                 //->where('yearly_employee_lenc_htas.status', '=', 'process')
                 ->where('yearly_employee_lenc_htas.emp_code', '=', $emp_code)
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
-                ->first();            
-    
+                ->first();
+
 
            // dd($payroll_details);
             if(isset($payroll_details->emp_gross_salary)){
@@ -160,8 +160,8 @@ class CommonHelper
             }
 
             $m = date('Y-m-d', strtotime("+1 months", strtotime($m)));
-        }        
-        
+        }
+
 
 
         $response=[
@@ -221,7 +221,7 @@ class CommonHelper
             'Tax Saving Bond',
             'Jiwan Surksha',
             'Mediclaim',
-            'Handicapped'        
+            'Handicapped'
         ];
     }
 
@@ -244,7 +244,7 @@ class CommonHelper
 
         //dd($response);
         return json_encode($response);
-    
+
     }
 
     public static function getTaxPayableSlab($financial_year,$taxable_amount,$gender){
@@ -269,7 +269,7 @@ class CommonHelper
         }
 
 
-        
+
 
         $response=[
             'itax_slab'=>$itaxSlab
@@ -278,7 +278,7 @@ class CommonHelper
 
         //dd($response);
         return json_encode($response);
-    
+
     }
 
     public static function getItaxSavings($emp_code,$financial_year,$saving_type_desc){
@@ -286,7 +286,7 @@ class CommonHelper
         $from_year=$fyear[0];
         $to_year=$fyear[1];
         $assesment_year=($from_year+1).'-'.($to_year+1);
-       
+
        $itax_savings  = ItaxSaving::join('saving_type_masters', 'saving_type_masters.id', '=', 'itax_savings.saving_type_id')
             ->select('itax_savings.*')
             ->where('itax_savings.financial_year','LIKE',$financial_year)
@@ -300,7 +300,7 @@ class CommonHelper
 
         //dd($response);
         return json_encode($response);
-    
+
     }
 
     public static function getItaxType($financial_year,$tax_desc){
@@ -308,7 +308,7 @@ class CommonHelper
         $from_year=$fyear[0];
         $to_year=$fyear[1];
         $assesment_year=($from_year+1).'-'.($to_year+1);
-       
+
        $itax_type  = Itax_type_master::where('itax_type_masters.financial_year','LIKE',$financial_year)
             ->where('itax_type_masters.tax_desc','LIKE',$tax_desc)
             ->first();
@@ -319,7 +319,7 @@ class CommonHelper
 
         //dd($response);
         return json_encode($response);
-    
+
     }
 
     public static function getFormXVISavings($emp_code,$financial_year,$saving_type_desc){
@@ -327,7 +327,7 @@ class CommonHelper
         $from_year=$fyear[0];
         $to_year=$fyear[1];
         $assesment_year=($from_year+1).'-'.($to_year+1);
-       
+
        $itax_savings  = ItaxSaving::join('saving_type_masters', 'saving_type_masters.id', '=', 'itax_savings.saving_type_id')
             ->select('itax_savings.*')
             ->where('itax_savings.financial_year','LIKE',$financial_year)
@@ -341,7 +341,7 @@ class CommonHelper
 
         //dd($response);
         return json_encode($response);
-    
+
     }
 
     public static function getEffectiveItaxRate($financial_year){
@@ -364,21 +364,21 @@ class CommonHelper
             $response= ['surcharge'=>$interest->surcharge,'ecess'=>$interest->ecess];
         }else{
             $response= ['surcharge'=>'0','ecess'=>'0'];
-        }        
+        }
         return json_encode($response);
     }
     /*
         * Function Name :  encrypt
         * Purpose       :  This function is use for encrypt a string.
         * Author        :  KB
-        * Created Date  :             
+        * Created Date  :
         * Input Params  :  string $value
         * Return Value  :  string
    */
 
     public static function encrypt($value)
     {
-        $cipher = 'AES-128-ECB'; 
+        $cipher = 'AES-128-ECB';
         $key = \Config::get('app.key');
         return openssl_encrypt($value, $cipher, $key);
     }
@@ -387,14 +387,14 @@ class CommonHelper
         * Function Name :  decrypt
         * Purpose       :  This function is use for decrypt the encrypted string.
         * Author        :  KB
-        * Created Date  :             
+        * Created Date  :
         * Input Params  :  string $value
         * Return Value  :  string
    */
 
     public static function decrypt($value)
     {
-        $cipher = 'AES-128-ECB'; 
+        $cipher = 'AES-128-ECB';
         $key = \Config::get('app.key');
         return openssl_decrypt($value, $cipher, $key);
     }
@@ -403,7 +403,7 @@ class CommonHelper
         * Function Name :  partialEmailidDisplay
         * Purpose       :  This function is use for hiding some characters of en email id.
         * Author        :  KB
-        * Created Date  :             
+        * Created Date  :
         * Input Params  :  string $value
         * Return Value  :  string
    */
@@ -421,19 +421,19 @@ class CommonHelper
     public static function encryptId($value)
     {
         // $hashids = new Hashids(\Config::get('app.key'));
-        // return $hashids->encode($value);     
-        $cipher = 'AES-128-ECB'; 
+        // return $hashids->encode($value);
+        $cipher = 'AES-128-ECB';
         $key = \Config::get('app.key');
-        return base64_encode(openssl_encrypt($value, $cipher, $key));          
+        return base64_encode(openssl_encrypt($value, $cipher, $key));
     }
 
     public static function decryptId($value)
     {
         // $hashids = new Hashids(\Config::get('app.key'));
-        // return (count($decptid = $hashids->decode($value))? $decptid[0]: '');    
-        $cipher = 'AES-128-ECB'; 
+        // return (count($decptid = $hashids->decode($value))? $decptid[0]: '');
+        $cipher = 'AES-128-ECB';
         $key = \Config::get('app.key');
-        return openssl_decrypt(base64_decode($value), $cipher, $key);           
+        return openssl_decrypt(base64_decode($value), $cipher, $key);
     }
     // Helper function to round a decimal number as per your logic
     public static function customRound($number) {
@@ -444,5 +444,5 @@ class CommonHelper
         return number_format($rounded, 2);
     }
 
- 
+
 }

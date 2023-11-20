@@ -548,7 +548,7 @@ function recalculatePtax() {
             console.log('----ptax==' + obj[0].prof_tax);
 
             if (obj[0].prof_tax == '1' || obj[0].prof_tax > '0') {
-             
+
                 if (obj[3][j].inpercentage != '0') {
                     console.log('----ptax percentage');
                     emp_prof_tax = Math.round(basic * obj[3][j].inpercentage / 100);
@@ -575,7 +575,7 @@ function recalculatePtax() {
                 $("#emp_prof_tax").prop("readonly", true);
 
             } else if (obj[0].prof_tax != null && obj[0].prof_tax != '') {
-  
+
                 if (obj[0].prof_tax > 0) {
                     emp_prof_tax = obj[0].prof_tax;
                     $("#emp_prof_tax").val(emp_prof_tax);
@@ -671,7 +671,6 @@ function recalculatePtax() {
                             }
                             //$("#emp_pf").val('1800');
                             console.log('hello percent LP');
-
 
                         } else {
                             console.log('hello not percent');
@@ -904,7 +903,7 @@ function getEmpCode() {
             }
 
             var basic = $('#emp_basic_pay').val();
-            
+
 
             if (obj[1].length > 0) {
                 for (var i = 0; i < obj[1].length; i++) {
@@ -1523,9 +1522,9 @@ function getEmpCode() {
                     //apf_rate
 
                     emp_apf = Math.round(basic * apf_rate / 100);
-                    
-                    
-                    
+
+
+
                     $("#emp_apf").val(emp_apf);
                     $("#emp_apf").prop("readonly", true);
 
@@ -1906,7 +1905,7 @@ function getEmpCode() {
             //         $('#emp_vda').val()) + parseFloat($('#emp_hra').val()) + parseFloat($(
             //         '#emp_others_alw').val()) + parseFloat($('#emp_tiff_alw').val()) + parseFloat($(
             //         '#emp_conv').val()) + parseFloat($('#emp_medical').val()) + parseFloat($('#emp_misc_alw').val()) + parseFloat($('#emp_over_time').val()) + parseFloat($('#emp_bouns').val()) + parseFloat($('#emp_leave_inc').val()) + parseFloat($('#emp_hta').val()));
-            
+
             var emp_da = parseFloat($('#emp_da').val());
 
             if(isNaN(emp_da) || emp_da == ''){
@@ -1914,16 +1913,16 @@ function getEmpCode() {
             }else{
                 var emp_daFinal = emp_da;
             }
-            
-            
+
+
             var emp_vda = parseFloat($('#emp_vda').val());
             if(isNaN(emp_vda) || emp_vda == ''){
                 var emp_vdaFinal = 0;
             }else{
                 var emp_vdaFinal = emp_vda;
             }
-      
-            
+
+
             var gross_salary = parseFloat(basic) + emp_daFinal + emp_vdaFinal + parseFloat($('#emp_hra').val()) + parseFloat($('#emp_tiff_alw').val()) +
                 parseFloat($('#emp_others_alw').val()) + parseFloat($('#emp_conv').val()) + parseFloat($(
                     '#emp_medical').val()) + parseFloat($('#emp_misc_alw').val()) + parseFloat($(
@@ -2048,7 +2047,17 @@ function getEmpCode() {
                                         console.log('----acc_basic--' + accountable_basic);
                                         console.log('----acc_basic pf--' + emp_pf);
                                         if (obj[0].emp_pf_inactuals == 'Y') {
-                                            emp_pf = Math.round(basic * obj[3][j].inpercentage / 100);
+
+                                            //change logic
+                                            var accountable_basic = parseFloat(gross_salary) - parseFloat($(
+                                            '#emp_hra').val()) - parseFloat($('#emp_over_time').val());
+                                            emp_pf = Math.round(accountable_basic * obj[3][j].inpercentage /
+                                            100);
+                                            if (emp_pf > 1800) {
+                                                emp_pf = 1800;
+                                            }
+                                            //change logic end
+                                            //emp_pf = Math.round(basic * obj[3][j].inpercentage / 100);
                                         } else {
                                             if (emp_pf > 1800) {
                                                 emp_pf = 1800;
@@ -2120,8 +2129,8 @@ function getEmpCode() {
 
 
             $("#emp_gross_salary").val(gross_salary);
-            
-              
+
+
              var eprof_tax=$('#emp_prof_tax').val();
             var epf = $('#emp_pf').val();
             var ei_tax = $('#emp_i_tax').val();
@@ -2145,8 +2154,8 @@ function getEmpCode() {
              var remain_salary11=0;
              var remain_salary12=0;
              var remain_salary13=0;
-             
-             
+
+
              var total_deduction1=0;
              var total_deduction2=0;
              var total_deduction3=0;
@@ -2160,43 +2169,43 @@ function getEmpCode() {
              var total_deduction11=0;
              var total_deduction12=0;
              var total_deduction13=0;
-             
-             
+
+
             var basic = $('#emp_basic_pay').val();
             var gross_salary =$("#emp_gross_salary").val();
-            
-   
-          
-                if(basic > (parseFloat(eprof_tax) + parseFloat(epf))){ 
+
+
+
+                if(basic > (parseFloat(eprof_tax) + parseFloat(epf))){
                     total_deduction1 = parseFloat(eprof_tax) + parseFloat(epf);
-                    remain_salary1 =(parseFloat(basic) - parseFloat(total_deduction1)); 
+                    remain_salary1 =(parseFloat(basic) - parseFloat(total_deduction1));
                     remain_gross_salary = parseFloat(gross_salary) - parseFloat(total_deduction1);
-                    
+
                 }else {
                     total_deduction1 = 0;
                 }
-                
+
                 if(remain_gross_salary > ei_tax){
-                //   alert("cut itax"); 
+                //   alert("cut itax");
                     total_deduction2 = ei_tax;
-                    remain_salary2 =  (parseFloat(remain_gross_salary)  - parseFloat(total_deduction2)); 
-               
+                    remain_salary2 =  (parseFloat(remain_gross_salary)  - parseFloat(total_deduction2));
+
                 }else{
                     total_deduction2 = 0;
                     $('#emp_i_tax').val(total_deduction2);
                 }
-                
+
                 if( remain_salary2  >  eins_prem){
-                    // alert("cut insurance"); 
-                    total_deduction3 = eins_prem; 
+                    // alert("cut insurance");
+                    total_deduction3 = eins_prem;
                     remain_salary3 =  parseFloat(remain_salary2) - parseFloat(total_deduction3) ;
-                   
+
                 }else{
                     total_deduction3 = 0;
                     $('#emp_insu_prem').val(total_deduction3);
-                } 
+                }
                 if(remain_salary3 > epf_loan){
-                    // alert("cut pf_loan"); 
+                    // alert("cut pf_loan");
                     total_deduction4 = epf_loan;
                     remain_salary4 =  parseFloat(remain_salary3) - parseFloat(total_deduction4);
                 }else {
@@ -2204,16 +2213,16 @@ function getEmpCode() {
                     $('#emp_pf_loan').val(total_deduction4);
                 }
                 if(remain_salary4 > esa){
-                    // alert("cut adv"); 
+                    // alert("cut adv");
                     total_deduction5 = esa;
                     remain_salary5 =  parseFloat(remain_salary4) - parseFloat(total_deduction5) ;
                 }else
                 {
                     total_deduction5 = 0;
                     $('#emp_adv').val(total_deduction5);
-                } 
+                }
                 if( remain_salary5  >  ecoop){
-                    // alert("cut cooperative"); 
+                    // alert("cut cooperative");
                     total_deduction6 = ecoop;
                     remain_salary6 =  parseFloat(remain_salary5) - parseFloat(total_deduction6) ;
                     $('#status_co').val(deduct_co);
@@ -2229,94 +2238,94 @@ function getEmpCode() {
                     var emp_esiFinal = 0;
                 }else{
                     var emp_esiFinal = emp_esi;
-                }  
-                
+                }
+
                 if(remain_salary6 > emp_esiFinal){
-                    // alert("cut esi"); 
+                    // alert("cut esi");
                     total_deduction7 = emp_esiFinal;
                     remain_salary7 =  parseFloat(remain_salary6) - parseFloat(total_deduction7) ;
                 }else
                 {
                     total_deduction7 = 0;
                     $('#emp_esi').val(total_deduction7);
-                } 
-            
+                }
+
                 var emp_hrd = parseFloat($('#emp_hrd').val());
                 if(isNaN(emp_hrd) || emp_hrd == ''){
                     var emp_hrdFinal = 0;
                 }else{
                     var emp_hrdFinal = emp_hrd;
                 }
-            
+
                 if(remain_salary7 > emp_hrdFinal){
-                    // alert("cut hrd"); 
+                    // alert("cut hrd");
                     total_deduction8 = emp_hrdFinal;
                     remain_salary8 =  parseFloat(remain_salary7) - parseFloat(total_deduction8) ;
                 }else
                 {
                     total_deduction8 = 0;
                     $('#emp_hrd').val(total_deduction8);
-                } 
-                
+                }
+
                 var emp_furniture = parseFloat($('#emp_furniture').val());
                 if(isNaN(emp_furniture) || emp_furniture == ''){
                     var emp_furnitureFinal = 0;
                 }else{
                     var emp_furnitureFinal = emp_furniture;
                 }
-                
+
                 if(remain_salary8 > emp_furnitureFinal){
-                    // alert("cut furniture"); 
+                    // alert("cut furniture");
                     total_deduction9 = emp_furnitureFinal;
                     remain_salary9 =  parseFloat(remain_salary8) - parseFloat(total_deduction9) ;
                 }else
                 {
                     total_deduction9 = 0;
                     $('#emp_furniture').val(total_deduction9);
-                } 
-                
+                }
+
                 if(remain_salary9 > $('#emp_pf_employer').val()){
-                    // alert("cut pf_employee"); 
+                    // alert("cut pf_employee");
                     total_deduction10 = $('#emp_pf_employer').val();
                     remain_salary10 =  parseFloat(remain_salary9) - parseFloat(total_deduction10) ;
                 }else
                 {
                     total_deduction10 = 0;
                     $('#emp_pf_employer').val(total_deduction10);
-                } 
-                
+                }
+
                 if(remain_salary10 > $('#emp_pf_int').val()){
-                    // alert("cut pf_int"); 
+                    // alert("cut pf_int");
                     total_deduction11 = $('#emp_pf_int').val();
                     remain_salary11 =  parseFloat(remain_salary10) - parseFloat(total_deduction11) ;
                 }else
                 {
                     total_deduction11 = 0;
                     $('#emp_pf_int').val(total_deduction11);
-                } 
-                
+                }
+
                 if(remain_salary11 > $('#emp_apf').val()){
-                    // alert("cut apf"); 
+                    // alert("cut apf");
                     total_deduction12 = $('#emp_apf').val();
                     remain_salary12 =  parseFloat(remain_salary11) - parseFloat(total_deduction12) ;
                 }else
                 {
                     total_deduction12 = 0;
                     $('#emp_apf').val(total_deduction12);
-                } 
-                
+                }
+
                 if(remain_salary12 > $('#emp_misc_ded').val()){
-                    // alert("cut apf"); 
+                    // alert("cut apf");
                     total_deduction13 = $('#emp_misc_ded').val();
                     remain_salary13 =  parseFloat(remain_salary12) - parseFloat(total_deduction13) ;
                 }else
                 {
                     total_deduction13 = 0;
                     $('#emp_misc_ded').val(total_deduction13);
-                } 
-                
-      
-                
+                }
+
+
+
             var total_deduction = (parseFloat(total_deduction1) + parseFloat(total_deduction2) +
                 parseFloat(total_deduction3) + parseFloat(total_deduction10) + parseFloat(total_deduction11) + parseFloat(total_deduction12) + parseFloat(total_deduction4) +
                 parseFloat(total_deduction5) + parseFloat(total_deduction6) + parseFloat(total_deduction7)  + parseFloat(total_deduction8) + parseFloat(total_deduction9) + parseFloat(total_deduction13)
@@ -2335,9 +2344,9 @@ function getEmpCode() {
             // );
             // console.log(total_deduction,'total_deduction');
             total_deduction = Math.round((total_deduction + Number.EPSILON) * 100) / 100;
-            
-            
-            
+
+
+
 
             $("#emp_total_deduction").val(total_deduction);
             var net_salary = (parseFloat(gross_salary) - parseFloat(total_deduction));
@@ -2359,7 +2368,7 @@ function OnblurCalculateAddition() {
     var other_addition = $('#other_addition').val();
 
     $('#emp_gross_salary').val('');
-    
+
     var emp_da = parseFloat($('#emp_da').val());
 
     if(isNaN(emp_da) || emp_da == ''){
@@ -2367,17 +2376,17 @@ function OnblurCalculateAddition() {
     }else{
         var emp_daFinal = emp_da;
     }
-    
-    
+
+
     var emp_vda = parseFloat($('#emp_vda').val());
     if(isNaN(emp_vda) || emp_vda == ''){
         var emp_vdaFinal = 0;
     }else{
         var emp_vdaFinal = emp_vda;
     }
-      
-    
-    
+
+
+
     //Total Addition
     var total_gross_on_blur = (parseFloat(basic_pay) + emp_daFinal + emp_vdaFinal + parseFloat($('#emp_hra').val()) + parseFloat($('#emp_others_alw').val()) +
         parseFloat($('#emp_tiff_alw').val()) + parseFloat($('#emp_conv').val()) +
@@ -2407,7 +2416,7 @@ function OnBlurCalculateSubtraction() {
 
     // var tot_cess = Number(emp_income_tax) * Number(cess) / 100;
     // tot_cess = Math.round(tot_cess);
-    
+
      var eprof_tax=$('#emp_prof_tax').val();
             var epf = $('#emp_pf').val();
             var ei_tax = $('#emp_i_tax').val();
@@ -2432,8 +2441,8 @@ function OnBlurCalculateSubtraction() {
              var remain_salary12=0;
              var remain_salary13=0;
              var remain_salary14=0;
-             
-             
+
+
              var total_deduction1=0;
              var total_deduction2=0;
              var total_deduction3=0;
@@ -2448,45 +2457,45 @@ function OnBlurCalculateSubtraction() {
              var total_deduction12=0;
              var total_deduction13=0;
              var total_deduction14=0;
-             
-             
+
+
             var basic = $('#emp_basic_pay').val();
             var gross_salary =$("#emp_gross_salary").val();
-          
-                if(basic > (parseFloat(eprof_tax) + parseFloat(epf))){ 
+
+                if(basic > (parseFloat(eprof_tax) + parseFloat(epf))){
                     total_deduction1 = parseFloat(eprof_tax) + parseFloat(epf);
-                    remain_salary1 =(parseFloat(basic) - parseFloat(total_deduction1)); 
+                    remain_salary1 =(parseFloat(basic) - parseFloat(total_deduction1));
                     remain_gross_salary = (parseFloat(gross_salary) - parseFloat(total_deduction1));
 
-                    
+
                 }else {
                     total_deduction1 = 0;
                     alert("Insufficient Gross Salary");
                 }
-                
-                
+
+
                 if(remain_gross_salary > ei_tax){
                     total_deduction2 = ei_tax;
-                    remain_salary2 =  (parseFloat(remain_gross_salary)  - parseFloat(total_deduction2)); 
-               
+                    remain_salary2 =  (parseFloat(remain_gross_salary)  - parseFloat(total_deduction2));
+
                 }else{
                     total_deduction2 = 0;
                     alert("Insufficient Gross Salary");
                     $('#emp_i_tax').val(total_deduction2);
                 }
-                 
-                
+
+
                 if( remain_salary2  >  eins_prem){
-                    total_deduction3 = eins_prem; 
+                    total_deduction3 = eins_prem;
                     remain_salary3 =  parseFloat(remain_salary2) - parseFloat(total_deduction3) ;
-                   
+
                 }else{
                     total_deduction3 = 0;
                     alert("Insufficient Gross Salary To Deduct Insurance");
                     $('#emp_insu_prem').val(total_deduction3);
-                } 
-                
-                
+                }
+
+
                 if(remain_salary3 > epf_loan){
                     total_deduction4 = epf_loan;
                     remain_salary4 =  parseFloat(remain_salary3) - parseFloat(total_deduction4);
@@ -2495,8 +2504,8 @@ function OnBlurCalculateSubtraction() {
                     alert("Insufficient Gross Salary To PF Loan");
                     $('#emp_pf_loan').val(total_deduction4);
                 }
-                
-                 
+
+
                 if(remain_salary4 > esa){
                     total_deduction5 = esa;
                     remain_salary5 =  parseFloat(remain_salary4) - parseFloat(total_deduction5) ;
@@ -2505,9 +2514,9 @@ function OnBlurCalculateSubtraction() {
                     total_deduction5 = 0;
                     alert("Insufficient Gross Salary To Deduct ADV");
                     $('#emp_adv').val(total_deduction5);
-                } 
-                
-                
+                }
+
+
                 if( remain_salary5  >  ecoop){
                     total_deduction6 = ecoop;
                     remain_salary6 =  parseFloat(remain_salary5) - parseFloat(total_deduction6) ;
@@ -2518,16 +2527,16 @@ function OnBlurCalculateSubtraction() {
                     $('#emp_co_op').val(total_deduction6);
                     $('#status_co').val(non_deduct_co);
                 }
-                
-                
+
+
                 var emp_esi = parseFloat($('#emp_esi').val());
 
                 if(isNaN(emp_esi) || emp_esi == ''){
                     var emp_esiFinal = 0;
                 }else{
                     var emp_esiFinal = emp_esi;
-                }  
-                
+                }
+
                 if(remain_salary6 > emp_esiFinal){
 
                     total_deduction7 = emp_esiFinal;
@@ -2537,16 +2546,16 @@ function OnBlurCalculateSubtraction() {
                     total_deduction7 = 0;
                     alert("Insufficient Gross Salary To Deduct ESI");
                     $('#emp_esi').val(total_deduction7);
-                } 
-               
-                
+                }
+
+
                 var emp_hrd = parseFloat($('#emp_hrd').val());
                 if(isNaN(emp_hrd) || emp_hrd == ''){
                     var emp_hrdFinal = 0;
                 }else{
                     var emp_hrdFinal = emp_hrd;
                 }
-            
+
                 if(remain_salary7 > emp_hrdFinal){
 
                     total_deduction8 = emp_hrdFinal;
@@ -2556,17 +2565,17 @@ function OnBlurCalculateSubtraction() {
                     total_deduction8 = 0;
                     alert("Insufficient Gross Salary To Deduct HRD");
                     $('#emp_hrd').val(total_deduction8);
-                } 
-                 
+                }
+
                 var emp_furniture = parseFloat($('#emp_furniture').val());
                 if(isNaN(emp_furniture) || emp_furniture == ''){
                     var emp_furnitureFinal = 0;
                 }else{
                     var emp_furnitureFinal = emp_furniture;
                 }
-                
-                
-                
+
+
+
                 if(remain_salary8 > emp_furnitureFinal){
 
                     total_deduction9 = emp_furnitureFinal;
@@ -2576,22 +2585,22 @@ function OnBlurCalculateSubtraction() {
                     total_deduction9 = 0;
                     alert("Insufficient Gross Salary To Deduct FURNITURE");
                     $('#emp_furniture').val(total_deduction9);
-                } 
-                
-                
+                }
+
+
                 var emp_pf_employer = parseFloat($('#emp_pf_employer').val());
-                
-                
+
+
                 if(isNaN(emp_pf_employer) || emp_pf_employer == ''){
                     var emp_pf_employerFinal = 0;
                 }else{
                     var emp_pf_employerFinal = emp_pf_employer;
                 }
-                
-                
-                 
+
+
+
                 if(remain_salary9 > emp_pf_employerFinal){
-                    
+
                     total_deduction10 = emp_pf_employerFinal;
                     remain_salary10 =  parseFloat(remain_salary9) - parseFloat(total_deduction10) ;
                 }else
@@ -2599,9 +2608,9 @@ function OnBlurCalculateSubtraction() {
                     total_deduction10 = 0;
                     alert("Insufficient Gross Salary To Deduct PF Employer Contribution");
                     $('#emp_pf_employer').val(total_deduction10);
-                } 
-               
-                
+                }
+
+
                 if(remain_salary10 > $('#emp_pf_int').val()){
 
                     total_deduction11 = $('#emp_pf_int').val();
@@ -2611,8 +2620,8 @@ function OnBlurCalculateSubtraction() {
                     total_deduction11 = 0;
                     alert("Insufficient Gross Salary To Deduct PF INT");
                     $('#emp_pf_int').val(total_deduction11);
-                } 
-              
+                }
+
                 if(remain_salary11 > $('#emp_apf').val()){
 
                     total_deduction12 = $('#emp_apf').val();
@@ -2622,11 +2631,11 @@ function OnBlurCalculateSubtraction() {
                     total_deduction12 = 0;
                     alert("Insufficient Gross Salary To Deduct APF");
                     $('#emp_apf').val(total_deduction12);
-                } 
-                
-                
+                }
+
+
                 if(remain_salary12 > $('#emp_misc_ded').val()){
- 
+
                     total_deduction13 = $('#emp_misc_ded').val();
                     remain_salary13 =  parseFloat(remain_salary12) - parseFloat(total_deduction13) ;
                 }else
@@ -2634,8 +2643,8 @@ function OnBlurCalculateSubtraction() {
                     total_deduction13 = 0;
                     alert("Insufficient Gross Salary To Deduct MISE DED");
                     $('#emp_misc_ded').val(total_deduction13);
-                } 
-                
+                }
+
                 if(remain_salary13 > other_deduction){
                     total_deduction14 = other_deduction;
                     remain_salary14 =  parseFloat(remain_salary13) - parseFloat(total_deduction14) ;
@@ -2645,7 +2654,7 @@ function OnBlurCalculateSubtraction() {
                     alert("Insufficient Gross Salary To Deduct Others");
                     $('#other_deduction').val(total_deduction14);
                 }
-                
+
                 var total_deduction = (parseFloat(total_deduction1) + parseFloat(total_deduction2) +
                 parseFloat(total_deduction3) + parseFloat(total_deduction10) + parseFloat(total_deduction11) + parseFloat(total_deduction12) + parseFloat(total_deduction4) +
                 parseFloat(total_deduction5) + parseFloat(total_deduction6) + parseFloat(total_deduction7)  + parseFloat(total_deduction8) + parseFloat(total_deduction9) + parseFloat(total_deduction13)
