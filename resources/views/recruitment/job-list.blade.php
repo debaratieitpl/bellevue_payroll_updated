@@ -57,7 +57,7 @@ BELLEVUE - Job Lists
 							<div class="aply-lv" style="padding-right: 36px;">
 								<a href="{{ url('recruitment/add-job-list') }}" class="btn btn-default">Add New Job <i class="fa fa-plus"></i></a>
 							</div>
-</div>
+                    </div>
                             <div class="card-body">
 							
 							<div class="srch-rslt" style="overflow-x:scroll;">

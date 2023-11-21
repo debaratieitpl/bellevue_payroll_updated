@@ -466,11 +466,18 @@ Route::get('recruitment/hired', 'Recruitment\RecruitmentController@viewhiredcand
 Route::get('recruitment/edit-hired/{hired_id}', 'Recruitment\RecruitmentController@viewhiredcandidatedetails');
 Route::post('recruitment/edit-hired', 'Recruitment\RecruitmentController@savehiredcandidatedetails');
 Route::get('recruitment/offer-letter', 'Recruitment\RecruitmentController@viewsoffercandidate');
-Route::get(' recruitment/generate-letter', 'Recruitment\RecruitmentController@viewsofferlattercandidate');
-Route::get('career/{career_id}', 'Recruitment\CareerController@viewdash');
+Route::get('recruitment/generate-letter', 'Recruitment\RecruitmentController@viewsofferlattercandidate');
+Route::post('recruitment/edit-offer-letter', 'Recruitment\RecruitmentController@saveofferlat');
+
 Route::get('pis/getjobpostByIdlkkk/{empid}','Recruitment\RecruitmentController@getDepartment');
 Route::get('pis/getjobpostByIdlkkkll/{empid}/{soc}', 'Recruitment\RecruitmentController@getJobdetails');
 
+//carer
+Route::get('career/{career_id}', 'CareerController@viewdash');
+Route::get('career/application/{career_id}', 'CareerController@viewapp');
+Route::post('career/application', 'CareerController@saveapp');
+Route::get('thank-you', 'CareerController@appthankyou');
+//end carer route
 //******* Routes with requirement end *********//
 
 //******* Routes with Leave Management start *********//

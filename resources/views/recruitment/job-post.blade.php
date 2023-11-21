@@ -65,6 +65,7 @@ BELLEVUE - Job Posts
                            </tr>
                         </thead>
                         <tbody>
+                           
                            <?php $i = 1; ?>
                            @foreach($company_job_rs as $recruitment_job)
                            <tr>

@@ -41,6 +41,9 @@ BELLEVUE - Interview
             <div class="card">
                <div class="card-header">
                   @include('include.messages')
+                  <div class="aply-lv" style="padding-right: 36px;">
+                     <a href="{{ url('recruitment/generate-letter') }}" class="btn btn-default">Add New Offer Letter <i class="fa fa-plus"></i></a>
+                  </div>
                </div>
                <div class="card-body">
                   <div class="srch-rslt" style="overflow-x:scroll;">
@@ -57,7 +60,7 @@ BELLEVUE - Interview
                               <th>Status</th>
                               <th>Date</th>
                               <th>Offered Salary</th>
-							  <th>Date Of Joining </th>
+							         <th>Date Of Joining </th>
                               <th>Action</th>
                            </tr>
                         </thead>
@@ -88,7 +91,7 @@ BELLEVUE - Interview
                                     Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                       <a download class="dropdown-item" href="{{asset('public/pdf/'.$candidate->dom_pdf)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
+                                       <a download class="dropdown-item" href="{{asset($candidate->dom_pdf)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
                                        {{-- <a class="dropdown-item" href="{{url('recruitment/send-letter/'.base64_encode($candidate->id))}}"><i class="fas fa-paper-plane"></i>&nbsp; Send</a>  --}}
                                        <!--<a class="dropdown-item" href="{{url('recruitment/offer-down-letter/'.base64_encode($candidate->id))}}"><i class="fas fa-eye"></i>&nbsp; View</a>-->
                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal<?=$ij;?>"><i class="fa fa-eye"></i>&nbsp; View</a>
