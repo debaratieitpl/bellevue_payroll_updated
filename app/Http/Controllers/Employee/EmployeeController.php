@@ -11,6 +11,9 @@ use App\Exports\ExcelFileExportEmployees;
 use App\Exports\ExcelFileExportEmployeesOnly;
 use App\Http\Controllers\Controller;
 use App\Models\Employee\Education_details;
+use App\Models\Employee\Personal_doc;
+use App\Models\Employee\Personal_record;
+use App\Models\Employee\Misc_doc;
 use App\Models\Employee\Employee_pay_structure;
 use App\Models\Employee\Emp_pay_structure;
 use App\Models\Employee\Increment_history;
@@ -364,7 +367,7 @@ class EmployeeController extends Controller
     {
         if (!empty(Session::get('admin'))) {
 
-             dd($request->all());
+             //dd($request->all());
 
             date_default_timezone_set('Asia/Kolkata');
 
@@ -594,6 +597,12 @@ class EmployeeController extends Controller
                 $retirementdate = date_create($date);
                 $retire_date = date_format($retirementdate, 'Y-m-d');
 
+                //bvc date
+                $retirebvcdate = $request->emp_retirement_bvc_date;
+                $date = str_replace('/', '-', $retirebvcdate);
+                $retirementbvcdate = date_create($date);
+                $retire_bvc_date = date_format($retirementbvcdate, 'Y-m-d');
+
                 if (isset($request->pay)) {
                     $countper = count($request->pay);
 
@@ -628,10 +637,62 @@ class EmployeeController extends Controller
                         }
                     }
                 }
-
+                 //dd($request->all());
                 //professional record dynamivally
+                if (isset($request->pdoctype)) {
+                    for ($i = 0; $i < count($request->pdoctype); $i++) {
+                        if ($request->pdoctype[$i] != '') {
+                            // Handle image upload
+                            $image = $request->file('pdocimage')[$i];
+                            $imageName = time() . '_' . $image->getClientOriginalName();
+                            $image->move(public_path('personaldoc'), $imageName);
+
+                            $perdoc[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'pdoctype' => $request->pdoctype[$i],
+                                'pdocimage' => 'personaldoc/' . $imageName,
+                            );
+                        }
+                    }
+                }
                 //personal record dynamivally
+                if (isset($request->precqualification)) {
+                    for ($i = 0; $i < count($request->precqualification); $i++) {
+                        if ($request->precqualification[$i] != '') {
+                            // Handle image upload
+                            $image = $request->file('precimage')[$i];
+                            $imageName = time() . '_' . $image->getClientOriginalName();
+                            $image->move(public_path('personalrecord'), $imageName);
+
+                            $perrecord[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'precqualification' => $request->precqualification[$i],
+                                'precdesignation' => $request->precdesignation[$i],
+                                'precfromdate' => $request->precfromdate[$i],
+                                'prectodate' => $request->prectodate[$i],
+                                'precimage' => 'personalrecord/' . $imageName,
+                            );
+                        }
+                    }
+                }
                 //misc record dynamivally
+
+                if (isset($request->mreccategory)) {
+                    for ($i = 0; $i < count($request->mreccategory); $i++) {
+                        if ($request->mreccategory[$i] != '') {
+                            // Handle image upload
+                            $image = $request->file('mrecimage')[$i];
+                            $imageName = time() . '_' . $image->getClientOriginalName();
+                            $image->move(public_path('miscdoc'), $imageName);
+
+                            $misdoc[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'mreccategory' => $request->mreccategory[$i],
+                                'mrecimage' => 'miscdoc/' . $imageName,
+                            );
+                        }
+                    }
+                }
 
                 // print_r($education);
                 // die();
@@ -705,7 +766,7 @@ class EmployeeController extends Controller
 
               }
 
-
+               //dd($request->all());
                 $data = array(
                     'emp_code' => $request->emp_code,
                     'old_emp_code' => $request->old_emp_code,
@@ -737,7 +798,6 @@ class EmployeeController extends Controller
                     'marital_date' => date('Y-m-d', strtotime($request->marital_date)),
                     'emp_doj' => $request->emp_doj,
                     'emp_retirement_date' => $retire_date,
-                    'emp_retirement_bvc_date' => date("Y-m-d", strtotime($request->emp_retirement_bvc_date)),
                     'emp_next_increament_date' => date("Y-m-d", strtotime($request->emp_next_increment_date)),
                     'emp_status' => $request->emp_status,
                     'emp_shift_group' => $request->emp_sift_grp,
@@ -838,15 +898,36 @@ class EmployeeController extends Controller
                     'emp_pension' => $request->emp_pension,
                     'emp_pf_inactuals' => $request->emp_pf_inactuals,
                     'emp_bonus' => $request->emp_bonus,
+
+                    //new field
+                    'emp_joining_designation' => $request->emp_joining_designation,
+                    'emp_retirement_bvc_date' => $retire_bvc_date,
+                    'contract_renew_date' => $request->contract_renew_date ? date("Y-m-d", strtotime($request->contract_renew_date)) : null,
+                    'emp_grade_reg' => $request->emp_grade_reg,
+                    'emp_reg_no' => $request->emp_reg_no,
+                    'emp_reg_date' => $request->emp_reg_date,
+                    'emp_reg_council' => $request->emp_reg_council,
+                    'emp_up_graduation' => $request->emp_up_graduation,
+
+
                 );
                 //dd($totalEarningValue);
-                dd($data);
-                //dd($education);
+                //dd($data);
+                //dd($perdoc);
                 //dd($pay);
                 Employee_pay_structure::insert($pay);
 
                 if (isset($education)) {
                     Education_details::insert($education);
+                }
+                if (isset($perdoc)) {
+                    Personal_doc::insert($perdoc);
+                }
+                if (isset($perrecord)) {
+                    Personal_record::insert($perrecord);
+                }
+                if (isset($misdoc)) {
+                    Misc_doc::insert($misdoc);
                 }
                 Employee::insert($data);
 
@@ -2178,7 +2259,8 @@ class EmployeeController extends Controller
         $result = ' <tr class="itemslotdoc" id="' . $row . '" >
 					    <td>' . $row . '</td>
 
-        <td><select class="form-control" name="pdoc[]">
+        <td><select class="form-control" name="pdoctype[]">
+                <option value="">Aadhar Card</option>
                 <option>Aadhar Card</option>
                 <option>Voter Card</option>
                 <option>Pan Card</option>
@@ -2186,7 +2268,7 @@ class EmployeeController extends Controller
                 <option>Passport</option>
             </select>
         </td>
-        <td><input type="file" name="pimage[]" value="" class="form-control"></td>
+        <td><input type="file" name="pdocimage[]" value="" class="form-control"></td>
           <td><button class="btn-success" style="margin-bottom: 5px;" type="button" id="adddoc' . $row . '" onClick="addnewrowdoc(' . $row . ')" data-id="' . $row . '"> <i class="ti-plus"></i> </button>
          <button class="btn-danger deleteButtondoc" style="background-color:#E70B0E; border-color:#E70B0E;" type="button" id="del' . $row . '"  onClick="delRowDoc(' . $row . ')"> <i class="ti-minus"></i> </button></td>
       </tr>';

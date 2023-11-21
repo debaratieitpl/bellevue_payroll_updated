@@ -1,0 +1,62 @@
+<table border="1" id="example">
+            <thead>
+                <th style="width:50px;">Sl no</th> 
+                <th style="width:100px;">Karigar Name</th> 
+                <th style="width:100px;">Jewellery Type</th> 
+                <th style="width:150px;">Image</th>
+                <th style="width:100px;">Party Name</th>
+                <th style="width:100px;">Quantity</th>
+                <th style="width:100px;">Rate</th>
+                <th style="width:100px;">Polished Weight</th> 
+                <th style="width:100px;">Polished Color</th>
+                <th style="width:100px;">Ploished Rate</th>
+                <th style="width:100px;">Making Amount</th>
+                 <th style="width:100px;">Product Rate</th>
+                <th style="width:100px;">Total</th>
+                <th style="width:100px;">Date</th>
+            </thead><tr style="height:180px;">
+                <td>7</td>
+                <td>Raja da</td>
+                <td>Penden</td>
+                <td><img height="176" width="120" src="https://sajkolkata.com/media/stock/286910349_nimanew2.jpg"></td>
+                <td>Sagar</td>
+                <td>90</td>
+                <td>100</td>
+                <td>10</td>
+                <td>Rose gold</td>
+                <td>2</td>
+                <td>200</td>
+                <td>320</td>
+                <td>28800</td>
+                <td>2023-10-18</td>
+                </tr><tr style="height:180px;">
+                <td>6</td>
+                <td>Raja da</td>
+                <td>Penden</td>
+                <td><img height="176" width="120" src="https://sajkolkata.com/media/stock/158527565_fintellect1.jpg"></td>
+                <td>Shamim</td>
+                <td>100</td>
+                <td>100</td>
+                <td>13</td>
+                <td>Rose gold</td>
+                <td>2</td>
+                <td>100</td>
+                <td>226</td>
+                <td>22600</td>
+                <td>2023-10-18</td>
+                </tr><tr style="height:180px;">
+                <td>5</td>
+                <td>Raja da</td>
+                <td>Penden</td>
+                <td><img height="176" width="120" src="https://sajkolkata.com/media/stock/286910349_nimanew2.jpg"></td>
+                <td>Raja Da</td>
+                <td>10</td>
+                <td>100</td>
+                <td>12</td>
+                <td>Rose gold</td>
+                <td>2</td>
+                <td>100</td>
+                <td>224</td>
+                <td>2240</td>
+                <td>2023-10-18</td>
+                </tr></table>

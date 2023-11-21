@@ -416,7 +416,7 @@ Employee Information System-Employees
                                     </div>
                                     <div class="col-md-3">
                                         <label>Date of up Graduation</label>
-                                        <input type="text" name="emp_up_graduation" class="form-control">
+                                        <input type="date" name="emp_up_graduation" class="form-control">
                                     </div>
 
                                 </div>
