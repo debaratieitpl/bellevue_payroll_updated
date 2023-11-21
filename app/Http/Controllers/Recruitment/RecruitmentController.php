@@ -14,6 +14,7 @@ use App\Models\Recruitment\Candidate;
 use Session;
 use DB;
 use Mail;
+use PDF;
 
 
 class RecruitmentController extends Controller
@@ -175,7 +176,10 @@ class RecruitmentController extends Controller
     }
     public function saveJobPostData(Request $request)
     {
+        
         if (!empty(Session::get('admin'))) {
+
+            // dd(Session::get('admin'));
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
                 ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
                 ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
@@ -863,12 +867,12 @@ class RecruitmentController extends Controller
             ->where('member_id', '=', Session::get('adminusernmae'))
             ->get();
 
-            $data['candidate_rs'] = DB::Table('candidate_offers')
-                ->join('company_jobs', 'candidate_offers.job_id', '=', 'company_jobs.id')
-                ->where('candidate_offers.status', '=', 'Hired')
-                ->select('candidate_offers.*', 'company_jobs.job_code')
+            $data['candidate_rs'] = DB::Table('candidate_offer')
+                ->join('company_jobs', 'candidate_offer.job_id', '=', 'company_jobs.id')
+                ->where('candidate_offer.status', '=', 'Hired')
+                ->select('candidate_offer.*', 'company_jobs.job_code')
                 ->get();
-
+            //    dd($data['candidate_rs']);
             return view('recruitment/candidate-offer', $data);
         } else {
             return redirect('/');
@@ -876,35 +880,39 @@ class RecruitmentController extends Controller
     }
     public function viewsofferlattercandidate()
     {
-        if (!empty(Session::get('emp_email'))) {
+     
+        if (!empty(Session::get('admin'))) {
+        
+            $email = Session::get('admin');
+        
+            // $Roledata = DB::table('registration')->where('status', '=', 'active')
 
-            $email = Session::get('emp_email');
-            $Roledata = DB::table('registration')->where('status', '=', 'active')
+            //     ->where('email', '=', $email)
+            //     ->first();
+            // $data['Roledata'] = DB::table('registration')->where('status', '=', 'active')
+            //     ->where('email', '=', $email)
+            //     ->first();
+            $data['employeeslist'] = DB::Table('candidates')
+                ->join('company_jobs', 'candidates.job_id', '=', 'company_jobs.id')
 
-                ->where('email', '=', $email)
-                ->first();
-            $data['Roledata'] = DB::table('registration')->where('status', '=', 'active')
-
-                ->where('email', '=', $email)
-                ->first();
-            $data['employeeslist'] = DB::Table('candidate')
-                ->join('company_job', 'candidate.job_id', '=', 'company_job.id')
-
-                ->where('company_job.emid', '=', $Roledata->reg)
+                // ->where('company_jobs.emid', '=', $Roledata->reg)
                 ->where(function ($query) {
-                    $query->where('candidate.status', '=', 'Hired')
-                        ->orWhere('candidate.status', '=', 'Job Offered');
+                    $query->where('candidates.status', '=', 'Hired')
+                        ->orWhere('candidates.status', '=', 'Job Offered');
                 })
 
-                ->select('candidate.*', 'company_job.job_code')
+                ->select('candidates.*', 'company_jobs.job_code')
                 ->get();
 
-            $data['candidate_rs'] = DB::table('candidate_offer')->join('candidate', 'candidate_offer.user_id', '=', 'candidate.id')
-                ->join('company_job', 'candidate_offer.job_id', '=', 'company_job.id')
 
-                ->where('company_job.emid', '=', $Roledata->reg)
+            $data['candidate_rs'] = DB::table('candidate_offer')
+            ->join('candidates', 'candidate_offer.user_id', '=', 'candidates.id')
+                // ->join('company_jobs', 'candidate_offer.job_id', '=', 'company_jobs.id')
+                // ->where('company_job.emid', '=', $Roledata->reg)
+                ->select('candidate_offer.*')
+                ->get();
 
-                ->select('candidate_offer.*')->get();
+            // dd($data['candidate_rs']);
 
             $userlist = array();
             foreach ($data['candidate_rs'] as $user) {
@@ -920,13 +928,80 @@ class RecruitmentController extends Controller
                 }
 
             }
-            $data['employeelists'] = DB::table('employee')->where('emid', '=', $Roledata->reg)->get();
-            return view('recruitment/candidate-add-offer', $data);
+            // dd($data['employees']);
+            $data['employeelists'] = DB::table('employees')->get();
+            // dd($data['employeelists']);
+            return view('recruitment/candidate-add-offer',$data);
         } else {
             return redirect('/');
         }
     }
+    public function saveofferlat(Request $request)
+    {
+        // dd($request->user_id);
+        if (!empty(Session::get('admin'))) {
+            // $email = Session::get('emp_email');
+            // $Roledata = DB::table('registration')->where('status', '=', 'active')
 
+            //     ->where('email', '=', $email)
+            //     ->first();
+
+            $job = DB::table('candidates')->where('id', '=', $request->user_id)->first();
+            // dd($job);
+            $filename = $job->name . time() . '.pdf';
+            // dd($filename);
+            $comname="Bellevue Clininc";
+            $logo="http://bellevuepf.com/payroll/public/theme/images/bellevue-logo1.png";
+            $datap = ['com_name' => $comname,'logo' => $logo,'date' => date('Y-m-d'), 'name' => $job->name, 'job_title' => $job->job_title, 'st_date' => date('Y-m-d', strtotime($request->date_jo)), 'em_name' => $job->name, 'em_pos' => $job->job_title];
+            
+            $pdf = PDF::loadView('myPDF', $datap);
+        
+            $pdf->save(public_path() . '/pdf/' . $filename);
+            $data = array(
+                'job_id' => $job->job_id,
+                'job_title' => $job->job_title,
+                'user_id' => $job->id,
+                'name' => $job->name,
+                'gender' => $job->gender,
+                'exp_month' => $job->exp_month,
+                'skill_level' => $job->skill_level,
+
+                'email' => $job->email,
+                'phone' => $job->phone,
+                'resume' => $job->resume,
+                'cover_letter' => $job->cover_letter,
+                'exp' => $job->exp,
+                'cur_or' => $job->cur_or,
+                'cur_deg' => $job->cur_deg,
+                'country' => $job->country,
+                'zip' => $job->zip,
+                'location' => $job->location,
+                'exp_sal' => $job->exp_sal,
+                'sal' => $job->sal,
+                'status' => $job->status,
+                'remarks' => $job->remarks,
+                'edu' => $job->edu,
+                'skill' => $job->skill,
+                'date' => $job->date,
+                'offered_sal' => $request->offered_sal,
+                'payment_type' => $request->payment_type,
+
+                'reportauthor' => $request->reportauthor,
+                'date_jo' => date('Y-m-d', strtotime($request->date_jo)),
+                'cr_date' => date('Y-m-d H:i:s'),
+                'dom_pdf' =>'pdf'.'/'.$filename,
+            );
+
+            DB::table('candidate_offer')->insert($data);
+
+            Session::flash('message', 'Job Offer Letter Generated.');
+
+            return redirect('recruitment/offer-letter');
+        } else {
+            return redirect('/');
+        }
+
+    }
 
 
 

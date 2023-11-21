@@ -100,7 +100,7 @@ BELLEVUE - Interview
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                        <a class="dropdown-item" href="{{url('recruitment/edit-interview/'.base64_encode($candidate->id))}}"><i class="fa fa-edit"></i>&nbsp; Edit</a> 
-                                       <a download class="dropdown-item" href="{{asset('public/'.$candidate->resume)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
+                                       <a download class="dropdown-item" href="{{asset($candidate->resume)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
                                        {{-- @if($candidate->status=='Interview')	
                                        <a class="dropdown-item" href="{{url('recruitment/send-letter-job-shorting/'.base64_encode($candidate->id))}}"><i class="fa fa-paper-plane"></i>&nbsp; Send</a> 
                                        @endif --}}
