@@ -29,7 +29,7 @@ Loan Information System - Loan Report
 	}
     .card-icon form {
     padding: 10px 0;
-    
+
 }
 </style>
 <!-- Content -->
@@ -57,7 +57,7 @@ Loan Information System - Loan Report
 			<div class="main-card">
 				<div class="card">
                     <div class="card-header">
-                       
+
                         @include('include.messages')
                     </div>
 
@@ -121,13 +121,13 @@ Loan Information System - Loan Report
 							@if($req_type=='PF')
 							@php
 							$employeeTotals = [];
-							$index = 0; 
+							$index = 0;
 							@endphp
-						
+
 						@foreach ($result as $record)
 							@php
 								$key = $record->emp_code;
-						
+
 								if (!isset($employeeTotals[$key])) {
 									$employeeTotals[$key] = [
 										'index' => ++$index,
@@ -136,35 +136,38 @@ Loan Information System - Loan Report
                                         'emp_status' => $record->emp_status,
 										'emp_name' => "{$record->salutation} {$record->emp_fname} {$record->emp_mname} {$record->emp_lname}",
 										'loan_amount' => 0,
+                                        'pre_recoveries' => 0,
 										'payroll_deduction' => 0,
 										'pf_interest' => 0,
 										'balance' => 0,
 										'loanadjust' => 0,
 									];
 								}
-						
+                                $opening_amount =  $record->pre_recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->pre_recoveries);
 								$balance = $record->recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->recoveries);
 								$employeeTotals[$key]['loan_amount'] += $record->loan_amount;
-								$employeeTotals[$key]['payroll_deduction'] += $record->payroll_deduction;
+                                $employeeTotals[$key]['pre_recoveries'] += $opening_amount;
+								$employeeTotals[$key]['payroll_deduction'] += $record->payroll_deduction_sa;
 								$employeeTotals[$key]['pf_interest'] += $record->pf_iterest;
 								$employeeTotals[$key]['balance'] += $balance;
-								$employeeTotals[$key]['loanadjust'] += $record->adjust_amount;
-						
+								$employeeTotals[$key]['loanadjust'] += $record->loan_adjust;
+
 								$pf_interest = $record->pf_iterest;
 							@endphp
 						@endforeach
-						
+
 						<table id="bootstrap-data-table" class="table table-striped table-bordered">
 							<thead style="text-align:center;vertical-align:middle;">
 								<tr>
-									<th style="width:8%;">Sl. No.</th>
-									<th style="width:5%;">Employee Code</th>
+									<th >Sl. No.</th>
+									<th >Employee Code</th>
 									<th>Employee Name</th>
-                                    <th>Employee Type</th>
-									<th style="width:5%;">PF Loan Outstanding</th>
+                                    {{-- <th>Employee Type</th> --}}
+									<th style="width:5%;">PF Total Loan Amount</th>
+                                    <th style="width:5%;">PF Opening Loan Amount</th>
 									<th style="width:5%;">PF Loan Deduction</th>
-									<th style="width:5%;">PF Interest</th>
-									<th style="width:5%;">Total Deduction</th>
+									{{-- <th style="width:5%;">PF Interest</th>
+									<th style="width:5%;">Total Deduction</th> --}}
 									<th style="width:5%;">PF Loan Balance</th>
 									<th style="width:5%;">Loan Adjust</th>
 									<th style="width:5%;">Final PF Loan Balance</th>
@@ -176,27 +179,30 @@ Loan Information System - Loan Report
 										<td>{{ $employee['index'] }}</td>
 										<td>{{ $employee['old_emp_code'] }}</td>
 										<td>{{ $employee['emp_name'] }}</td>
-                                        <td>{{ $employee['emp_status'] }}</td>
+                                        {{-- <td>{{ $employee['emp_status'] }}</td> --}}
 										<td>{{ number_format(round($employee['loan_amount'], 1),2) }}</td>
+                                        <td>{{ number_format(round($employee['pre_recoveries'], 1),2) }}</td>
 										<td>{{ number_format(round($employee['payroll_deduction'], 1),2) }}</td>
-										<td>{{ number_format(round($employee['pf_interest'], 1),2)}}</td>
-										<td>{{ number_format(round($employee['payroll_deduction'] + $employee['pf_interest'], 1),2) }}</td>
-										<td>{{ number_format(round($employee['balance'], 1),2) }}</td>
+										{{-- <td>{{ number_format(round($employee['pf_interest'], 1),2)}}</td>
+										<td>{{ number_format(round($employee['payroll_deduction'] + $employee['pf_interest'], 1),2) }}</td> --}}
+										{{-- <td>{{ number_format(round($employee['balance'], 1),2) }}</td> --}}
+                                        <td>{{ number_format(round($employee['pre_recoveries'] - $employee['payroll_deduction'], 1), 2) }}</td>
 										<td>{{ number_format(round($employee['loanadjust'], 1),2)}}</td>
-										<td>{{ number_format(round($employee['balance'] - $employee['loanadjust'], 1),2) }}</td>
+										<td>{{ number_format(round($employee['balance'], 1),2) }}</td>
 									</tr>
 								@endforeach
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan="4" style="font-weight:700;">Grand Total</td>
+									<td colspan="3" style="font-weight:700;">Grand Total</td>
 									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'loan_amount')), 1),2) }}</td>
+                                    <td>{{ number_format(round(array_sum(array_column($employeeTotals, 'pre_recoveries')), 1),2) }}</td>
 									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')), 1),2) }}</td>
-									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'pf_interest')), 1),2) }}</td>
-									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')) + array_sum(array_column($employeeTotals, 'pf_interest')), 1),2) }}</td>
-									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'balance')), 1),2) }}</td>
+									{{-- <td>{{ number_format(round(array_sum(array_column($employeeTotals, 'pf_interest')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'payroll_deduction')) + array_sum(array_column($employeeTotals, 'pf_interest')), 1),2) }}</td> --}}
+                                    <td>{{ number_format(round(array_sum(array_column($employeeTotals, 'pre_recoveries')) - array_sum(array_column($employeeTotals, 'payroll_deduction')), 1),2) }}</td>
 									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'loanadjust')), 1),2) }}</td>
-									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'balance')) - array_sum(array_column($employeeTotals, 'loanadjust')), 1),2) }}</td>
+									<td>{{ number_format(round(array_sum(array_column($employeeTotals, 'balance')), 1),2) }}</td>
 								</tr>
 							</tfoot>
 						</table>
@@ -204,10 +210,10 @@ Loan Information System - Loan Report
 							@if($req_type=='SA')
                             @php
                                 $consolidatedData = [];
-                            
+
                                 foreach ($result as $record) {
                                     $empCode = $record->emp_code;
-                            
+
                                     if (!isset($consolidatedData[$empCode])) {
                                         $consolidatedData[$empCode] = [
                                             'recordCount' => 0,
@@ -215,6 +221,7 @@ Loan Information System - Loan Report
                                             'total_installment' => 0,
                                             'total_balance' => 0,
                                             'total_loanadjust' => 0,
+                                            'pre_recoveries' => 0,
                                             'salutation' => $record->salutation,
                                             'emp_fname' => $record->emp_fname,
                                             'emp_mname' => $record->emp_mname,
@@ -223,17 +230,18 @@ Loan Information System - Loan Report
                                             'old_emp_code' => $record->old_emp_code,
                                         ];
                                     }
-                            
+                                    $opening_amount =  $record->pre_recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->pre_recoveries);
                                     $balance = $record->recoveries === null ? $record->loan_amount : ($record->loan_amount - $record->recoveries);
-                            
+
                                     $consolidatedData[$empCode]['recordCount']++;
                                     $consolidatedData[$empCode]['total_loan_amount'] += $record->loan_amount;
-                                    $consolidatedData[$empCode]['total_installment'] += $record->payroll_deduction;
+                                    $consolidatedData[$empCode]['total_installment'] += $record->payroll_deduction_sa;
                                     $consolidatedData[$empCode]['total_balance'] += $balance;
-                                    $consolidatedData[$empCode]['total_loanadjust'] += $record->adjust_amount;
+                                    $consolidatedData[$empCode]['pre_recoveries'] += $opening_amount;
+                                    $consolidatedData[$empCode]['total_loanadjust'] += $record->loan_adjust;
                                 }
                             @endphp
-                        
+
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
                             <thead style="text-align:center;vertical-align:middle;">
                                 <tr>
@@ -242,8 +250,9 @@ Loan Information System - Loan Report
                                     {{-- <th style="width:12%;">Employee New Code</th> --}}
                                     <th>Employee Name</th>
                                     {{-- <th style="width:10%;">Loan ID</th> --}}
-                                    <th style="width:5%;">Employee type</th>
-                                    <th style="width:5%;">Outstanding Amount</th>
+                                    {{-- <th style="width:5%;">Employee type</th> --}}
+                                    <th style="width:5%;">Total Loan Amount</th>
+                                    <th style="width:5%;">Opening Amount</th>
                                     <th>Deducted Amount</th>
                                     <th style="width:5%;">Balance Amount</th>
                                     <th style="width:5%;">Adjust Amount</th>
@@ -259,12 +268,13 @@ Loan Information System - Loan Report
                                         {{-- <td>{{ $employee['emp_code'] }}</td> --}}
                                         <td>{{ $employee['salutation'] }} {{ $employee['emp_fname'] }} {{ $employee['emp_mname'] }} {{ $employee['emp_lname'] }}</td>
                                         {{-- <td>Consolidated Loan ID</td>  --}}
-                                        <td>{{ $employee['emp_status'] }}</td>
+                                        {{-- <td>{{ $employee['emp_status'] }}</td> --}}
                                         <td>{{ number_format(round($employee['total_loan_amount'], 1), 2) }}</td>
+                                        <td>{{ number_format(round($employee['pre_recoveries'], 1), 2) }}</td>
                                         <td>{{ number_format(round($employee['total_installment'], 1), 2) }}</td>
-                                        <td>{{ number_format(round($employee['total_balance'], 1), 2) }}</td>
+                                        <td>{{ number_format(round($employee['pre_recoveries'] - $employee['total_installment'], 1), 2) }}</td>
                                         <td>{{ number_format(round($employee['total_loanadjust'], 1), 2) }}</td>
-                                        <td>{{ number_format(round($employee['total_balance'] - $employee['total_loanadjust'], 1), 2)  }}</td>
+                                        <td>{{ number_format(round($employee['total_balance'], 1), 2)  }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -293,7 +303,7 @@ Loan Information System - Loan Report
                                 </tr>
                             </tfoot>
                         </table>
-                                                    
+
 							@endif
 						</div>
 					</div>

@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
-  <style type="text/css" media="print"> @page { size: auto; /* auto is the initial value */  
+  <style type="text/css" media="print"> @page { size: auto; /* auto is the initial value */
    	margin-top: 0;
-    margin-bottom: 0; /* this affects the margin in the printer settings */ }  
+    margin-bottom: 0; /* this affects the margin in the printer settings */ }
    </style>
   <style>
 body {-webkit-print-color-adjust: exact;font-family:Arial, Helvetica, sans-serif;}
-.bank-state table td h2, .bank-state table td h1{text-align:center;}
+.bank-state table td h2, .bank-state table td h1{text-align:left;}
 .bank-state table tr td{vertical-align:top;}
 table{width:100%;position:relative;}
-.acnt thead tr th, .acnt tr td{padding:4px;font-size:12px;border:1px solid #000;}
+.acnt thead tr th, .acnt tr td{padding:4px;font-size:12px;border:none;}
 .acnt .head td{background:#ddd;font-weight:600;text-align:center;}
 .center{text-align:center;}.right{text-align:right;}
 tfoot{position:fixed;bottom:0;width:100%;}
@@ -54,14 +54,14 @@ tfoot{position:fixed;bottom:0;width:100%;}
 
 <br clear="all">
 <!---------------------------------------------------->
-<?php 
+<?php
 $dt=$month;
 $dtar=explode('/',$dt);
 $paymonth= $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 ?>
 <!------------bank-statement-body---------------------->
 
-	
+
 	<tr>
 		<td colspan="5" style="border:none;">
 			<p style="line-height:19px;margin:0;margin-top:5px;text-align: justify;"><b>EMPLOYEE'S BANK PAYEE STATEMENT FOR THE MONTH OF   <?php echo $paymonth; ?> - <?php echo $dtar[1]; ?></b> </p>
@@ -71,35 +71,35 @@ $paymonth= $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 <!------------------------------------------>
 
 <!-----------------bank-statement-table-------------------->
-<tbody style="border:1px solid #000;">
+<tbody style="border: 1px solid #000;">
 	<tr class="head">
-			<td>Employee ID</td>
-			<td>Employee Code</td>
-			<td>CLASS.</td>
-			<td>EMPLOYEE NAME</td>
-			<td>A/C NO.</td>
-			
-			<td> NET PAY (<i class="fas fa-rupee-sign"></i>)</td>
+			{{-- <td>Employee ID</td> --}}
+			<td style="text-align: left;">EMP NO</td>
+			{{-- <td>CLASS.</td> --}}
+			<td style="text-align: left;width:200px;">EMPLOYEE NAME</td>
+			<td style="text-align: left;">A/C NO.</td>
+
+			<td style="text-align: right;"> NET PAY (<i class="fas fa-rupee-sign"></i>)</td>
 		</tr>
 
 	@php $total=0; @endphp
 		@if(isset($Payroll_details_rs) && count($Payroll_details_rs)!=0)
-		
+
 		@foreach($Payroll_details_rs as $key=>$statement)
 		@php $total = $total + $statement->emp_net_salary; @endphp
-		
+
 		<tr>
-			<td class="center" width="70">{{$statement->emp_code}}</td>
-			<td class="center" >{{$statement->old_emp_code}}</td>
-			<td>{{$statement->group_name}}</td>
-			<td>{{$statement->emp_name}}</td>
-			<td>{{$statement->emp_account_no}}</td>
-		
+			{{-- <td class="center" width="70">{{$statement->emp_code}}</td> --}}
+			<td style="text-align: left;" width="50" >{{$statement->old_emp_code}}</td>
+			{{-- <td>{{$statement->group_name}}</td> --}}
+			<td style="text-align: left;width:200px;">{{$statement->emp_name}}</td>
+			<td style="text-align: left;">{{$statement->emp_account_no}}</td>
+
 			<td style="text-align: right;">{{$statement->emp_net_salary}}</td>
 		</tr>
 		@endforeach
 		@endif
-	
+
 <?php $number = $total;
    $no = round($number);
    $point = round($number - $no, 2) * 100;
@@ -149,18 +149,18 @@ $paymonth= $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
   $words[$point = $point % 10] : '';
   //echo $result . "Rupees  " . $points . " Paise"; ?>
 
-
+  <hr>
 	<tr>
 		<td class="left" style="font-weight:600;border-right: none;">Total In Figures</td>
 		<td colspan="5" class="center" style="font-weight:600;text-align:right;border-left:none;">{{$total}}</td>
 	</tr>
-	
+
 	<tr>
 		<td width="150" style="border-right:none;font-weight:600;"> Total in Words</td>
 		<td colspan="5" class="right" style="font-weight:600;padding:5px 2px;border-left:none;font-size:10px;">(<u>RUPEES <?php echo strtoupper($result); ?></u>)</td>
 	</tr>
-	
-	
+
+
 	</tbody>
 
 

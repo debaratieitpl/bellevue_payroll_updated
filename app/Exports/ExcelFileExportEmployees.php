@@ -11,16 +11,16 @@ use DB;
 
 class ExcelFileExportEmployees implements FromCollection, WithHeadings
 {
-    
-    
+
+
     /**
      * @return \Illuminate\Support\Collection
      */
     public function __construct()
     {
-        
-       
-        
+
+
+
     }
     public function collection()
     {
@@ -38,7 +38,7 @@ class ExcelFileExportEmployees implements FromCollection, WithHeadings
 
         $h = 1;
         $collection_array = array();
-        
+
         //dd($record_rs[0]);
 
         if (count($record_rs) != 0) {
@@ -52,6 +52,8 @@ class ExcelFileExportEmployees implements FromCollection, WithHeadings
                     'Father Name'=>$record->emp_father_name,
                     'Department'=>$record->emp_department,
                     'Designation'=>$record->emp_designation,
+                    'Phone'=>$record->emp_phone,
+                    'Email'=>$record->emp_email,
                     'DOB'=>$record->emp_dob,
                     'DOJ'=>$record->emp_doj,
                     'EMP Status'=>$record->emp_status,
@@ -100,6 +102,8 @@ class ExcelFileExportEmployees implements FromCollection, WithHeadings
             'Father Name',
             'Department',
             'Designation',
+            'Phone',
+            'Email',
             'DOB',
             'DOJ',
             'EMP Status',

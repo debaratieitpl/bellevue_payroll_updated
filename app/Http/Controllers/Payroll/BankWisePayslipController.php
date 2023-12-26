@@ -176,7 +176,7 @@ class BankWisePayslipController extends Controller
                 ->where('member_id', '=', $email)
                 ->get();
 
-           // dd($request->all());    
+           // dd($request->all());
 
             $monthyr = '';
             if (isset($request->monthyr)) {

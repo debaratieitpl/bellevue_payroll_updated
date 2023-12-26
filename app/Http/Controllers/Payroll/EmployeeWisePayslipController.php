@@ -268,15 +268,26 @@ class EmployeeWisePayslipController extends Controller
             $emp_id = Crypt::decrypt($emp_id);
             $pay_dtl_id = Crypt::decrypt($pay_dtl_id);
 
+
+            $payrollDetail = Payroll_detail::find($pay_dtl_id );
+            if ($payrollDetail) {
+                $monthYrValue = $payrollDetail->month_yr;
+            } else {
+                $monthYrValue='';
+            }
+
             if ($emp_id) {
                 $data['payroll_rs'] = Payroll_detail::join('employees', 'payroll_details.employee_id', '=', 'employees.emp_code')
                     ->join('bank_masters', 'employees.emp_bank_name', '=', 'bank_masters.id')
                     ->join('banks', 'employees.bank_branch_id', '=','banks.id')
                     ->join('monthly_employee_allowances', 'employees.emp_code','=','monthly_employee_allowances.emp_code' )
+                    ->join('monthly_employee_overtimes', 'employees.emp_code','=','monthly_employee_overtimes.emp_code' )
                     ->leftJoin('group_name_details', 'employees.emp_group_name', '=', 'group_name_details.id')
                     ->where('payroll_details.employee_id', '=', $emp_id)
                     ->where('payroll_details.id', '=', $pay_dtl_id)
-                    ->select('payroll_details.*', 'employees.*', 'bank_masters.master_bank_name', 'group_name_details.group_name', 'banks.branch_name', 'monthly_employee_allowances.no_days_tiffalw')
+                    ->where('monthly_employee_allowances.month_yr', '=', $monthYrValue)
+                    ->where('monthly_employee_overtimes.month_yr', '=', $monthYrValue)
+                    ->select('payroll_details.*', 'employees.*', 'bank_masters.master_bank_name', 'group_name_details.group_name', 'banks.branch_name', 'monthly_employee_allowances.no_days_tiffalw','monthly_employee_overtimes.last_month_ot_hrs','monthly_employee_overtimes.current_month_ot_hrs')
                     ->get();
 
                 $data['leave_hand'] = Leave_allocation::join('leave_types', 'leave_allocations.leave_type_id', '=', 'leave_types.id')
@@ -314,7 +325,7 @@ class EmployeeWisePayslipController extends Controller
     }
 
     function mailPayrollToEmployees(Request $request) {
-        dispatch(new \App\Jobs\PayslipEmployees($request->month_yr))->onQueue('low');
+        dispatch(new \App\Jobs\PayslipEmployees($request->month_yr,$request->emp_code))->onQueue('high');
         return back();
     }
 

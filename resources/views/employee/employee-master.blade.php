@@ -142,6 +142,8 @@ Employee Information System-Employees
                                        <label>First Name <span>(*)</span></label>
                                        <input type="text" name="emp_fname" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_fname;}?>" class="form-control" id="fname" required>
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <div class="col-md-3">
                                        <label>Middle Name</label>
                                        <input type="text" name="emp_mid_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_mname;}?>" class="form-control" id="fname">
@@ -179,6 +181,8 @@ Employee Information System-Employees
                                        <label>Spouse Name</span></label>
                                        <input type="text" name="emp_nearest_railway" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_nearest_railway;}?>" class="form-control">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <div class="col-md-3">
                                         <label>Email</span></label>
                                         <input type="text" name="email" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->email;}?>" class="form-control">
@@ -205,8 +209,8 @@ Employee Information System-Employees
                                           @endforeach
                                        </select>
                                     </div>
-                                    <!-- </div>
-                                       <div class="row form-group"> -->
+                                     </div>
+                                       <div class="row form-group">
                                     <div class="col-md-3">
                                        <label>Religion</span></label>
                                        <select class="form-control" name="emp_religion">
@@ -2092,7 +2096,8 @@ Employee Information System-Employees
            });
 
    	}
-       function delRowDoc(rowid)
+
+    function delRowDoc(rowid)
    	{
    		var lastrowdoc = $(".itemslotdoc:last").attr("id");
            //alert(lastrow);

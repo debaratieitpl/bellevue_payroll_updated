@@ -47,7 +47,7 @@ BELLEVUE - Interview
                      <table id="bootstrap-data-table" class="table table-striped table-bordered">
                         <thead>
                            <tr>
-                              {{-- 
+                              {{--
                               <th>Job Code</th>
                               --}}
                               <th>Job Title</th>
@@ -63,7 +63,7 @@ BELLEVUE - Interview
                            <?php $i = 1; ?>
                            @foreach($candidate_rs as $candidate)
                            <tr>
-                              {{-- 
+                              {{--
                               <td>{{ $candidate->job_code }}</td>
                               --}}
                               <td>{{ $candidate->job_title }}</td>
@@ -74,9 +74,9 @@ BELLEVUE - Interview
                               <td>
                                  <?php
                                     $job_details=DB::table('candidate_historys')->where('user_id', '=', $candidate->id ) ->where('status','=','Hired') ->orderBy('id', 'DESC')->first();
-                                    
-                                    
-                                    if(!empty($job_details)){ 
+
+
+                                    if(!empty($job_details)){
                                     echo date('d/m/Y',strtotime($job_details->date));}
                                     else{
                                     echo date('d/m/Y',strtotime($candidate->date));
@@ -87,14 +87,14 @@ BELLEVUE - Interview
                                     Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                       <a class="dropdown-item" href="{{url('recruitment/edit-hired/'.base64_encode($candidate->id))}}"><i class="fa fa-edit"></i>&nbsp; Edit</a> 
-                                       <a download class="dropdown-item" href="{{asset('public/'.$candidate->resume)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
+                                       <a class="dropdown-item" href="{{url('recruitment/edit-hired/'.base64_encode($candidate->id))}}"><i class="fa fa-edit"></i>&nbsp; Edit</a>
+                                       <a download class="dropdown-item" href="{{asset($candidate->resume)}}"><i class="fa fa-download"></i>&nbsp; Download</a>
                                     </div>
                                  </div>
                               </td>
                               </td>
                            </tr>
-                           @endforeach  
+                           @endforeach
                         </tbody>
                      </table>
                   </div>

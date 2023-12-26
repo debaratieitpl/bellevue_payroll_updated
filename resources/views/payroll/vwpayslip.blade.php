@@ -86,7 +86,8 @@ $paymonth = $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 			</thead>
 			<tbody>
 				<tr>
-				<td colspan="2" width="33.33%"><span>Employee Code :</span><br> {{$payroll_rs[0]->old_emp_code}}</td>
+                    <td colspan="1" width="16.66%"><span>Employee Code :</span><br> {{$payroll_rs[0]->old_emp_code}}</td>
+                    <td colspan="1" width="16.66%"><span>PF No. :</span><br> {{$payroll_rs[0]->emp_pf_no}}</td>
 					<td colspan="2" width="33.33%"><span>Employee Name :</span><br> {{$payroll_rs[0]->emp_name}}</td>
 					<td colspan="2" width="33.33%"><span>Department :</span><br> {{$payroll_rs[0]->emp_department}}</td>
 				</tr>
@@ -132,7 +133,7 @@ $paymonth = $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 						<!-- <td>Basic Pay</td>
 						<td style="text-align:right;">@if(isset($actual_payroll->emp_actual_basic_pay)){{$actual_payroll->emp_actual_basic_pay}}@endif</td> -->
 
-				     	<td rowspan="2">Basic Pay</td>
+				     	<td rowspan="2">BASIC PAY</td>
 						<td style="text-align:right;" rowspan="2">{{number_format(($payroll_rs[0]->emp_basic_pay),2)}}</td>
 						<td>PROF TAX</td>
 						<td style="text-align:right;">{{number_format(($payroll_rs[0]->emp_prof_tax),2)}}</td>
@@ -218,7 +219,7 @@ $paymonth = $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 						<!-- <td>MISC ALW</td>
 						<td style="text-align:right;">@if(isset($actual_payroll->emp_actual_misc_alw)){{$actual_payroll->emp_actual_misc_alw}}@endif</td> -->
 
-				    	<td>Convey Alw.</td>
+				    	<td>CONVEY ALW.</td>
 						<td style="text-align:right;">{{number_format(($payroll_rs[0]->emp_conv),2)}}</td>
 						<td>ADV</td>
 						<td style="text-align:right;">{{number_format(($payroll_rs[0]->emp_adv),2)}}</td>
@@ -272,10 +273,10 @@ $paymonth = $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 						<!-- <td rowspan="2">Other </td>
 						<td rowspan="2" style="text-align:right;">@if(isset($payroll_rs[0]->emp_actual_others_addition)){{$payroll_rs[0]->emp_actual_others_addition}}@endif</td> -->
 
-						<td rowspan="2">Other </td>
+						<td rowspan="2">OTHER </td>
 						<td rowspan="2" style="text-align:right;">{{number_format(($payroll_rs[0]->other_addition),2)}}</td>
 
-						<td>Employer PF Contribution</td>
+						<td>EMPLOYER PF CONTRIBUTION</td>
 						<td style="text-align:right;">@if(isset($payroll_rs[0]->emp_pf_employer)){{number_format(($payroll_rs[0]->emp_pf_employer),2)}}@else 0 @endif</td>
 
 
@@ -286,7 +287,7 @@ $paymonth = $monthName = strftime('%B', mktime(0, 0, 0, $dtar[0]));
 
 					<tr>
 
-						<td>Others</td>
+						<td>OTHERS</td>
 						<td style="text-align:right;">{{number_format(($payroll_rs[0]->other_deduction),2)}}</td>
 
 					</tr>
@@ -358,7 +359,7 @@ $words[$point = $point % 10] : '';
 							<td colspan="2">
 								<table style="width: 100%;">
 									<tr style="width: 100%;">
-										<td style="font-weight:500;"><b>Pay Day<br> 
+										<td style="font-weight:500;"><b>Pay Day<br>
 											<br><?php echo $no_of_pay_days = $current_month_days - $payroll_rs[0]->emp_absent_days; ?> </b>
 										</td>
 										<td style="font-weight:500;"><b>T.Day <br>
@@ -367,10 +368,14 @@ $words[$point = $point % 10] : '';
 										<td style="font-weight:500;"><b>ADJ.<br>
 												<br>{{$payroll_rs[0]->emp_adjust_days }} </b>
 										</td>
+                                        <td style="font-weight:500;"><b>OT.(HR.)<br>
+                                            <?php $total_ot_hours =  $payroll_rs[0]->last_month_ot_hrs + $payroll_rs[0]->current_month_ot_hrs; ?>
+                                            <br>{{ $total_ot_hours }} </b>
+                                        </td>
 									</tr>
 								</table>
 							</td>
-							
+
 						<td style="font-weight:600;text-align:right;" colspan="2"><span style="float: left;">Net Salary :</span> <img src="{{ asset('theme/payslip-img/rupee.png') }}" alt="" style="width: 8px;vertical-align: middle;"> {{number_format(($payroll_rs[0]->emp_net_salary),2)}}<br>
                            <!--<span style="float: left;">RUPEES <?php echo strtoupper($result); ?></span>-->
 						</td>

@@ -1,0 +1,26 @@
+BellVue Cpanel Access:
+
+bellevuepf.com/cpanel
+user ID - bellevuepf
+Password - bellevu_payroll@2023@@##
+
+
+login password - bellevue@2023#@
+
+
+EIT Godaddy
+=====================
+customer-111067797
+password: Kolkata@##2019$@
+
+
+climber hrms project ::
+=====================
+Username
+chandana.tsap@gmail.com
+
+password - climbr@2023#@
+
+$con=mysqli_connect("localhost","mollosra_demo","kH;aOiux4W(g","mollosra_demo");
+define('SERVER_PATH',$_SERVER['DOCUMENT_ROOT'].'/');
+define('SITE_PATH','https://crm.mollosradix.com/');

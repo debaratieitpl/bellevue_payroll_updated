@@ -75,11 +75,11 @@ function my_simple_crypt($string, $action = 'encrypt')
                 <div class="card">
 
                     <div class="card-header">
-                        
+
                     <div class="aply-lv">
-                        
+
                         <a href="{{ url('add-employee') }}" class="btn btn-default" style="float:right;">Add Employee Master <i class="fa fa-plus"></i></a>
-                        
+
                         @if(count($employee_rs)>0)
                         <form  method="post" action="{{ url('xls-export-employees') }}" enctype="multipart/form-data" >
 											<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -90,10 +90,10 @@ function my_simple_crypt($string, $action = 'encrypt')
 											<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 											<button data-toggle="tooltip" data-placement="bottom" title="Download Excel" class="btn btn-default" style="background:none !important;padding: 10px 15px;margin-top: -30px;float:right;margin-right: 15px;" type="submit">Employee Only</button>
-                                            
-                                        
+
+
                                         </form>
-                                              
+
                         @endif
                     </div>
                     </div>
@@ -106,7 +106,7 @@ function my_simple_crypt($string, $action = 'encrypt')
                     <!-- <div class="aply-lv">
                         <a href="{{ url('add-employee') }}" class="btn btn-default">Add Employee Master <i class="fa fa-plus"></i></a>
                     </div> -->
-                   
+
                     <div class="clear-fix">
 
                     <div class="mx-1 mb-2 mt-1">
@@ -121,7 +121,7 @@ function my_simple_crypt($string, $action = 'encrypt')
                           </button>
                     </div>
                         <table id="bootstrap-data-table" class="table table-striped table-bordered">
-                            
+
                             <thead>
                                 <tr>
                                     <th>Sl No.</th>
@@ -163,12 +163,12 @@ function my_simple_crypt($string, $action = 'encrypt')
 								<!--  </button>-->
 								<!--</div>-->
 								<div class="modal-body">
-								  
+
 									<div class="form-group">
 									  <label for="excel_file">Upload Excel</label>
 									  <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file">
 									</div>
-								  
+
 								</div>
 								<div class="modal-footer">
 								  <button type="button" class="btn btn-secondary" style="padding: 0px 8px;height: 32px;" data-dismiss="modal">Close</button>
@@ -193,12 +193,12 @@ function my_simple_crypt($string, $action = 'encrypt')
 								<!--  </button>-->
 								<!--</div>-->
 								<div class="modal-body">
-								  
+
 									<div class="form-group">
 									  <label for="excel_file">Upload PayDetails Excel</label>
 									  <input type="file" name="excel_file" class="form-control" style='height: 40px;' id="excel_file">
 									</div>
-								  
+
 								</div>
 								<div class="modal-footer">
 								  <button type="button" class="btn btn-secondary" style="padding: 0px 8px;height: 32px;" data-dismiss="modal">Close</button>

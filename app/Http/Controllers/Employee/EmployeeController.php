@@ -52,6 +52,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Session;
 use view;
 use App\Imports\ImportEmployee;
+use App\Imports\ImportEmail;
 use App\Imports\ImportPayDetails;
 use App\Exports\SampleEmployeeExport;
 class EmployeeController extends Controller
@@ -265,7 +266,7 @@ class EmployeeController extends Controller
     public function employeesimport(Request $request){
         if (!empty(Session::get('admin'))) {
 
-            if(\Excel::import(new ImportEmployee(), $request->file('excel_file'))){
+            if(\Excel::import(new ImportEmail(), $request->file('excel_file'))){
                 Session::flash('message', 'Import Successfully');
                 return redirect()->back();
             }else{
@@ -614,85 +615,130 @@ class EmployeeController extends Controller
                     }
                 }
 
-                //education load dynamically
-                if (isset($request->discipline)) {
-                    for ($i = 0; $i < count($request->discipline); $i++) {
-                        if ($request->qualification[$i] != '') {
-                            // Handle image upload
-                            $image = $request->file('aimage')[$i];
-                            $imageName = time() . '_' . $image->getClientOriginalName();
-                            $image->move(public_path('education'), $imageName);
-
-                            $education[$i] = array(
-                                'employee_code' => $request->emp_code,
-                                'qualification' => $request->qualification[$i],
-                                'discipline' => $request->discipline[$i],
-                                'institute_name' => $request->institute_name[$i],
-                                'university' => $request->university[$i],
-                                'year_of_passing' => $request->year_of_passing[$i],
-                                'percentage' => $request->percentage[$i],
-                                'grade' => $request->grade[$i],
-                                'aimage' => 'education/' . $imageName,
-                            );
+               //education load dynamically
+               if (isset($request->discipline)) {
+                for ($i = 0; $i < count($request->discipline); $i++) {
+                    if ($request->qualification[$i] != '') {
+                        if ($request->hasFile('aimage') && is_array($request->file('aimage'))) {
+                            $files = $request->file('aimage');
+                            if (isset($files[$i]) && $files[$i]->isValid()) {
+                                $image = $files[$i];
+                                $imageName = time() . '_' . $image->getClientOriginalName();
+                                $image->move(public_path('education'), $imageName);
+                                $imageFile = 'education/' . $imageName;
+                            } else {
+                                $imageFile = '';
+                            }
+                        } else {
+                            $imageFile = '';
                         }
+                        $education[$i] = array(
+                            'employee_code' => $request->emp_code,
+                            'qualification' => $request->qualification[$i],
+                            'discipline' => $request->discipline[$i],
+                            'institute_name' => $request->institute_name[$i],
+                            'university' => $request->university[$i],
+                            'year_of_passing' => $request->year_of_passing[$i],
+                            'percentage' => $request->percentage[$i],
+                            'grade' => $request->grade[$i],
+                            'aimage' => $imageFile,
+                        );
                     }
                 }
-                 //dd($request->all());
-                //professional record dynamivally
-                if (isset($request->pdoctype)) {
-                    for ($i = 0; $i < count($request->pdoctype); $i++) {
-                        if ($request->pdoctype[$i] != '') {
-                            // Handle image upload
-                            $image = $request->file('pdocimage')[$i];
-                            $imageName = time() . '_' . $image->getClientOriginalName();
-                            $image->move(public_path('personaldoc'), $imageName);
+            }
 
-                            $perdoc[$i] = array(
-                                'employee_code' => $request->emp_code,
-                                'pdoctype' => $request->pdoctype[$i],
-                                'pdocimage' => 'personaldoc/' . $imageName,
-                            );
+             //professional record dynamivally
+             if (isset($request->pdoctype)) {
+                for ($i = 0; $i < count($request->pdoctype); $i++) {
+                    if ($request->pdoctype[$i] != '') {
+                        // Handle image upload
+                        if ($request->hasFile('pdocimage') && is_array($request->file('pdocimage'))) {
+                            $files = $request->file('pdocimage');
+                            if (isset($files[$i]) && $files[$i]->isValid()) {
+                                $image = $files[$i];
+                                $image = $request->file('pdocimage')[$i];
+                                $imageName = time() . '_' . $image->getClientOriginalName();
+                                $image->move(public_path('personaldoc'), $imageName);
+                                $filedoc = 'personaldoc/' . $imageName;
+                            } else {
+                                $filedoc = '';
+                            }
+                        } else {
+                            $filedoc = '';
                         }
+                        $perdoc[$i] = array(
+                            'employee_code' => $request->emp_code,
+                            'pdoctype' => $request->pdoctype[$i],
+                            'pdocimage' => $filedoc,
+                        );
                     }
                 }
-                //personal record dynamivally
-                if (isset($request->precqualification)) {
-                    for ($i = 0; $i < count($request->precqualification); $i++) {
-                        if ($request->precqualification[$i] != '') {
-                            // Handle image upload
-                            $image = $request->file('precimage')[$i];
-                            $imageName = time() . '_' . $image->getClientOriginalName();
-                            $image->move(public_path('personalrecord'), $imageName);
+            }
 
-                            $perrecord[$i] = array(
-                                'employee_code' => $request->emp_code,
-                                'precqualification' => $request->precqualification[$i],
-                                'precdesignation' => $request->precdesignation[$i],
-                                'precfromdate' => $request->precfromdate[$i],
-                                'prectodate' => $request->prectodate[$i],
-                                'precimage' => 'personalrecord/' . $imageName,
-                            );
+             //personal record dynamivally
+             if (isset($request->precqualification)) {
+                for ($i = 0; $i < count($request->precqualification); $i++) {
+                    if ($request->precqualification[$i] != '') {
+                        // Handle image upload
+
+                        if ($request->hasFile('precimage') && is_array($request->file('precimage'))) {
+                            $files = $request->file('precimage');
+                            if (isset($files[$i]) && $files[$i]->isValid()) {
+                                $image = $files[$i];
+                                $image = $request->file('precimage')[$i];
+                                $imageName = time() . '_' . $image->getClientOriginalName();
+                                $image->move(public_path('personalrecord'), $imageName);
+                                $filerec = 'personalrecord/' . $imageName;
+                            } else {
+                                $filerec = '';
+                            }
+                        } else {
+                            $filerec = '';
                         }
+
+                        $perrecord[$i] = array(
+                            'employee_code' => $request->emp_code,
+                            'precqualification' => $request->precqualification[$i],
+                            'precdesignation' => $request->precdesignation[$i],
+                            'precfromdate' => $request->precfromdate[$i],
+                            'prectodate' => $request->prectodate[$i],
+                            'precimage' => $filerec,
+                        );
                     }
                 }
-                //misc record dynamivally
+            }
 
-                if (isset($request->mreccategory)) {
-                    for ($i = 0; $i < count($request->mreccategory); $i++) {
-                        if ($request->mreccategory[$i] != '') {
-                            // Handle image upload
-                            $image = $request->file('mrecimage')[$i];
-                            $imageName = time() . '_' . $image->getClientOriginalName();
-                            $image->move(public_path('miscdoc'), $imageName);
+            //misc record dynamivally
 
-                            $misdoc[$i] = array(
-                                'employee_code' => $request->emp_code,
-                                'mreccategory' => $request->mreccategory[$i],
-                                'mrecimage' => 'miscdoc/' . $imageName,
-                            );
+            if (isset($request->mreccategory)) {
+                for ($i = 0; $i < count($request->mreccategory); $i++) {
+                    if ($request->mreccategory[$i] != '') {
+                        // Handle image upload
+
+                        if ($request->hasFile('mrecimage') && is_array($request->file('mrecimage'))) {
+                            $files = $request->file('mrecimage');
+                            if (isset($files[$i]) && $files[$i]->isValid()) {
+                                $image = $files[$i];
+                                $image = $request->file('mrecimage')[$i];
+                                $imageName = time() . '_' . $image->getClientOriginalName();
+                                $image->move(public_path('miscdoc'), $imageName);
+                                $filemis = 'miscdoc/' . $imageName;
+                            } else {
+                                $filemis = '';
+                            }
+                        } else {
+                            $filemis = '';
                         }
+
+                        $misdoc[$i] = array(
+                            'employee_code' => $request->emp_code,
+                            'mreccategory' => $request->mreccategory[$i],
+                            'mrecimage' => $filemis,
+                        );
                     }
                 }
+            }
+
 
                 // print_r($education);
                 // die();
@@ -900,6 +946,8 @@ class EmployeeController extends Controller
                     'emp_bonus' => $request->emp_bonus,
 
                     //new field
+                    'emp_phone' =>$request->emp_phone,
+                    'emp_email' =>$request->emp_email,
                     'emp_joining_designation' => $request->emp_joining_designation,
                     'emp_retirement_bvc_date' => $retire_bvc_date,
                     'contract_renew_date' => $request->contract_renew_date ? date("Y-m-d", strtotime($request->contract_renew_date)) : null,
@@ -992,6 +1040,11 @@ class EmployeeController extends Controller
 
             $data['emp_edu'] = Education_details::where('employee_code', '=', $decrypted_id)->get();
 
+            //new add
+            $data['perdoc'] = Personal_doc::where('employee_code', '=', $decrypted_id)->get();
+            $data['perrecord'] = Personal_record::where('employee_code', '=', $decrypted_id)->get();
+            $data['misdoc'] = Misc_doc::where('employee_code', '=', $decrypted_id)->get();
+
             $data['department'] = Department::where('department_status', '=', 'active')->get();
             $data['designation'] = Designation::leftJoin('departments', 'designations.department_code', '=', 'departments.id')
                 ->where('designations.designation_status', '=', 'active')
@@ -1036,7 +1089,7 @@ class EmployeeController extends Controller
     public function updateEmployee(Request $request)
     {
         if (!empty(Session::get('admin'))) {
-            //dd($request->all());
+            // dd($request->all());
             date_default_timezone_set('Asia/Kolkata');
 
             if (strtotime($request->emp_dob) > strtotime(date('Y-m-d'))) {
@@ -1094,22 +1147,135 @@ class EmployeeController extends Controller
                 }
             }
 
-            if (isset($request->discipline)) {
-                for ($i = 0; $i < count($request->discipline); $i++) {
-                    if ($request->qualification[$i] != '') {
-                        $education[$i] = array(
-                            'employee_code' => $request->emp_code,
-                            'qualification' => $request->qualification[$i],
-                            'discipline' => $request->discipline[$i],
-                            'institute_name' => $request->institute_name[$i],
-                            'university' => $request->university[$i],
-                            'year_of_passing' => $request->year_of_passing[$i],
-                            'percentage' => $request->percentage[$i],
-                            'grade' => $request->grade[$i],
-                        );
+
+
+                 //education load dynamically
+                 if (isset($request->discipline)) {
+                    for ($i = 0; $i < count($request->discipline); $i++) {
+                        if ($request->qualification[$i] != '') {
+                            if ($request->hasFile('aimage') && is_array($request->file('aimage'))) {
+                                $files = $request->file('aimage');
+                                if (isset($files[$i]) && $files[$i]->isValid()) {
+                                    $image = $files[$i];
+                                    $imageName = time() . '_' . $image->getClientOriginalName();
+                                    $image->move(public_path('education'), $imageName);
+                                    $imageFile = 'education/' . $imageName;
+                                } else {
+                                    $imageFile = '';
+                                }
+                            } else {
+                                $imageFile = '';
+                            }
+                            $education[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'qualification' => $request->qualification[$i],
+                                'discipline' => $request->discipline[$i],
+                                'institute_name' => $request->institute_name[$i],
+                                'university' => $request->university[$i],
+                                'year_of_passing' => $request->year_of_passing[$i],
+                                'percentage' => $request->percentage[$i],
+                                'grade' => $request->grade[$i],
+                                'aimage' => $imageFile,
+                            );
+                        }
                     }
                 }
-            }
+
+                 //professional record dynamivally
+                 if (isset($request->pdoctype)) {
+                    for ($i = 0; $i < count($request->pdoctype); $i++) {
+                        if ($request->pdoctype[$i] != '') {
+                            // Handle image upload
+                            if ($request->hasFile('pdocimage') && is_array($request->file('pdocimage'))) {
+                                $files = $request->file('pdocimage');
+                                if (isset($files[$i]) && $files[$i]->isValid()) {
+                                    $image = $files[$i];
+                                    $image = $request->file('pdocimage')[$i];
+                                    $imageName = time() . '_' . $image->getClientOriginalName();
+                                    $image->move(public_path('personaldoc'), $imageName);
+                                    $filedoc = 'personaldoc/' . $imageName;
+                                } else {
+                                    $filedoc = '';
+                                }
+                            } else {
+                                $filedoc = '';
+                            }
+                            $perdoc[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'pdoctype' => $request->pdoctype[$i],
+                                'pdocimage' => $filedoc,
+                            );
+                        }
+                    }
+                }
+
+                 //personal record dynamivally
+                 if (isset($request->precqualification)) {
+                    for ($i = 0; $i < count($request->precqualification); $i++) {
+                        if ($request->precqualification[$i] != '') {
+                            // Handle image upload
+
+                            if ($request->hasFile('precimage') && is_array($request->file('precimage'))) {
+                                $files = $request->file('precimage');
+                                if (isset($files[$i]) && $files[$i]->isValid()) {
+                                    $image = $files[$i];
+                                    $image = $request->file('precimage')[$i];
+                                    $imageName = time() . '_' . $image->getClientOriginalName();
+                                    $image->move(public_path('personalrecord'), $imageName);
+                                    $filerec = 'personalrecord/' . $imageName;
+                                } else {
+                                    $filerec = '';
+                                }
+                            } else {
+                                $filerec = '';
+                            }
+
+                            $perrecord[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'precqualification' => $request->precqualification[$i],
+                                'precdesignation' => $request->precdesignation[$i],
+                                'precfromdate' => $request->precfromdate[$i],
+                                'prectodate' => $request->prectodate[$i],
+                                'precimage' => $filerec,
+                            );
+                        }
+                    }
+                }
+
+                //misc record dynamivally
+
+                if (isset($request->mreccategory)) {
+                    for ($i = 0; $i < count($request->mreccategory); $i++) {
+                        if ($request->mreccategory[$i] != '') {
+                            // Handle image upload
+
+                            if ($request->hasFile('mrecimage') && is_array($request->file('mrecimage'))) {
+                                $files = $request->file('mrecimage');
+                                if (isset($files[$i]) && $files[$i]->isValid()) {
+                                    $image = $files[$i];
+                                    $image = $request->file('mrecimage')[$i];
+                                    $imageName = time() . '_' . $image->getClientOriginalName();
+                                    $image->move(public_path('miscdoc'), $imageName);
+                                    $filemis = 'miscdoc/' . $imageName;
+                                } else {
+                                    $filemis = '';
+                                }
+                            } else {
+                                $filemis = '';
+                            }
+
+                            $misdoc[$i] = array(
+                                'employee_code' => $request->emp_code,
+                                'mreccategory' => $request->mreccategory[$i],
+                                'mrecimage' => $filemis,
+                            );
+                        }
+                    }
+                }
+
+
+
+
             // print_r($education);
             // die();
 
@@ -1237,7 +1403,10 @@ class EmployeeController extends Controller
 
 
 
-
+          $retirebvcdate = $request->emp_retirement_bvc_date;
+          $date = str_replace('/', '-', $retirebvcdate);
+          $retirementbvcdate = date_create($date);
+          $retire_bvc_date = date_format($retirementbvcdate, 'Y-m-d');
             //dd($payupdate);
             $dataupdate = array(
                 'emp_code' => $request->emp_code,
@@ -1369,6 +1538,17 @@ class EmployeeController extends Controller
                 'emp_pension' => $request->emp_pension,
                 'emp_pf_inactuals' => $request->emp_pf_inactuals,
                 'emp_bonus' => $request->emp_bonus,
+
+                'emp_phone' =>$request->emp_phone,
+                'emp_email' =>$request->emp_email,
+                'emp_joining_designation' => $request->emp_joining_designation,
+                'emp_retirement_bvc_date' => $retire_bvc_date,
+                'contract_renew_date' => $request->contract_renew_date ? date("Y-m-d", strtotime($request->contract_renew_date)) : null,
+                'emp_grade_reg' => $request->emp_grade_reg,
+                'emp_reg_no' => $request->emp_reg_no,
+                'emp_reg_date' => $request->emp_reg_date,
+                'emp_reg_council' => $request->emp_reg_council,
+                'emp_up_graduation' => $request->emp_up_graduation,
             );
 
             //dd($payupdate);
@@ -1385,9 +1565,18 @@ class EmployeeController extends Controller
                 Emp_pay_structure::insert($emp_pay);
             }
             if (isset($education)) {
-                Education_details::where('employee_code', $decrypted_empid)
-                    ->forceDelete();
+                // Education_details::where('employee_code', $decrypted_empid)
+                //     ->forceDelete();
                 Education_details::insert($education);
+            }
+            if (isset($perdoc)) {
+                Personal_doc::insert($perdoc);
+            }
+            if (isset($perrecord)) {
+                Personal_record::insert($perrecord);
+            }
+            if (isset($misdoc)) {
+                Misc_doc::insert($misdoc);
             }
             Session::flash('message', 'Record has been successfully updated');
 

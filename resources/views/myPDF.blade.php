@@ -18,7 +18,7 @@
 
 <tbody>
 <tr>
-  <td style="padding-bottom:65px;padding-left:15px" colspan="2">Sub: ob Offer Letter</td>
+  <td style="padding-bottom:65px;padding-left:15px" colspan="2">Sub: Job Offer Letter</td>
 </tr>
 
   <tr>
@@ -35,19 +35,19 @@
     <td colspan="2" style="padding-left:15px">
 	 {{ $job_title }}
 	</td>
-  
+
    <tr>
     <td colspan="2" style="padding-left:15px">
 	  Dear {{ $name }},
-	  
+
 	</td>
   </tr>
   <tr>
     <td colspan="2" style="padding-left:15px">
 	 <p> We are pleased to offer the position of {{ $job_title }} at {{ $com_name }}. We feel confident that you will contribute your skills and experience towards the growth of our organization.</p>
-	  
+
 	  <p> As per the discussion your starting date will be  {{ date('d/m/Y',strtotime($st_date)) }}. Please find the employee handbook attached here with which contains medical and retired benefit offered by our organization.</p>
-	  
+
 	  <p>Please confirm your acceptance of this offer by signing and returning the copy of this letter</p>
 	  <p>We look forward to welcoming you on board.</p>
 	</td>

@@ -18,6 +18,7 @@ use App\Exports\ExcelFileExportLoanRepo;
 use App\Exports\ExcelFileExportLoanList;
 use App\Imports\ImportLoans;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Session;
 use View;
 
@@ -409,16 +410,45 @@ class LoanController extends Controller
             //     ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
             //     ->get();
 
+
+           $inputDate = $request->month;
+           list($month, $year) = explode('/', $inputDate);
+           $date = new \DateTime();
+           $date->setDate($year, $month, 1);
+           $date->modify('-1 month');
+           $oneMonthPreviousDate = $date->format('m/Y');
+
             $employee_rs = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
-                ->select('employees.salutation', 'employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname','employees.emp_status','employees.emp_designation', 'employees.old_emp_code', 'employees.emp_pf_no', 'employees.emp_department', 'loans.*', DB::raw("(SELECT IFNULL(SUM(loan_recoveries.amount), IFNULL((SELECT loan_amount FROM loans WHERE loans.id = employees.emp_code), 0)) FROM loan_recoveries WHERE loan_recoveries.loan_id = loans.id AND loan_recoveries.payout_month <= '".$request->month."') as recoveries"), DB::raw("(SELECT SUM(loan_recoveries.amount) FROM loan_recoveries WHERE loan_recoveries.loan_id = loans.id AND loan_recoveries.payout_month = '".$request->month."') as payroll_deduction"), DB::raw("(SELECT IFNULL(payroll_details.emp_pf_int, 0) FROM payroll_details WHERE payroll_details.employee_id = employees.emp_code AND payroll_details.month_yr = '".$request->month."') as pf_interest"))
+                ->select('employees.salutation', 'employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname',
+                'employees.emp_status','employees.emp_designation', 'employees.old_emp_code', 'employees.emp_pf_no',
+                'employees.emp_department', 'loans.*', DB::raw("(SELECT IFNULL(SUM(loan_recoveries.amount),
+                IFNULL((SELECT loan_amount FROM loans WHERE loans.id = employees.emp_code), 0)) FROM loan_recoveries
+                 WHERE loan_recoveries.loan_id = loans.id AND loan_recoveries.payout_month <= '".$request->month."')
+                 as recoveries"),
+                 DB::raw("(SELECT IFNULL(SUM(loan_recoveries.amount),
+                IFNULL((SELECT loan_amount FROM loans WHERE loans.id = employees.emp_code), 0)) FROM loan_recoveries
+                 WHERE loan_recoveries.loan_id = loans.id AND loan_recoveries.payout_month <= '".$oneMonthPreviousDate."')
+                 as pre_recoveries"),
+                 DB::raw("(SELECT SUM(loan_recoveries.amount) FROM loan_recoveries WHERE
+                  loan_recoveries.loan_id = loans.id  AND loan_recoveries.payout_month = '".$request->month."')
+                  as payroll_deduction"),
+                  DB::raw("(SELECT SUM(loan_recoveries.amount) FROM loan_recoveries WHERE
+                  loan_recoveries.loan_id = loans.id and loan_recoveries.adjusted='N'  AND loan_recoveries.payout_month = '".$request->month."')
+                  as payroll_deduction_sa"),
+                  DB::raw("(SELECT SUM(loan_recoveries.amount) FROM loan_recoveries WHERE
+                  loan_recoveries.loan_id = loans.id and loan_recoveries.adjusted='Y'  AND loan_recoveries.payout_month = '".$request->month."')
+                  as loan_adjust"),
+                  DB::raw("(SELECT IFNULL(payroll_details.emp_pf_int, 0) FROM payroll_details
+                   WHERE payroll_details.employee_id = employees.emp_code AND payroll_details.month_yr = '".$request->month."')
+                    as pf_interest"))
                 ->where(DB::raw('DATE_FORMAT(loans.start_month, "%m/%Y")'), '<=', $request->month)
                 ->where('loan_type', '=', $request->loan_type)
                 // ->where('deduction', '=', 'Y')
-                // ->where('loans.emp_code', '=', 2024)
+                //  ->where('loans.emp_code', '=', 0012)
                 ->where('loans.loan_amount', '>', 0)
                 ->orderByRaw('cast(employees.old_emp_code as unsigned)', 'asc')
                 ->get();
-
+            // dd($employee_rs);
             // $employee_rs = Loan::join('employees', 'employees.emp_code', '=', 'loans.emp_code')
             // ->select(
             //     'employees.salutation', 'employees.emp_fname', 'employees.emp_mname', 'employees.emp_lname',

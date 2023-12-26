@@ -93,7 +93,7 @@
                               <h5 class="card-title">Send Payslip To Employees</h5>
                               <input type="hidden" name="_token" value="{{ csrf_token() }}">
                               <div class="row form-group">
-                                  <div class="col-md-5">
+                                  <div class="col-md-3">
                                       <label for="text-input" class=" form-control-label">Select Month
                                           <span>(*)</span></label>
                                       <select data-placeholder="Choose an Month..." class="form-control" name="month_yr"
@@ -107,6 +107,23 @@
                                           <div class="error" style="color:red;">{{ $errors->first('month_yr') }}</div>
                                       @endif
                                   </div>
+                                  <div class="col-md-4">
+                                    <label class=" form-control-label">Enter Employee Id <span>(*)</span></label>
+                                    <select data-placeholder="Choose Employee..." name="emp_code"
+                                        class="form-control select2_el" >
+                                        <option value="" selected disabled> Select </option>
+                                        <?php foreach ($employeeslist as $employee) {?>
+                                        <option value="<?php echo $employee->emp_code; ?>"
+                                            @if (isset($emp_id_new) && $emp_id_new == $employee->emp_code) selected @endif><?php echo $employee->emp_fname . ' ' . $employee->emp_mname . ' ' . $employee->emp_lname . ' (' . $employee->old_emp_code . ') '; ?>
+                                        </option>
+                                        <?php }?>
+                                    </select>
+
+
+                                    @if ($errors->has('emp_code'))
+                                        <div class="error" style="color:red;">{{ $errors->first('emp_code') }}</div>
+                                    @endif
+                                </div>
                                   <div class="col-md-4 btn-up">
                                       <button type="submit" class="btn btn-danger btn-sm">
                                         Send

@@ -347,7 +347,7 @@ $words[$point = $point % 10] : '';
 						<!--<td style="font-weight:500;" colspan="2"><b>No. of pay in days: <?php echo $no_of_pay_days = $record['current_month_days'] - $record['payroll_rs'][0]->emp_absent_days; ?> </b>-->
 
 							<!--<p style="margin: 0">E. &amp; O.E. This is a computer generated payslip and does not need a signature</p></td>-->
-							
+
 						 <td colspan="2">
                             <table style="width: 100%;">
                                 <tr style="width: 100%;">
@@ -367,12 +367,12 @@ $words[$point = $point % 10] : '';
                            <!--<span style="float: left;">RUPEES <?php echo strtoupper($result); ?></span>-->
 						</td>
 					</tr>
-					
+
 				</tbody>
 			</table>
 
 
-		
+
 </div>
 <div class="print">&nbsp;</div>
 @endforeach

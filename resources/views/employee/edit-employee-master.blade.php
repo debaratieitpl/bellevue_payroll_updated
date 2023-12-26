@@ -165,6 +165,8 @@ Employee Information System-Employees
 					<label>First Name <span>(*)</span></label>
                     <input type="text" name="emp_fname" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_fname;}?>" class="form-control" id="fname" required>
 				</div>
+            </div>
+            <div class="row form-group">
 				<div class="col-md-3">
 					<label>Middle Name</label>
                     <input type="text" name="emp_mid_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_mname;}?>" class="form-control" id="fname">
@@ -202,6 +204,16 @@ Employee Information System-Employees
 			   		<label>Spouse Name</span></label>
                     <input type="text" name="emp_nearest_railway" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_nearest_railway;}?>" class="form-control">
 			    </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <label>Email</span></label>
+                    <input type="text" name="emp_email" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_email;}?>" class="form-control">
+                 </div>
+                 <div class="col-md-3">
+                    <label>Phone</span></label>
+                    <input type="text" name="emp_phone" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_phone;}?>" class="form-control">
+                 </div>
 			    <div class="col-md-3">
 			   	    <label>Caste</span></label>
                     <select class="form-control" name="emp_caste">
@@ -329,7 +341,7 @@ Employee Information System-Employees
 					</select>
 				</div>
 				<div class="col-md-3">
-				<label>Designation <span>(*)</span></label>
+				<label>Current Designation  <span>(*)</span></label>
                     <select class="form-control" name="emp_designation" required id="emp_designation">
 						<option value="" label="Select">Select </option>
 						 @foreach($designation as $desg)
@@ -337,34 +349,53 @@ Employee Information System-Employees
 						@endforeach
 				</select>
 				</div>
+                 <div class="col-md-3">
+                     <label>Joining Designation <span></span></label>
+                     <select class="form-control" name="emp_joining_designation" id="emp_joining_designation">
+                        <option value="" label="Select">Select </option>
+						 @foreach($designation as $desg)
+						<option value="{{$desg->designation_name}}" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_designation == $desg->designation_name) {echo 'selected';}}?>>{{$desg->designation_name}}</option>
+						@endforeach
+                     </select>
+                  </div>
 
 				<div class="col-md-3">
 				<label>Date of Birth <span>(*)</span></label>
                     <input type="date" name="emp_dob" id="emp_dob" onchange="calculateDor()" data-msg-max="select date max today." data-date-format="DD MMMM YYYY"  value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_dob;}?>" class="form-control" required>
 				</div>
-
+              </div>
+              <div class="row form-group">
 				<div class="col-md-3">
 				<label>Date of Retirement </label>
                 <input type="text" name="emp_retirement_date" id="emp_retirement_date"  value="<?php if (request()->get('q') != '') {
-    $date_of_retire = date_create($employee_rs[0]->emp_retirement_date);
-    echo date_format($date_of_retire, 'd/m/Y');
-}?>" class="form-control" readonly>
-				</div>
+                    $date_of_retire = date_create($employee_rs[0]->emp_retirement_date);
+                    echo date_format($date_of_retire, 'd/m/Y');
+                }?>" class="form-control" readonly>
+                </div>
 
-			</div>
+                <div class="col-md-3">
+                    <label>Date of Retirement BVC</label>
+                    <input type="text" name="emp_retirement_bvc_date" id="emp_retirement_bvc_date" value="<?php if (request()->get('q') != '') {
+                        $date_of_retire = date_create($employee_rs[0]->emp_retirement_bvc_date);
+                        echo date_format($date_of_retire, 'd/m/Y');
+                    }?>" class="form-control" readonly>
+                 </div>
 
-			<div class="row form-group">
 
-			<div class="col-md-3">
-				<label>Date of Joining <span>(*)</span></label>
-                <input type="date" name="emp_doj" id="emp_doj" onchange="calculateDateOfIncrement()" data-date-format="DD MMMM YYYY" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_doj;}?>" class="form-control" required>
-				</div>
 
-				<div class="col-md-3">
-				<label>Confirmation Date</label>
-                <input type="date" name="emp_from_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_from_date;}?>" class="form-control">
-			</div>
 
+                <div class="col-md-3">
+                    <label>Date of Joining <span>(*)</span></label>
+                    <input type="date" name="emp_doj" id="emp_doj" data-date-format="DD MMMM YYYY" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_doj;}?>" class="form-control" required onchange="calculateConfirmationDate()">
+                 </div>
+
+				 <div class="col-md-3">
+                    <label>Confirmation Date</label>
+                    <input type="date" name="emp_from_date" id="emp_from_date" data-date-format="DD MMMM YYYY"  value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_from_date;}?>" class="form-control">
+                 </div>
+
+                </div>
+                <div class="row form-group">
 				<div class="col-md-3">
 				<label>Next Increment Date </label>
                     <input type="date" name="emp_next_increment_date" id="emp_next_increment_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_next_increament_date;}?>" class="form-control" >
@@ -379,28 +410,34 @@ Employee Information System-Employees
 				</div>
 
 
-			</div>
 
-			<div class="row form-group">
 
 			<div class="col-md-3">
 				<label>Employee Type <span>(*)</span></label>
-                    <select class="form-control" name="emp_status" required>
+                    <select class="form-control" name="emp_status" required onchange="showRenewDate(this.value)">
                         <option value="">Select</option>
                         @foreach($employee_type as $emp)
                         <option value="{{$emp->employee_type_name}}" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_status == $emp->employee_type_name) {echo 'selected';}}?>>{{$emp->employee_type_name}}</option>
                         @endforeach
 				</select>
 			</div>
+            <?php
 
-			<!-- <div class="col-md-3">
-				<label>Till Date</label>
-                    <input type="hidden" name="emp_till_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_till_date;}?>" class="form-control">
-			</div> -->
+              if($employee_rs[0]->contract_renew_date != ''){
+                 $value = '';
+              }else{
+                 $value='none';
+              }
 
+            ?>
+            <div class="col-md-3" id="renewDateSection" style="display: {{ $value }};">
+                <label>Contract Renew Date</label>
+                <input type="date" name="contract_renew_date" id="contract_renew_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->contract_renew_date;}?>" class="form-control" readonly>
+            </div>
 
+        </div>
 
-
+        <div class="row form-group">
 			<div class="col-md-3">
 				<label>Reporting Authority</label>
                     <select class="form-control" name="emp_reporting_auth" >
@@ -420,18 +457,45 @@ Employee Information System-Employees
 				</select>
 			</div>
 
-			</div>
-			<div class="row form-group">
-			<div class="col-md-3">
-				<label>Profile Image</label>
-                    <input type="file" name="emp_image" class="form-control" style="height: 40px;">
-			</div>
-   <input type="hidden" name="old_image" class="form-control" value="{{$employee_rs[0]->emp_image}}">
 
-			 <?php if (!empty($employee_rs[0]->emp_image)) {?>
-								<img src="{{ asset($employee_rs[0]->emp_image) }}" height="auto" width="80px">
-								<?php }?>
-			 </div>
+
+                                <div class="col-md-3">
+                                    <label>Employee Grade</label>
+                                    <input type="text" name="emp_grade_reg" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_grade_reg;}?>"  class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Registartion No</label>
+                                    <input type="text" name="emp_reg_no" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_reg_no;}?>"  class="form-control">
+                                </div>
+                            </div>
+                            {{-- extra field add --}}
+                            <div class="row form-group">
+
+                                <div class="col-md-3">
+                                    <label>Registartion Date</label>
+                                    <input type="date" name="emp_reg_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_reg_date;}?>"  class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Registartion Conucil</label>
+                                    <input type="text" name="emp_reg_council" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_reg_council;}?>" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Date of up Graduation</label>
+                                    <input type="date" name="emp_up_graduation" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_up_graduation;}?>" class="form-control">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label>Profile Image</label>
+                                        <input type="file" name="emp_image" class="form-control" style="height: 40px;">
+                                </div>
+                       <input type="hidden" name="old_image" class="form-control" value="{{$employee_rs[0]->emp_image}}">
+
+                                 <?php if (!empty($employee_rs[0]->emp_image)) {?>
+                                                    <img src="{{ asset($employee_rs[0]->emp_image) }}" height="auto" width="80px">
+                                                    <?php }?>
+
+                            </div>
+
 
 			<button class="btn btn-primary open1" type="button">Next <i class="ti-arrow-right"></i></button>
 
@@ -449,7 +513,7 @@ Employee Information System-Employees
 			<table border="1" class="table table-bordered table-responsove" style="border-collapse:collapse;overflow-x:scroll;">
 				<thead>
 					<tr>
-						<th>Sl.No.</th>
+                        <th>Sl no</th>
 						<th>Qualification</th>
 						<th>Discipline</th>
 						<th>Institute Name</th>
@@ -457,53 +521,72 @@ Employee Information System-Employees
 						<th>Year of Passing</th>
 						<th>Percentage</th>
 						<th>Grade/Division</th>
-<!--						<th>Action</th>-->
+					    <th>File</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody id="marksheet">
-				  <?php $tr_id = 0;
-$countpay = count($emp_edu);
-?>
-				  @if ($countpay!=0)
-				  @foreach($emp_edu as $edu)
-                                <tr class="itemslot" id="<?php echo $tr_id; ?>">
-                                    <td><?php echo ($tr_id + 1); ?></td>
+				  <?php
+                $countpay = count($emp_edu);
+                $tr_id = 0;
+                ?>
+				  @if ($countpay != 0)
+                  <?php $serialNumber = 1; ?>
+                  @foreach ($emp_edu as $edu)
+                                   <tr class="itemslot" id="<?php echo $tr_id; ?>">
+                                    <input type="hidden" name="education_id[]" value="{{ $edu->id }}" class="form-control">
+                                    <td>{{ $serialNumber }}</td>
                                     <td>
 
-									<select class="form-control" name="qualification[]">
+									<select class="form-control"  disabled>
 
 									<option value='' selected>Select</option>
 									@foreach($education as $educ)
 									<option
 									<?php
 
-if ($edu->qualification == $educ->id) {
-    echo 'selected';
-}
+                                    if ($edu->qualification == $educ->id) {
+                                        echo 'selected';
+                                    }
 
-?>
+                                    ?>
 
 									value='{{ $educ->id }}'>{{ $educ->education }}</option>
 									@endforeach
 									</select>
 
 								</td>
-                                    <td><input type="text" name="discipline[]" value="{{ $edu->discipline}}" class="form-control"></td>
-                                    <td><input type="text" name="institute_name[]" value="{{ $edu->institute_name}}" class="form-control"></td>
-                                    <td><input type="text" name="university[]" value="{{ $edu->university}}" class="form-control"></td>
-                                    <td><input type="text" name="year_of_passing[]" value="{{ $edu->year_of_passing}}" class="form-control"></td>
-                                    <td><input type="text" name="percentage[]" value="{{ $edu->percentage}}" class="form-control"></td>
-                                    <td><input type="text" name="grade[]" value="{{ $edu->grade}}" class="form-control">
-
-									<!-- <input type="hidden" class="form-control" name="educations[]" value="{{ $edu->id}}"> -->
-								</td>
-
+                                    <td><input type="text"  value="{{ $edu->discipline}}" class="form-control" disabled></td>
+                                    <td><input type="text"  value="{{ $edu->institute_name}}" class="form-control" disabled></td>
+                                    <td><input type="text"  value="{{ $edu->university}}" class="form-control" disabled></td>
+                                    <td><input type="text"  value="{{ $edu->year_of_passing}}" class="form-control" disabled></td>
+                                    <td><input type="text"  value="{{ $edu->percentage}}" class="form-control" disabled></td>
+                                    <td><input type="text"  value="{{ $edu->grade}}" class="form-control" disabled></td>
+									<?php
+									$filePath = $edu->aimage;
+									$extension = pathinfo($filePath, PATHINFO_EXTENSION);
+									?>
+									@if ($extension == 'pdf')
+									<td><a href="{{asset($edu->aimage)}}" target="_blank"><img src="{{asset('sampleimage/pdf.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@elseif ($extension == 'txt')
+									<td><a href="{{asset($edu->aimage)}}" target="_blank"><img src="{{asset('sampleimage/text.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@elseif ($extension == 'doc')
+									<td><a href="{{asset($edu->aimage)}}" target="_blank"><img src="{{asset('sampleimage/doc.jpeg')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@elseif ($extension == 'xlsx')
+									<td><a href="{{asset($edu->aimage)}}" target="_blank"><img src="{{asset('sampleimage/excel.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                                    @elseif ($extension == ' ')
+									<td></td>
+									@else
+									<td><a href="{{asset($edu->aimage)}}" target="_blank"><img src="{{asset($edu->aimage)}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@endif
 									<td style="width:85px;"><button class="btn-success" type="button" id="add<?php echo ($tr_id + 1); ?>" onClick="addnewrow(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
                                 </tr>
+                                <?php $serialNumber++; ?>
 								@endforeach
 								@else
 
                                 <tr class="itemslot" id="<?php echo $tr_id; ?>">
+
                                     <td>1</td>
                                     <td>
 
@@ -522,83 +605,221 @@ if ($edu->qualification == $educ->id) {
                                     <td><input type="text" name="year_of_passing[]" value="" class="form-control"></td>
                                     <td><input type="text" name="percentage[]" value="" class="form-control"></td>
                                     <td><input type="text" name="grade[]" value="" class="form-control"></td>
+                                    <td><input type="file" name="aimage[]" value="" class="form-control"></td>
 
 									<td style="width:85px;"><button class="btn-success" type="button" id="add<?php echo ($tr_id + 1); ?>" onClick="addnewrow(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
                                 </tr>
 								@endif
-
-				  	<!-- <tr>
-						<td>1</td>
-                       	<td><input type="text" name="emp_viii_qualification" readonly="" value="8th" class="form-control"></td>
-                        <td><input type="text" name="emp_viii_dicipline" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_viii_dicipline;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_viii_inst_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_viii_inst_name;}?>"  class="form-control"></td>
-						<td><input type="text" name="emp_viii_board_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_viii_board_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_viii_pass_year" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_viii_pass_year;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_viii_percentage" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_viii_percentage;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_viii_rank" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_viii_rank;}?>" class="form-control"></td>
-
-					</tr>
-                    <tr>
-						<td>2</td>
-                       	<td><input type="text" name="emp_x_qualification" readonly="" value="10th" class="form-control"></td>
-                        <td><input type="text" name="emp_x_dicipline" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_x_dicipline;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_x_inst_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_x_institute_name;}?>"  class="form-control"></td>
-						<td><input type="text" name="emp_x_board_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_x_board_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_x_pass_year" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_x_pass_year;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_x_percentage" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_x_percentage;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_x_rank" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_x_rank;}?>" class="form-control"></td> -->
-						<!--<td style="width:150px;"><button type="button" id="add" class="btn btn-default pls"><i class="fa fa-plus"></i></button></td>-->
-					<!-- </tr>
-                    <tr>
-						<td>3</td>
-                        <td><input type="text" name="emp_xii_qualification" readonly="" value="12th" class="form-control"></td>
-						<td><input type="text" name="emp_xii_dicipline" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_xii_dicipline;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_xii_inst_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_xii_institute_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_xii_board_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_xii_board_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_xii_pass_year" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_xii_pass_year;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_xii_percentage" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_xii_percentage;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_xii_rank" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_xii_rank;}?>" class="form-control"></td> -->
-					<!--<td style="width:150px;"><button type="button" id="add" class="btn btn-default pls"><i class="fa fa-plus"></i></button></td>-->
-					<!-- </tr>
-                    <tr>
-						<td>4</td>
-                        <td><input type="text" name="emp_graduate_qualification" readonly="" value="Graduate" class="form-control"></td>
-						<td><input type="text" name="emp_graduate_dicipline" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_graduate_dicipline;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_graduate_inst_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_graduate_institute_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_graduate_board_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_graduate_board_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_graduate_pass_year" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_graduate_pass_year;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_graduate_percentage" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_graduate_percentage;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_graduate_rank" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_graduate_rank;}?>" class="form-control"></td>
-
-					</tr>
-                    <tr>
-						<td>5</td>
-                        <td><input type="text" name="emp_pgradu_qualification" readonly="" value="Post Graduate" class="form-control"></td>
-						<td><input type="text" name="emp_pgradu_dicipline" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pgraduate_dicipline;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_pgradu_inst_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pgraduate_institute_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_pgradu_board_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pgraduate_board_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_pgradu_pass_year" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pgraduate_pass_year;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_pgradu_percentage" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pgraduate_percentage;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_pgradu_rank" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pgraduate_rank;}?>" class="form-control"></td>
-
-					</tr>
-
-					<tr>
-						<td>6</td>
-                       	<td><input type="text" name="emp_other_qualification" readonly="" value="other" class="form-control"></td>
-                        <td><input type="text" name="emp_other_dicipline" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_other_dicipline;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_other_inst_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_other_inst_name;}?>"  class="form-control"></td>
-						<td><input type="text" name="emp_other_board_name" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_other_board_name;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_other_pass_year" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_other_pass_year;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_other_percentage" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_other_percentage;}?>" class="form-control"></td>
-						<td><input type="text" name="emp_other_rank" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_other_rank;}?>" class="form-control"></td>
-
-					</tr> -->
-
 				</tbody>
 			</table>
 
 			<!---------------------------------------->
+
+             {{-- document upload --}}
+             <legend>Personal Records</legend>
+             <table border="1" class="table table-bordered table-responsove" style="border-collapse:collapse;overflow-x:scroll;">
+                <thead>
+                   <tr>
+                      <th>Sl.No.</th>
+                      <th>Doc type</th>
+                      <th>File</th>
+                   </tr>
+                </thead>
+                <tbody id="marksheetdoc">
+                    <?php
+                    $countdoc = count($perdoc);
+                    $tr_id = 0;
+                    ?>
+                      @if ($countdoc != 0)
+                      <?php $serialNumber = 1; ?>
+                      @foreach ($perdoc as $pdocs)
+                      <tr class="itemslotdoc" id="<?php echo $tr_id; ?>">
+                         <td>1</td>
+                         <td>
+                            <select class="form-control" disabled>
+                               <option value='' >{{ $pdocs->pdoctype  }}</option>
+                               {{-- <option>Aadhar card</option>
+                               <option>Voter Id</option>
+                               <option>Pan card</option>
+                               <option>Driving License</option>
+                               <option>Passport</option> --}}
+                            </select>
+                         </td>
+                         <?php
+									$filePath = $pdocs->pdocimage;
+									$extension = pathinfo($filePath, PATHINFO_EXTENSION);
+									?>
+									@if ($extension == 'pdf')
+									<td><a href="{{asset($pdocs->pdocimage)}}" target="_blank"><img src="{{asset('sampleimage/pdf.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@elseif ($extension == 'txt')
+									<td><a href="{{asset($pdocs->pdocimage)}}" target="_blank"><img src="{{asset('sampleimage/text.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@elseif ($extension == 'doc')
+									<td><a href="{{asset($pdocs->pdocimage)}}" target="_blank"><img src="{{asset('sampleimage/doc.jpeg')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@elseif ($extension == 'xlsx')
+									<td><a href="{{asset($pdocs->pdocimage)}}" target="_blank"><img src="{{asset('sampleimage/excel.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                                    @elseif ($extension == ' ')
+									<td></td>
+									@else
+									<td><a href="{{asset($pdocs->pdocimage)}}" target="_blank"><img src="{{asset($pdocs->pdocimage)}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+									@endif
+									<td><button class="btn-success" type="button" id="adddoc<?php echo ($tr_id + 1); ?>" onClick="addnewrowdoc(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                                </tr>
+                                <?php $serialNumber++; ?>
+                      </tr>
+                      @endforeach
+                    @else
+                   <?php $tr_id = 0;?>
+                   <tr class="itemslotdoc" id="<?php echo $tr_id; ?>">
+                      <td>1</td>
+                      <td>
+                         <select class="form-control" name="pdoctype[]">
+                            <option value='' >Select</option>
+                            <option>Aadhar card</option>
+                            <option>Voter Id</option>
+                            <option>Pan card</option>
+                            <option>Driving License</option>
+                            <option>Passport</option>
+                         </select>
+                      </td>
+                      <td><input type="file" name="pdocimage[]" value="" class="form-control"></td>
+                      <td><button class="btn-success" type="button" id="adddoc<?php echo ($tr_id + 1); ?>" onClick="addnewrowdoc(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                   </tr>
+                </tbody>
+                @endif
+             </table>
+             {{-- document end --}}
+
+                {{-- Personal Record upload --}}
+                <legend>Professional Records</legend>
+                <table border="1" class="table table-bordered table-responsove" style="border-collapse:collapse;overflow-x:scroll;">
+                    <thead>
+                        <tr>
+                            <th>Sl.No.</th>
+                            <th>Qualification</th>
+                            <th>Designation</th>
+                            <th>From Date</th>
+                            <th>To date</th>
+                            <th>File</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marksheetprec">
+                        <?php
+                    $countdocs = count($perrecord);
+                    $tr_id = 0;
+                    ?>
+                      @if ($countdocs != 0)
+                      <?php $serialNumber = 1; ?>
+                      @foreach ($perrecord as $perdocs)
+                      <?php $tr_id = 0;?>
+                        <tr class="itemslotprec" id="<?php echo $tr_id; ?>">
+                            <td>1</td>
+                            <td><input type="text"  value="{{$perdocs->precqualification}}" class="form-control" disabled></td>
+                            <td><input type="text"  value="{{$perdocs->precdesignation}}" class="form-control" disabled></td>
+                            <td><input type="date"  value="{{$perdocs->precfromdate}}" class="form-control" disabled></td>
+                            <td><input type="date"  value="{{$perdocs->prectodate}}" class="form-control" disabled></td>
+                            <?php
+                            $filePath = $perdocs->precimage;
+                            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                            ?>
+                            @if ($extension == 'pdf')
+                            <td><a href="{{asset($perdocs->precimage)}}" target="_blank"><img src="{{asset('sampleimage/pdf.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == 'txt')
+                            <td><a href="{{asset($perdocs->precimage)}}" target="_blank"><img src="{{asset('sampleimage/text.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == 'doc')
+                            <td><a href="{{asset($perdocs->precimage)}}" target="_blank"><img src="{{asset('sampleimage/doc.jpeg')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == 'xlsx')
+                            <td><a href="{{asset($perdocs->precimage)}}" target="_blank"><img src="{{asset('sampleimage/excel.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == ' ')
+                            <td></td>
+                            @else
+                            <td><a href="{{asset($perdocs->precimage)}}" target="_blank"><img src="{{asset($perdocs->precimage)}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @endif
+                            <td><button class="btn-success" type="button" id="addprec<?php echo ($tr_id + 1); ?>" onClick="addnewrowprec(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                        </tr>
+
+                      @endforeach
+                      @else
+                        <?php $tr_id = 0;?>
+                        <tr class="itemslotprec" id="<?php echo $tr_id; ?>">
+                            <td>1</td>
+                            <td><input type="text" name="precqualification[]" value="" class="form-control"></td>
+                            <td><input type="text" name="precdesignation[]" value="" class="form-control"></td>
+                            <td><input type="date" name="precfromdate[]" value="" class="form-control"></td>
+                            <td><input type="date" name="prectodate[]" value="" class="form-control"></td>
+                            <td><input type="file" name="precimage[]" value="" class="form-control"></td>
+                            <td><button class="btn-success" type="button" id="addprec<?php echo ($tr_id + 1); ?>" onClick="addnewrowprec(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                        </tr>
+                    </tbody>
+                    @endif
+                </table>
+                {{-- Personal record end --}}
+
+                  {{-- Misc Record upload --}}
+                  <legend>Misc. Documents</legend>
+                  <table border="1" class="table table-bordered table-responsove" style="border-collapse:collapse;overflow-x:scroll;">
+                      <thead>
+                          <tr>
+                              <th>Sl.No.</th>
+                              <th>Category</th>
+                              <th>File</th>
+                          </tr>
+                      </thead>
+                      <tbody id="marksheetmrec">
+                        <?php
+                        $countmis = count($misdoc);
+                        $tr_id = 0;
+                        ?>
+                      @if ($countdocs != 0)
+                      <?php $serialNumber = 1; ?>
+                      @foreach ($misdoc as $misdocs)
+                          <?php $tr_id = 0;?>
+                          <tr class="itemslotmrec" id="<?php echo $tr_id; ?>">
+                            <td>1</td>
+                            <td>
+                               <select  id="" class="form-control" disabled>
+                                   <option value="">{{$misdocs->mreccategory}}</option>
+
+                               </select>
+                            </td>
+                            <?php
+                            $filePath = $misdocs->mrecimage;
+                            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                            ?>
+                            @if ($extension == 'pdf')
+                            <td><a href="{{asset($misdocs->mrecimage)}}" target="_blank"><img src="{{asset('sampleimage/pdf.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == 'txt')
+                            <td><a href="{{asset($misdocs->mrecimage)}}" target="_blank"><img src="{{asset('sampleimage/text.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == 'doc')
+                            <td><a href="{{asset($misdocs->mrecimage)}}" target="_blank"><img src="{{asset('sampleimage/doc.jpeg')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == 'xlsx')
+                            <td><a href="{{asset($misdocs->mrecimage)}}" target="_blank"><img src="{{asset('sampleimage/excel.png')}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @elseif ($extension == ' ')
+                            <td></td>
+                            @else
+                            <td><a href="{{asset($misdocs->mrecimage)}}" target="_blank"><img src="{{asset($misdocs->mrecimage)}}" alt="" style="max-width: 30px;min-width:30px;"></a></td>
+                            @endif
+                            <td><button class="btn-success" type="button" id="addmrec<?php echo ($tr_id + 1); ?>" onClick="addnewrowmrec(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                        </tr>
+
+                      @endforeach
+                      @else
+                          <tr class="itemslotmrec" id="<?php echo $tr_id; ?>">
+                              <td>1</td>
+                              <td>
+                                 <select name="mreccategory[]" id="" class="form-control">
+                                     <option value="">Select</option>
+                                     <option>Traning</option>
+                                     <option>Legal</option>
+                                     <option>Others</option>
+                                 </select>
+                              </td>
+                              <td><input type="file" name="mrecimage[]" value="" class="form-control"></td>
+                              <td><button class="btn-success" type="button" id="addmrec<?php echo ($tr_id + 1); ?>" onClick="addnewrowmrec(<?php echo ($tr_id + 1); ?>)" data-id="<?php echo ($tr_id + 1); ?>"> <i class="ti-plus"></i> </button></td>
+                          </tr>
+                      </tbody>
+                      @endif
+                  </table>
+                  {{-- Misc record end --}}
 
             <div class="clearfix" style="height: 10px;clear: both;"></div>
 
@@ -776,8 +997,8 @@ if ($edu->qualification == $educ->id) {
 
 
 				<div class="col-md-4">
-					<label>Pin Code <span>(*)</span> </label>
-                     <input id="parmenent_pincode" name="emp_pr_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pr_pincode;}?>" type="text" class="form-control" required >
+					<label>Pin Code  </label>
+                     <input id="parmenent_pincode" name="emp_pr_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_pr_pincode;}?>" type="text" class="form-control"  >
 				</div>
 
 			</div>
@@ -794,9 +1015,9 @@ if ($edu->qualification == $educ->id) {
 				</div>
 
 				<div class="col-md-4">
-					<label>State <span>(*)</span></label>
+					<label>State </label>
 
-                        <select name="emp_pr_state" id="parmenent_state" class="form-control" required>
+                        <select name="emp_pr_state" id="parmenent_state" class="form-control" >
 						<option value="" label="Select">Select</option>
 						<?php foreach ($states as $state) {?>
 						<option value="<?php echo $state->state_name; ?>" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_pr_state == $state->state_name) {echo 'selected';}}?>><?php echo $state->state_name; ?></option>
@@ -851,8 +1072,8 @@ if ($edu->qualification == $educ->id) {
 				</div>
 
 				<div class="col-md-4">
-					<label>Pin Code <span>(*)</span></label>
-                                        <input type="text" name="emp_ps_pincode" id="present_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_ps_pincode;}?>" class="form-control" required>
+					<label>Pin Code </label>
+                                        <input type="text" name="emp_ps_pincode" id="present_pincode" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_ps_pincode;}?>" class="form-control" >
 				</div>
 			</div>
 			<div class="row form-group">
@@ -863,10 +1084,10 @@ if ($edu->qualification == $educ->id) {
 				</div>
 
 				<div class="col-md-4">
-					<label>State <span>(*)</span></label>
+					<label>State </label>
 
 
-                   <select name="emp_ps_state" id="present_state" class="form-control" required>
+                   <select name="emp_ps_state" id="present_state" class="form-control" >
 						<option value="" label="Select">Select</option>
 						<?php foreach ($states as $state) {?>
 						<option value="<?php echo $state->state_name; ?>" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_ps_state == $state->state_name) {echo 'selected';}}?>><?php echo $state->state_name; ?></option>
@@ -2107,27 +2328,43 @@ if ($value->id == '1') {
 		}
 
 
-		function calculateDor(){
-			var emp_dob = $("#emp_dob").val();
-	    	var dateOfBirth = new Date(emp_dob);
+        function calculateDor(){
+   	var emp_dob = $("#emp_dob").val();
+      	var dateOfBirth = new Date(emp_dob);
 
-	    	var sixty_years_ago = new Date(dateOfBirth.getFullYear()+60,dateOfBirth.getMonth(),dateOfBirth.getDate());
+      	var sixty_years_ago = new Date(dateOfBirth.getFullYear()+60,dateOfBirth.getMonth(),dateOfBirth.getDate());
+        //bvc
+        var fiftyeight_years_ago = new Date(dateOfBirth.getFullYear()+58,dateOfBirth.getMonth(),dateOfBirth.getDate());
 
-	    	if(dateOfBirth.getDate()==1 && sixty_years_ago.getMonth()==0){
-	    		var lastdate = new Date(sixty_years_ago.getFullYear(), (sixty_years_ago.getMonth()+1), 0).getDate();
-	    	   var lastDayWithSlashes = lastdate + '/' + '12' + '/' + (sixty_years_ago.getFullYear()-1);
+      	if(dateOfBirth.getDate()==1 && sixty_years_ago.getMonth()==0){
+      		var lastdate = new Date(sixty_years_ago.getFullYear(), (sixty_years_ago.getMonth()+1), 0).getDate();
+      	   var lastDayWithSlashes = lastdate + '/' + '12' + '/' + (sixty_years_ago.getFullYear()-1);
 
-	    	}else if(dateOfBirth.getDate()==1 && sixty_years_ago.getMonth()>0){
-	    		var lastdate = new Date(sixty_years_ago.getFullYear(), (sixty_years_ago.getMonth()), 0).getDate();
-	    		var lastDayWithSlashes = lastdate + '/' + (sixty_years_ago.getMonth()) + '/' + sixty_years_ago.getFullYear();
+      	}else if(dateOfBirth.getDate()==1 && sixty_years_ago.getMonth()>0){
+      		var lastdate = new Date(sixty_years_ago.getFullYear(), (sixty_years_ago.getMonth()), 0).getDate();
+      		var lastDayWithSlashes = lastdate + '/' + (sixty_years_ago.getMonth()) + '/' + sixty_years_ago.getFullYear();
 
-	    	}else{
-	    		var lastdate = new Date(sixty_years_ago.getFullYear(), (sixty_years_ago.getMonth()+1), 0).getDate();
-	    		var lastDayWithSlashes = lastdate +'/' + (sixty_years_ago.getMonth()+1) + '/' + sixty_years_ago.getFullYear();
-	    	}
+      	}else{
+      		var lastdate = new Date(sixty_years_ago.getFullYear(), (sixty_years_ago.getMonth()+1), 0).getDate();
+      		var lastDayWithSlashes = lastdate +'/' + (sixty_years_ago.getMonth()+1) + '/' + sixty_years_ago.getFullYear();
+      	}
+        //bvc calculate
+          if(dateOfBirth.getDate()==1 && fiftyeight_years_ago.getMonth()==0){
+      		var lastdatebvc = new Date(fiftyeight_years_ago.getFullYear(), (fiftyeight_years_ago.getMonth()+1), 0).getDate();
+      	   var lastDayWithSlashesbvc = lastdatebvc + '/' + '12' + '/' + (fiftyeight_years_ago.getFullYear()-1);
 
-		    $("#emp_retirement_date").val(lastDayWithSlashes);
-		}
+      	}else if(dateOfBirth.getDate()==1 && fiftyeight_years_ago.getMonth()>0){
+      		var lastdatebvc = new Date(fiftyeight_years_ago.getFullYear(), (fiftyeight_years_ago.getMonth()), 0).getDate();
+      		var lastDayWithSlashesbvc = lastdatebvc + '/' + (fiftyeight_years_ago.getMonth()) + '/' + fiftyeight_years_ago.getFullYear();
+
+      	}else{
+      		var lastdatebvc = new Date(fiftyeight_years_ago.getFullYear(), (fiftyeight_years_ago.getMonth()+1), 0).getDate();
+      		var lastDayWithSlashesbvc = lastdatebvc +'/' + (fiftyeight_years_ago.getMonth()+1) + '/' + fiftyeight_years_ago.getFullYear();
+      	}
+
+       $("#emp_retirement_date").val(lastDayWithSlashes);
+       $("#emp_retirement_bvc_date").val(lastDayWithSlashesbvc);
+   }
 
 
 
@@ -2153,6 +2390,43 @@ if ($value->id == '1') {
 		    $("#emp_next_increment_date").val(nextIncrementDate);
 
 		}
+
+        function calculateConfirmationDate() {
+        var doj = document.getElementById('emp_doj').value;
+        var confirmationDate = new Date(doj);
+        confirmationDate.setMonth(confirmationDate.getMonth() + 6); // Add 6 months
+
+        var dd = String(confirmationDate.getDate()).padStart(2, '0');
+        var mm = String(confirmationDate.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var yyyy = confirmationDate.getFullYear();
+
+        var formattedConfirmationDate = yyyy + '-' + mm + '-' + dd;
+        document.getElementById('emp_from_date').value = formattedConfirmationDate;
+    }
+    function showRenewDate(selectedValue) {
+        var renewDateSection = document.getElementById('renewDateSection');
+        var contractRenewDateInput = document.getElementById('contract_renew_date');
+
+        if (selectedValue === 'CONTRACT') {
+            renewDateSection.style.display = 'block';
+            var joiningDate = document.getElementById('emp_doj').value; // Fetch the joining date
+
+            if (joiningDate) {
+                var contractRenewDate = new Date(joiningDate);
+                // Calculate renew date (assuming it's one year after joining)
+                contractRenewDate.setFullYear(contractRenewDate.getFullYear() + 1);
+
+                var dd = String(contractRenewDate.getDate()).padStart(2, '0');
+                var mm = String(contractRenewDate.getMonth() + 1).padStart(2, '0');
+                var yyyy = contractRenewDate.getFullYear();
+
+                var formattedRenewDate = yyyy + '-' + mm + '-' + dd;
+                contractRenewDateInput.value = formattedRenewDate;
+            }
+        } else {
+            renewDateSection.style.display = 'none';
+        }
+    }
 
 
 
@@ -2503,16 +2777,10 @@ function showHideDiv() {
 
 function addnewrow(rowid)
 	{
-
-
-
 		if (rowid != ''){
 				$('#add'+rowid).attr('disabled',true);
 
 		}
-
-
-
 		$.ajax({
 
 				url:'{{url('settings/get-add-row-item')}}/'+rowid,
@@ -2525,6 +2793,59 @@ function addnewrow(rowid)
 				}
 			});
 	}
+    function addnewrowdoc(rowid){
+        if (rowid != ''){
+   				$('#adddoc'+rowid).attr('disabled',true);
+
+   		}
+   		$.ajax({
+
+   				url:'{{url('settings/get-add-row-docs')}}/'+rowid,
+   				type: "GET",
+
+   				success: function(response) {
+
+   					$("#marksheetdoc").append(response);
+
+   				}
+   			});
+    }
+    function addnewrowprec(rowid){
+        if (rowid != ''){
+   				$('#addprec'+rowid).attr('disabled',true);
+
+   		}
+   		$.ajax({
+
+   				url:'{{url('settings/get-add-row-prec')}}/'+rowid,
+   				type: "GET",
+
+   				success: function(response) {
+
+   					$("#marksheetprec").append(response);
+
+   				}
+   			});
+
+    }
+    function addnewrowmrec(rowid){
+        if (rowid != ''){
+   				$('#addmrec'+rowid).attr('disabled',true);
+
+   		}
+   		$.ajax({
+
+   				url:'{{url('settings/get-add-row-mrec')}}/'+rowid,
+   				type: "GET",
+
+   				success: function(response) {
+
+   					$("#marksheetmrec").append(response);
+
+   				}
+   			});
+
+    }
 
 
 	function delRow(rowid)
@@ -2538,6 +2859,37 @@ function addnewrow(rowid)
         });
 
 	}
+    function delRowDoc(rowid)
+   	{
+   		var lastrowdoc = $(".itemslotdoc:last").attr("id");
+           //alert(lastrow);
+           var active_div = (lastrowdoc-1);
+           $('#adddoc'+active_div).attr('disabled',false);
+           $(document).on('click','.deleteButtondoc',function() {
+               $(this).closest("tr.itemslotdoc").remove();
+           });
+
+   	}
+    function delRowprec(rowid){
+        var lastrowprec = $(".itemslotprec:last").attr("id");
+           //alert(lastrow);
+           var active_div = (lastrowprec-1);
+           $('#addprec'+active_div).attr('disabled',false);
+           $(document).on('click','.deleteButtonprec',function() {
+               $(this).closest("tr.itemslotprec").remove();
+           });
+
+    }
+    function delRowmrec(rowid){
+        var lastrowprec = $(".itemslotmrec:last").attr("id");
+           //alert(lastrow);
+           var active_div = (lastrowprec-1);
+           $('#addmrec'+active_div).attr('disabled',false);
+           $(document).on('click','.deleteButtonmrec',function() {
+               $(this).closest("tr.itemslotmrec").remove();
+           });
+
+    }
 	 function checkdepart(emp_department){
 
 	   	$.ajax({

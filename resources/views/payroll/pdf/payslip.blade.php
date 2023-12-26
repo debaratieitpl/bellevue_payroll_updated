@@ -6,7 +6,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{ asset('img/logo-small.png') }}" type="image/x-icon" />
+    <link rel="icon" href="{{ asset('theme/images/bellevue-logo1.png') }}" type="image/x-icon" />
 
     <style type="text/css" media="print">
         @page {
@@ -226,8 +226,8 @@
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="2" width="33.33%"><span>Employee Code :</span><br>
-                        {{ $payroll_rs[0]->old_emp_code }}</td>
+                    <td colspan="1" width="16.66%"><span>Employee Code :</span><br> {{$payroll_rs[0]->old_emp_code}}</td>
+                    <td colspan="1" width="16.66%"><span>PF No. :</span><br> {{$payroll_rs[0]->emp_pf_no}}</td>
                     <td colspan="2" width="33.33%"><span>Employee Name :</span><br> {{ $payroll_rs[0]->emp_name }}
                     </td>
                     <td colspan="2" width="33.33%"><span>Department :</span><br> {{ $payroll_rs[0]->emp_department }}
@@ -266,13 +266,9 @@
                     <!-- <td>Particulars</td>
       <td style="text-align:right;">Amount (<img src="{{ asset('theme/payslip-img/rupee.png') }}" alt="" style="width: 8px;vertical-align: middle;">)</td> -->
                     <td width="30%">Particulars</td>
-                    <td style="text-align:right;" width="20%">Amount (<img
-                            src="{{ asset('theme/payslip-img/rupee.png') }}" alt=""
-                            style="width: 8px;vertical-align: middle;">)</td>
+                    <td style="text-align:right;" width="20%">Amount (Rs)</td>
                     <td width="30%">Particulars</td>
-                    <td style="text-align:right;" width="20%">Amount (<img
-                            src="{{ asset('theme/payslip-img/rupee.png') }}" alt=""
-                            style="width: 8px;vertical-align: middle;">)</td>
+                    <td style="text-align:right;" width="20%">Amount (Rs)</td>
                 </tr>
                 <tr>
 
@@ -541,10 +537,10 @@
                 }
                 $str = array_reverse($str);
                 $result = implode('', $str);
-                
+
                 $point = abs($point);
                 $point = number_format($point, 0);
-                
+
                 $points = $point ? '.' . $words[$point / 10] . ' ' . $words[($point = $point % 10)] : '';
                 //echo $result . "Rupees  " . $points . " Paise";
                 ?>
@@ -566,14 +562,17 @@
                                 <td style="font-weight:500;"><b>ADJ.<br>
                                         <br>{{ $payroll_rs[0]->emp_adjust_days }} </b>
                                 </td>
+                                <td style="font-weight:500;"><b>OT.(HR.)<br>
+                                    <?php $total_ot_hours =  $payroll_rs[0]->last_month_ot_hrs + $payroll_rs[0]->current_month_ot_hrs; ?>
+                                    <br>{{ $total_ot_hours }} </b>
+                                </td>
                             </tr>
                         </table>
                     </td>
 
                     <td style="font-weight:600;text-align:right;" colspan="2"><span style="float: left;">Net
-                            Salary :</span> <img src="{{ asset('theme/payslip-img/rupee.png') }}" alt=""
-                            style="width: 8px;vertical-align: middle;">
-                        {{ number_format($payroll_rs[0]->emp_net_salary, 2) }}<br>
+                            Salary :</span>
+                        {{ number_format($payroll_rs[0]->emp_net_salary, 2) }}(Rs)<br>
                         <!--<span style="float: left;">RUPEES <?php echo strtoupper($result); ?></span>-->
                     </td>
                 </tr>

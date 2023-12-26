@@ -159,10 +159,10 @@ BELLEVUE Short Listing  Details
                         </div>
                         <div class="col-md-4">
                            <?php  if($job->upload_sh!=''){   ?>
-                           <button class="btn btn-primary download" type="button" style="    margin: 11px 0 0;"><a href="{{asset('public/'.$job->upload_sh)}}" download>Download Interview Sheet</a></button>
+                           <button class="btn btn-primary download" type="button" style="    margin: 11px 0 0;"><a href="{{asset($job->upload_sh)}}" download>Download Interview Sheet</a></button>
                            <?php
                               }
-                              
+
                               ?>
                         </div>
                      </div>
