@@ -12,6 +12,7 @@ class CareerController extends Controller
 {
     public function viewdash($career_id)
     {
+        // dd('hello',base64_decode($career_id));
             $data['job']=DB::table('company_jobs')->where('id','=',base64_decode($career_id))->first();
           
             return View('career/career',$data);
@@ -33,16 +34,14 @@ class CareerController extends Controller
 
     public function saveapp(Request $request)
     {
-        // dd($request->all());
-
-            // dd($request->job_id);
+       
             $ckeck_dept= DB::table('candidates')->where('job_id', $request->job_id)->where('email', $request->email)->first();
             
             if (!empty($ckeck_dept)) {
                 Session::flash('message', 'You are Already Applied For this Post.');
                 return redirect('career/application/' . base64_encode($request->job_id));
             } else {
-            //   dd("hello");
+          
             if ($request->has('resume')) {
 
                 $file = $request->file('resume');
@@ -54,19 +53,7 @@ class CareerController extends Controller
                $path='candidate_resume'.'/'.$paths->getFilename();
                
             }
-            // if ($request->has('cover_letter')) {
-
-            //     $file_cover_letter = $request->file('cover_letter');
-            //     $extension_cover_letter = $request->cover_letter->extension();
-               
-            //     $imageName = time() . '.' . $file_cover_letter->getClientOriginalExtension();
-            //     $paths =$file->move(public_path('/candidate_cover_letter'), $imageName);
-            //     $path_cover_letter='candidate_cover_letter'.'/'.$paths->getFilename();
-            // } else {
-            //     $path_cover_letter = '';
-            // }
-
-
+           
                 if ($request->dob != '') {
                     $dob = date('Y-m-d', strtotime($request->dob));
                 } else {
@@ -75,15 +62,12 @@ class CareerController extends Controller
                 $data = array(
                     'job_id' => $request->job_id,
                     'job_title' => $request->job_title,
-
                     'name' => $request->name,
                     'gender' => $request->gender,
                     'exp_month' => $request->exp_month,
                     'skill_level' => $request->skill_level,
-
                     'email' => $request->email,
                     'phone' => $request->phone,
-                    // 'cover_letter' => $path_cover_letter,
                     'exp' => $request->exp,
                     'cur_or' => $request->cur_or,
                     'cur_deg' => $request->cur_deg,
@@ -101,8 +85,6 @@ class CareerController extends Controller
                     'createDate'=>date('Y-m-d'),
                     'updateDate'=>date('Y-m-d'),
                 );
-                // dd($data);
-
                 DB::table('candidates')->insert($data);
 
                 return redirect('thank-you');

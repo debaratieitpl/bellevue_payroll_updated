@@ -93,6 +93,7 @@ BELLEVUE - Job Posts
                               <td>{{ $recruitment_job->con_num }}</td>
                               <td>{{ $recruitment_job->status }}</td>
                               <td><a data-toggle="tooltip" data-placement="bottom" title="Edit"  href="{{url('recruitment/add-job-post/')}}?id={{$recruitment_job->id}}"><i class="ti-pencil-alt"></i></a>
+                              <a href="">Apply</a>
                               </td>
                            </tr>
                            @endforeach  
