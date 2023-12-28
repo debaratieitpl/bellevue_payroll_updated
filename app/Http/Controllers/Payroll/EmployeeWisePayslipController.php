@@ -325,7 +325,7 @@ class EmployeeWisePayslipController extends Controller
     }
 
     function mailPayrollToEmployees(Request $request) {
-        dispatch(new \App\Jobs\PayslipEmployees($request->month_yr,$request->emp_code))->onQueue('high');
+        dispatch(new \App\Jobs\PayslipEmployees($request->month_yr,$request->emp_code))->onQueue('default');
         return back();
     }
 

@@ -55,6 +55,7 @@ use App\Imports\ImportEmployee;
 use App\Imports\ImportEmail;
 use App\Imports\ImportPayDetails;
 use App\Exports\SampleEmployeeExport;
+use App\Exports\ExcelEmpDesignationReport;
 class EmployeeController extends Controller
 {
     //
@@ -161,6 +162,24 @@ class EmployeeController extends Controller
             return redirect('/');
         }
     }
+    public function employeesByDesignation()
+    {
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+            $data['monthlist'] = Employee::orderBy('emp_designation')->select('emp_designation')->distinct('emp_designation')->get();
+            $data['result'] = '';
+            return view('employee.EmployeeListDesginationWiseReport', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
 
     public function emp_class_xlsexport(Request $request)
     {
@@ -227,6 +246,27 @@ class EmployeeController extends Controller
             }
 
             return Excel::download(new ExcelEmpDepReport($department_data), 'EmpDepartmentReport.xlsx');
+        } else {
+            return redirect('/');
+        }
+    }
+    public function emp_designation_xlsexport(Request $request)
+    {
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+            $designation_data = '';
+            if (isset($request->designation)) {
+                $designation_data = $request->designation;
+            }
+
+            return Excel::download(new ExcelEmpDesignationReport($designation_data), 'EmpDesignationReport.xlsx');
         } else {
             return redirect('/');
         }

@@ -59,8 +59,11 @@ $menuslist = array_unique($menus);?>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ asset('images/attendence.png') }}" alt="" /> Employee Report Generate</a>
                         <ul class="sub-menu children dropdown-menu">
 
-                            <li><a href="{{ url('employees') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Class Wise</a></li>
-                            <li><a href="{{ url('employees') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Department Wise</a></li>
+                            <li><a href="{{ url('employees/class') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Class Wise</a></li>
+                            <li><a href="{{ url('employees/department') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Department Wise</a></li>
+                            <li><a href="{{ url('employees/designation') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Designation Wise</a></li>
+                            <li><a href="{{ url('employees/retirement') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Retirement List</a></li>
+                            <li><a href="{{ url('employees/ex-report') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Ex Employee </a></li>
 			            </ul>
 					</li>
 
@@ -110,6 +113,8 @@ $menuslist = array_unique($menus);?>
 
                             <li><a href="{{ url('employees/class') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Class Wise</a></li>
                             <li><a href="{{ url('employees/department') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Department Wise</a></li>
+                            <li><a href="{{ url('employees/designation') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee List Designation Wise</a></li>
+                            <li><a href="{{ url('employees/retirement') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Retirement List</a></li>
                             <li><a href="{{ url('employees/ex-report') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Ex Employee </a></li>
 			            </ul>
 					</li>

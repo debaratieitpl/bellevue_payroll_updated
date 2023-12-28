@@ -389,8 +389,14 @@ Route::get('xls-sample-pay-details-download', 'Employee\EmployeeController@smapl
 
 Route::get('employees/class', 'Employee\EmployeeController@employeesByClass');
 Route::get('employees/department', 'Employee\EmployeeController@employeesByDepartment');
+Route::get('employees/designation', 'Employee\EmployeeController@employeesByDesignation');
+
+// Emploee Report
+Route::get('employees/retirement', 'Employee\EmployeeReportController@employeesByRetirement');
+Route::post('employees/retirement-export-report', 'Employee\EmployeeReportController@emp_retirement_xlsexport');
 
 Route::post('employees/department-export-report', 'Employee\EmployeeController@emp_dep_xlsexport');
+Route::post('employees/designation-export-report', 'Employee\EmployeeController@emp_designation_xlsexport');
 Route::post('employees/class-export-report', 'Employee\EmployeeController@emp_class_xlsexport');
 Route::get('employees/ex-report', 'Employee\EmployeeController@emp_ex_report');
 
