@@ -474,6 +474,13 @@ Route::post('recruitment/edit-hired', 'Recruitment\RecruitmentController@savehir
 Route::get('recruitment/offer-letter', 'Recruitment\RecruitmentController@viewsoffercandidate');
 Route::get('recruitment/generate-letter', 'Recruitment\RecruitmentController@viewsofferlattercandidate');
 Route::post('recruitment/edit-offer-letter', 'Recruitment\RecruitmentController@saveofferlat');
+Route::get('recruitment/rejected', 'Recruitment\RecruitmentController@viewReejected');
+Route::get('recruitment/apply', 'Recruitment\RecruitmentController@applyView');
+Route::post('recruitment/saveapply', 'Recruitment\RecruitmentController@applysave');
+
+
+
+
 
 Route::get('pis/getjobpostByIdlkkk/{empid}','Recruitment\RecruitmentController@getDepartment');
 Route::get('pis/getjobpostByIdlkkkll/{empid}/{soc}', 'Recruitment\RecruitmentController@getJobdetails');

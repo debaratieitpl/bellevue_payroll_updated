@@ -315,6 +315,81 @@ class RecruitmentController extends Controller
         }
 
     }
+    public function applyView(){
+        if (!empty(Session::get('admin'))) {
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', Session::get('adminusernmae'))
+                ->get();
+
+                $data['jobs'] = DB::table('company_jobs')->get();
+                // dd($data['jobs']);
+
+                return view('recruitment/job-apply', $data);
+        }else{
+            return redirect('/');
+        }
+    }
+    public function applysave(Request $request){
+       
+        $ckeck_dept= DB::table('candidates')->where('job_id', $request->job_id)->where('email', $request->email)->first();
+        
+        if (!empty($ckeck_dept)) {
+            Session::flash('message', 'You are Already Applied For this Post.');
+            return redirect('career/application/' . base64_encode($request->job_id));
+        } else {
+      
+        if ($request->has('resume')) {
+
+            $file = $request->file('resume');
+            
+            $extension = $request->resume->extension();
+            
+           $imageName = time() . '.' . $file->getClientOriginalExtension();
+            $paths =$file->move(public_path('/candidate_resume'), $imageName);
+           $path='candidate_resume'.'/'.$paths->getFilename();
+           
+        }
+       
+            if ($request->dob != '') {
+                $dob = date('Y-m-d', strtotime($request->dob));
+            } else {
+                $dob = '';
+            }
+            $data = array(
+                'job_id' => $request->job_id,
+                'job_title' => $request->job_title,
+                'name' => $request->name,
+                'gender' => $request->gender,
+                'exp_month' => $request->exp_month,
+                'skill_level' => $request->skill_level,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'exp' => $request->exp,
+                'cur_or' => $request->cur_or,
+                'cur_deg' => $request->cur_deg,
+                'country' => $request->country,
+                'dob' => $dob,
+                'zip' => $request->zip,
+                'location' => $request->location,
+                'exp_sal' => trim($request->exp_sal),
+                'sal' => trim($request->sal),
+                'status' => 'Application Received',
+                'edu' => $request->edu,
+                'skill' => $request->skill,
+                'date' => date('Y-m-d H:i:s'),
+                'resume' => $path,
+                'createDate'=>date('Y-m-d'),
+                'updateDate'=>date('Y-m-d'),
+            );
+            DB::table('candidates')->insert($data);
+
+            return redirect('recruitment/candidate');
+
+        }
+}
     public function viewjobpublished()
     {
         if (!empty(Session::get('admin'))) {
@@ -822,6 +897,21 @@ class RecruitmentController extends Controller
         }
 
     }
+
+    public function viewReejected(){
+        if (!empty(Session::get('admin'))) {
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', Session::get('adminusernmae'))
+            ->get();   
+            $data['rejected_list']=DB::table('candidates')->where('status','Rejected')->get();
+            return view('recruitment/candidate-rejected', $data);
+        }else{
+            return redirect('/');
+        }
+    }
     public function viewhiredcandidate()
     {
         if (!empty(Session::get('admin'))) {
@@ -926,6 +1016,7 @@ class RecruitmentController extends Controller
                 } else {
                     $data['employees'][] = (object) array("user_id" => $employee->id, "name" => $employee->name);
                 }
+               
 
             }
             // dd($data['employees']);
