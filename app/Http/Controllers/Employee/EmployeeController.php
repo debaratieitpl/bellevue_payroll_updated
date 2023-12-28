@@ -80,12 +80,15 @@ class EmployeeController extends Controller
                 ->orderBy('emp_next_increament_date', 'asc')
                 ->get();
 
-            $data['employeesdob'] = Employee::whereDay('emp_dob', '>=', date('d'))
-                ->whereMonth('emp_dob', '=', date('m'))
-                ->where('status', '=', 'active')
+                $data['employeesdob'] = Employee::where('status', '=', 'active')
                 ->where('emp_status', '!=', 'TEMPORARY')
                 ->where('emp_status', '!=', 'EX-EMPLOYEE')
-                ->orderBy('emp_dob', 'desc')
+                ->where(function ($query) {
+                    $query->whereRaw('MONTH(emp_dob) = MONTH(NOW())')
+                        ->whereRaw('DAY(emp_dob) >= DAY(NOW())')
+                        ->orWhereRaw('MONTH(emp_dob) > MONTH(NOW())');
+                })
+                ->orderByRaw('MONTH(emp_dob) = MONTH(NOW()) AND DAY(emp_dob) = DAY(NOW()) DESC, MONTH(emp_dob), DAY(emp_dob)')
                 ->get();
 
             $data['employeeretirement'] = Employee::where('emp_retirement_date', '>=', date('Y-m-d'))
@@ -1589,6 +1592,8 @@ class EmployeeController extends Controller
                 'emp_reg_date' => $request->emp_reg_date,
                 'emp_reg_council' => $request->emp_reg_council,
                 'emp_up_graduation' => $request->emp_up_graduation,
+
+                'updated_at' => date('Y-m-d h:i:s'),
             );
 
             //dd($payupdate);

@@ -50,7 +50,6 @@ class EmployeeReportController extends Controller
 {
     public function employeesByRetirement()
     {
-        dd('abbas');
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
@@ -59,9 +58,29 @@ class EmployeeReportController extends Controller
                 ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
                 ->where('member_id', '=', $email)
                 ->get();
-            $data['monthlist'] = Employee::orderBy('emp_designation')->select('emp_designation')->distinct('emp_designation')->get();
-            $data['result'] = '';
-            return view('employee.EmployeeListRetirementReport', $data);
+                $nearRetirementDate = now()->addDays(7);
+
+                $data['result'] = Employee::whereDate('emp_retirement_date', '>=', now()) // Today and future dates
+                    ->where('emp_status', '!=', 'TEMPORARY')
+                    ->where('emp_status', '!=', 'EX-EMPLOYEE')
+                    ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
+                    ->get();
+                return view('employee.EmployeeListRetirementReport', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+    public function emp_retirement_xlsexport(Request $request){
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+            return Excel::download(new EmployeeRetirementReport(), 'EmpRetirementReport.xlsx');
         } else {
             return redirect('/');
         }
