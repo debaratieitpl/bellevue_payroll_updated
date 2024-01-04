@@ -45,6 +45,7 @@ use App\Models\Masters\Role_authorization;
 use App\Models\Masters\State_master;
 use App\Models\Masters\Sub_cast;
 use App\Models\Role\Employee;
+use App\Models\User;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -1000,7 +1001,40 @@ class EmployeeController extends Controller
 
                 );
                 //dd($totalEarningValue);
-                //dd($data);
+                // dd($data);
+
+                //boton roy code user access
+                
+                $name=strtoupper($request->emp_fname).' '.strtoupper($request->emp_lname);
+                $min = 10004;
+                $max = 99999;
+                $randomNumber = rand($min, $max);
+                $hashedPassword = bcrypt($randomNumber);
+                $userData=array(
+                        'employee_id'=> $request->emp_code,
+                        'name'=>$name,
+                        'email'=>$request->email,
+                        'user_type'=>'employee',
+                        'password'=>$hashedPassword,
+                        'status'=>'active',
+                );
+                $usercheck=User::where('email','=',$request->email)->first();
+                if(!empty($usercheck)){
+                    Session::flash('error', 'Employee Email Id Alredy Exit');
+                    return redirect('employees');
+                }
+                $toEmail=$request->email;
+                User::insert($userData);
+                 //Send Mail
+                 \Mail::send('employeeMail', ['name' =>$name,'email'=>$request->email,'password'=>$randomNumber,'base_url'=>env('BASE_URL')], function ($message) use ($toEmail){
+                    $subject = 'Bellevue-Employee Access';
+                    $message->to($toEmail)->subject($subject);
+                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                });
+                
+
+
+                //end boton roy code
                 //dd($perdoc);
                 //dd($pay);
                 Employee_pay_structure::insert($pay);
@@ -1124,6 +1158,102 @@ class EmployeeController extends Controller
         }
 
         //return view('pis/employee-master')->with(['company'=>$company,'employee'=>$employee_type]);
+    }
+
+    public function viewProfile(){
+        if (!empty(Session::get('admin'))) {
+
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+            $id = request()->get('q');
+
+            function my_simple_crypt($string, $action = 'encrypt')
+            {
+
+                // you may change these values to your own
+                $secret_key = 'bopt_saltlake_kolkata_secret_key';
+                $secret_iv = 'bopt_saltlake_kolkata_secret_iv';
+
+                $output = false;
+                $encrypt_method = "AES-256-CBC";
+                $key = hash('sha256', $secret_key);
+                $iv = substr(hash('sha256', $secret_iv), 0, 16);
+
+                if ($action == 'encrypt') {
+                    $output = base64_encode(openssl_encrypt($string, $encrypt_method, $key, 0, $iv));
+                } else if ($action == 'decrypt') {
+                    $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+                }
+
+                return $output;
+            }
+            ///
+            //$encrypted = my_simple_crypt( 'Hello World!', 'encrypt' );
+            $decrypted_id = my_simple_crypt($id, 'decrypt');
+            $data['salutations'] = Salutation::pluck('name');
+            $data['employee_rs'] = Employee::leftJoin('employee_pay_structures', 'employees.emp_code', '=', 'employee_pay_structures.employee_code')
+
+                ->leftJoin('education_details', 'employees.emp_code', '=', 'education_details.employee_code')
+                ->leftJoin('group_name_details', 'employees.emp_group_name', '=', 'group_name_details.id')
+                ->where('employees.emp_code', '=', '5475')
+                ->select('employees.*', 'employee_pay_structures.*', 'employee_pay_structures.*', 'education_details.*', 'group_name_details.group_name')
+                ->get();
+                // dd($data['employee_rs']);
+
+            $data['emp_pay_st'] = Employee_pay_structure::where('employee_code', '=', $decrypted_id)->first();
+
+            //dd($data['emp_pay_st']);
+
+            $data['emp_edu'] = Education_details::where('employee_code', '=', $decrypted_id)->get();
+
+            //new add
+            $data['perdoc'] = Personal_doc::where('employee_code', '=', $decrypted_id)->get();
+            $data['perrecord'] = Personal_record::where('employee_code', '=', $decrypted_id)->get();
+            $data['misdoc'] = Misc_doc::where('employee_code', '=', $decrypted_id)->get();
+
+            $data['department'] = Department::where('department_status', '=', 'active')->get();
+            $data['designation'] = Designation::leftJoin('departments', 'designations.department_code', '=', 'departments.id')
+                ->where('designations.designation_status', '=', 'active')
+                // ->where('departments.department_name', '=', $data['employee_rs'][0]->emp_department)
+                ->get();
+            $data['cast'] = Cast::where('cast_status', '=', 'active')->get();
+            $data['sub_cast'] = Sub_cast::where('sub_cast_status', '=', 'active')->get();
+            $data['religion'] = Religion::get();
+            $data['employee_type'] = Employee_type::where('employee_type_status', '=', 'active')->get();
+            $data['grade'] = Grade::where('grade_status', '=', 'active')->get();
+            $data['bank'] = Bank_master::get();
+            $data['payscale_master'] = Pay_scale_master::get();
+            $data['states'] = State_master::get();
+            $data['pay_master'] = Pay_head_master::leftJoin('pay_types', 'pay_types.id', '=', 'pay_head_masters.pay_type')
+                ->select('pay_head_masters.*', 'pay_types.pay_type_name')
+                ->get();
+            $data['pay_head'] = Pay_head_master::get();
+            $data['pay_type'] = Pay_type::get();
+            $data['rate_details'] = Rate_details::leftJoin('rate_masters', 'rate_masters.id', '=', 'rate_details.rate_id')
+                ->select('rate_details.*', 'rate_masters.head_name', 'rate_masters.head_type')
+                ->where('rate_details.from_date', '>=', date('Y-01-01'))
+                ->where('rate_details.to_date', '<=', date('Y-12-31'))
+                ->groupBy('rate_details.rate_id')
+                ->get();
+            $data['rate_master'] = Rate_master::get();
+
+            $data['education'] = Education_master::get();
+            $data['group_name'] = Group_name_detail::where('status', '=', 'active')->get();
+
+            $data['education_details'] = Education_details::get();
+            $data['pay_structure'] = Emp_pay_structure::get();
+            $data['employeelists'] = Employee::where('emp_status', 'REGULAR')->orWhere('emp_status', 'PROBATIONARY EMPLOYEE')->get();
+            //echo "<pre>";print_r($data['states']);exit;
+
+            return view('user-employee/view-profile', $data);
+        } else {
+            return redirect('/');
+        }
     }
 
     public function updateEmployee(Request $request)

@@ -32,6 +32,7 @@ Route::get('logout', 'HomeController@Logout');
 Route::get('masters/dashboard', 'HomeController@mastersdashboard');
 Route::get('hcm-dashboard', 'HomeController@hcmdashboard');
 Route::get('finance-dashboard', 'HomeController@FinanceDashboard');
+Route::get('employee-dashbord','HomeController@EmployeeDashbord');
 //******* Routes with Login  end *********//
 
 //******* Routes with Master start *********//
@@ -224,6 +225,7 @@ Route::get('masters/edit-pay-head/{id}', 'Masters\EmpPayHeadController@editPayHe
 Route::post('masters/update-pay-head', 'Masters\EmpPayHeadController@updatePayHead');
 Route::get('masters/del-pay-head/{id}', 'Masters\EmpPayHeadController@deletePayHead');
 Route::get('employee/department-name/{emp_department}', 'Employee\EmployeeController@EmpDepartment');
+Route::get('profile-view','Employee\EmployeeController@viewProfile');
 
 //Employee Type Da
 Route::get('masters/emp-type-da', 'Masters\EmpTypeDaController@getEmpTypeDA');

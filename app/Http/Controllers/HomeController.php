@@ -69,6 +69,11 @@ class HomeController extends Controller
             $useradmin = User::where('email', '=', $request->input('email'))
                 ->where('user_type', '=', 'admin')
                 ->first();
+
+                $userEmployee=User::where('email','=',$request->input('email'))
+                ->where('user_type','=','employee')
+                ->first();
+                // dd($userEmployee);
             if (!empty($user)) {
                 if (Hash::check($request->input('psw'), $user->password)) {
 
@@ -90,7 +95,17 @@ class HomeController extends Controller
                     Session::flash('error', 'Your email and password wrong!!');
                     return redirect('/');
                 }
-            } else {
+            }else if (!empty($userEmployee)) {
+                if (Hash::check($request->input('psw'), $userEmployee->password)) {
+                    Session::put('employeeusername', $request->email); // Fix the typo here
+                    Session::put('employeepassword', $request->psw);
+                    Session::put('employee', $userEmployee);
+                    return redirect('employee-dashboard'); // Fix the typo in the URL here
+                } else {
+                    Session::flash('error', 'Your email and password are wrong!!'); // Fix the grammar in the error message
+                    return redirect('/');
+                }
+            }else {
                 Session::flash('error', 'Your email and password wrong!!');
                 return redirect('/');
             }
@@ -118,6 +133,22 @@ class HomeController extends Controller
                 ->where('member_id', '=', Session::get('adminusernmae'))
                 ->get();
             return view('home/dashboard', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function EmployeeDashbord(){
+        if (!empty(Session::get('admin'))) {
+
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', Session::get('adminusernmae'))
+                ->get();
+                // dd("hello");
+            return view('user-employee/dashbord', $data);
         } else {
             return redirect('/');
         }
