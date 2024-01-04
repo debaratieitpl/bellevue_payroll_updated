@@ -110,7 +110,7 @@
                                   <div class="col-md-4">
                                     <label class=" form-control-label">Enter Employee Id <span>(*)</span></label>
                                     <select data-placeholder="Choose Employee..." name="emp_code"
-                                        class="form-control select2_el" >
+                                        class="form-control select2_el" required>
                                         <option value="" selected disabled> Select </option>
                                         <?php foreach ($employeeslist as $employee) {?>
                                         <option value="<?php echo $employee->emp_code; ?>"
