@@ -98,6 +98,34 @@ BELLEVUE - Interview
 							  </select>
 						   </div>
 						</div>
+						<div class="col-md-4">
+						   <div class=" form-group">
+							  <label for="working_hour" class="placeholder">Address</label>
+							  <input type="text" class="form-control" name="address" placeholder="Address">
+						   </div>
+						</div>
+						<div class="col-md-4">
+						   <div class=" form-group">
+							  <label for="working_hour" class="placeholder">Pincode</label>
+							  <input type="number" class="form-control" name="pincode" placeholder="Pincode">
+						   </div>
+						</div>
+						<div class="col-md-4">
+						   <div class=" form-group">
+							  <label for="working_hour" class="placeholder">State</label>
+							  <input type="text" class="form-control" name="state" placeholder="Pincode">
+						   </div>
+						</div>
+						<div class="col-md-4">
+						   <div class=" form-group">
+							  <label for="working_hour" class="placeholder">Method Type</label>
+							  <select class="form-control " id="selectFloatingLabelra" name="method_type" >
+							  <option value="">Select</option>
+							  <option value="Bellevue">Bellevue Hospital</option>
+							  <option value="Nursing">Nursing Collage</option>
+							  </select>
+						   </div>
+						</div>
 					   </div>
 					   <div class="row form-group">
 						  <div class="col-md-4 btn-up">

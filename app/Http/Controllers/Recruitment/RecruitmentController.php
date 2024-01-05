@@ -37,7 +37,7 @@ class RecruitmentController extends Controller
         } else {
             return redirect('/');
         }
-        
+
     }
     public function viewjoblist()
     {
@@ -88,7 +88,7 @@ class RecruitmentController extends Controller
                 ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
                 ->where('member_id', '=', Session::get('adminusernmae'))
                 ->get();
-                
+
             $id = $request->id;
             $soc = strtoupper(trim($request->soc));
             $data = [
@@ -103,19 +103,19 @@ class RecruitmentController extends Controller
                 if ($res){
                     Session::flash('message', 'Job List Information Successfully Updated.');
                 }else{
-                    Session::flash('error', 'Something Went Wrong.'); 
+                    Session::flash('error', 'Something Went Wrong.');
                 }
             }else{
                 $job = CompanyJobList::where('soc',$request->soc)->get();
                 // if($job){
-                //     Session::flash('error', 'Job Code already exists.'); 
+                //     Session::flash('error', 'Job Code already exists.');
                 //     return redirect()->back();
                 // }
                 $res = CompanyJobList::create($data);
                 if ($res ){
                     Session::flash('message', 'Job List Information Successfully Saved.');
                 }else{
-                    Session::flash('error', 'Something Went Wrong.'); 
+                    Session::flash('error', 'Something Went Wrong.');
                 }
             }
             return redirect('recruitment/job-list');
@@ -176,7 +176,7 @@ class RecruitmentController extends Controller
     }
     public function saveJobPostData(Request $request)
     {
-        
+
         if (!empty(Session::get('admin'))) {
 
             // dd(Session::get('admin'));
@@ -227,7 +227,7 @@ class RecruitmentController extends Controller
                     'skil_set' => $request->skil_set,
                     'time_pre' => $request->time_pre,
                 );
-              
+
 
                 DB::table('company_jobs')->where('id', $request->id)->update($data);
                 $datajoblist = array(
@@ -246,7 +246,7 @@ class RecruitmentController extends Controller
                 //     return redirect('recruitment/job-post');
                 // }
                 $last_dept = DB::table('company_jobs')->orderBy('id', 'DESC')->first();
-               
+
                 if (!empty($last_dept)) {
                     $l_id = $last_dept->id;
                 } else {
@@ -333,26 +333,26 @@ class RecruitmentController extends Controller
         }
     }
     public function applysave(Request $request){
-       
+
         $ckeck_dept= DB::table('candidates')->where('job_id', $request->job_id)->where('email', $request->email)->first();
-        
+
         if (!empty($ckeck_dept)) {
             Session::flash('message', 'You are Already Applied For this Post.');
             return redirect('career/application/' . base64_encode($request->job_id));
         } else {
-      
+
         if ($request->has('resume')) {
 
             $file = $request->file('resume');
-            
+
             $extension = $request->resume->extension();
-            
+
            $imageName = time() . '.' . $file->getClientOriginalExtension();
             $paths =$file->move(public_path('/candidate_resume'), $imageName);
            $path='candidate_resume'.'/'.$paths->getFilename();
-           
+
         }
-       
+
             if ($request->dob != '') {
                 $dob = date('Y-m-d', strtotime($request->dob));
             } else {
@@ -385,7 +385,7 @@ class RecruitmentController extends Controller
                 'updateDate'=>date('Y-m-d'),
             );
             DB::table('candidates')->insert($data);
-
+            Session::flash('message', 'Application Successfully Submit');
             return redirect('recruitment/candidate');
 
         }
@@ -548,7 +548,7 @@ class RecruitmentController extends Controller
             if ($request->has('go')) {
                 $formDate = $request->get('formDate');
                 $formdateArray=$formDate;
-                $toDate = $request->get('toDate'); 
+                $toDate = $request->get('toDate');
                 $check=$request->get('checklist');
                 $toCheck=$check;
                 $todateArray=$toDate;
@@ -615,27 +615,27 @@ class RecruitmentController extends Controller
                     'apply' => $request->apply,
                     'resume' => $job->resume,
                 );
-    
+
                 DB::table('candidate_historys')->insert($data);
                 $dataupdate = array(
                     'apply' => $request->apply,
                     'status' => $request->status,
                     'remarks' => $request->remarks,
-    
+
                 );
                 $job_d = DB::table('company_jobs')->where('id', '=', $request->job_id)->first();
-    
+
                 DB::table('candidates')->where('id', '=', $request->id)->update($dataupdate);
-    
+
             }else{
                 $dataupdate = array(
-                   
+
                     'date' => $request->application_date.' '.date('H:i:s',strtotime($job->date)),
-                   
-    
+
+
                 );
                 $job_d = DB::table('company_jobs')->where('id', '=', $request->job_id)->first();
-    
+
                 DB::table('candidates')->where('id', '=', $request->id)->update($dataupdate);
 
             }
@@ -905,7 +905,7 @@ class RecruitmentController extends Controller
             ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
             ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
             ->where('member_id', '=', Session::get('adminusernmae'))
-            ->get();   
+            ->get();
             $data['rejected_list']=DB::table('candidates')->where('status','Rejected')->get();
             return view('recruitment/candidate-rejected', $data);
         }else{
@@ -920,7 +920,7 @@ class RecruitmentController extends Controller
             ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
             ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
             ->where('member_id', '=', Session::get('adminusernmae'))
-            ->get();    
+            ->get();
             $data['candidate_rs'] = DB::Table('candidates')
                 ->join('company_jobs', 'candidates.job_id', '=', 'company_jobs.id')
                 ->where('candidates.status', '=', 'Hired')
@@ -968,13 +968,25 @@ class RecruitmentController extends Controller
             return redirect('/');
         }
     }
+    public function viewofferlater($id){
+    //    dd(base64_decode($id));
+      $data['candidate_offer']= DB::table('candidate_offer')->where('id',base64_decode($id))->first();
+    //   dd($data['candidate_offer']);
+      if($data['candidate_offer']->method_type=="Nursing"){
+        return view('recruitment/nursing-view',$data);
+      }else{
+        return view('recruitment/bellvue-view',$data);
+
+      }
+       
+    }
     public function viewsofferlattercandidate()
     {
-     
+
         if (!empty(Session::get('admin'))) {
-        
+
             $email = Session::get('admin');
-        
+
             // $Roledata = DB::table('registration')->where('status', '=', 'active')
 
             //     ->where('email', '=', $email)
@@ -1016,7 +1028,7 @@ class RecruitmentController extends Controller
                 } else {
                     $data['employees'][] = (object) array("user_id" => $employee->id, "name" => $employee->name);
                 }
-               
+
 
             }
             // dd($data['employees']);
@@ -1044,9 +1056,9 @@ class RecruitmentController extends Controller
             $comname="Bellevue Clininc";
             $logo="http://bellevuepf.com/payroll/public/theme/images/bellevue-logo1.png";
             $datap = ['com_name' => $comname,'logo' => $logo,'date' => date('Y-m-d'), 'name' => $job->name, 'job_title' => $job->job_title, 'st_date' => date('Y-m-d', strtotime($request->date_jo)), 'em_name' => $job->name, 'em_pos' => $job->job_title];
-            
+
             $pdf = PDF::loadView('myPDF', $datap);
-        
+
             $pdf->save(public_path() . '/pdf/' . $filename);
             $data = array(
                 'job_id' => $job->job_id,
@@ -1081,6 +1093,9 @@ class RecruitmentController extends Controller
                 'date_jo' => date('Y-m-d', strtotime($request->date_jo)),
                 'cr_date' => date('Y-m-d H:i:s'),
                 'dom_pdf' =>'pdf'.'/'.$filename,
+                'address'=>$request->address,
+                'pincode'=>$request->pincode,
+                'state'=>$request->state,
             );
 
             DB::table('candidate_offer')->insert($data);
@@ -1109,13 +1124,13 @@ class RecruitmentController extends Controller
 
         echo $result_status1;
     }
-    public function getJobdetails(Request $request,$empid,$soc){  
+    public function getJobdetails(Request $request,$empid,$soc){
         $desig_rs = CompanyJobList::where('id', $soc)->first();
         $employee_rs = CompanyJobList::where('soc', $desig_rs->soc)
         ->where('title', $empid)
         ->first();
         return json_encode($employee_rs);
     }
- 
+
 
 }

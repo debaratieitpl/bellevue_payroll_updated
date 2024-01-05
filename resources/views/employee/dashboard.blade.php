@@ -80,7 +80,7 @@ table tr:last-child{border-bottom:none;}
     100% {
         opacity:1;
     }
-} 
+}
 
 @-webkit-keyframes blink {
     0% {
@@ -104,7 +104,7 @@ table tr:last-child{border-bottom:none;}
     100% {
         opacity:1;
     }
-} 
+}
 /* Opera and prob css3 final iteration */
 @keyframes blink {
     0% {
@@ -116,7 +116,7 @@ table tr:last-child{border-bottom:none;}
     100% {
         opacity:1;
     }
-} 
+}
 .blink-image {
     -moz-animation: blink normal 1s infinite ease-in-out; /* Firefox */
     -webkit-animation: blink normal 1s infinite ease-in-out; /* Webkit */
@@ -135,7 +135,7 @@ table tr:last-child{border-bottom:none;}
         	<div class="animated fadeIn">
       <!-- privious month detail  -->
       <div class="dash-mar">
-	  
+
 	  <div class="row">
 	  <div class="col-md-12">
         <h2>Increment Schedule</h2>
@@ -157,15 +157,15 @@ table tr:last-child{border-bottom:none;}
 			</tr>
 			<?php } ?>
 		</table>
-		
+
 	  </div>
-       </div> 
+       </div>
       </div>
       <!-- /privious month detail -->
-	  
-	 <!----birthday-reminder--------------> 
+
+	 <!----birthday-reminder-------------->
 	 <div class="dash-mar">
-	  
+
 	  <div class="row">
 	  <div class="col-md-12">
         <h2>Birthday Reminder (for the month of <?php echo date('F', mktime(0, 0, 0, date('m'), 10)) ?>, <?php echo date('Y'); ?>)</h2>
@@ -178,39 +178,41 @@ table tr:last-child{border-bottom:none;}
 				<th></th>
 			</tr>
 
-			<?php foreach($employeesdob as $empdobkey=>$empdobvalue){ ?>
-			<tr>
-				<td><?php echo $empdobvalue->emp_code; ?></td>
-				<td><?php echo $empdobvalue->emp_fname." ".$empdobvalue->emp_mname." ".$empdobvalue->emp_lname; ?></td>
-
-				<td><?php echo date_format(date_create($empdobvalue->emp_dob),"d/m/Y"); ?></td>
-				<td width="120">
-					<?php if(!empty($empdobvalue->emp_image)){ ?>
-					<img src="{{ url('/') }}/storage/app/{{ $empdobvalue->emp_image }}" alt="profile Picture" width="50">
-					<?php }else{ ?>
-						<img src="{{ asset('images/img/prof.png')}}" alt="profile Picture" width="50">
-					<?php } ?>		
-				</td>
-				<td class="bday">
-					<?php if($empdobkey==0){   ?>
-					<img class="blink-image" src="{{ asset('images/img/baloon.png')}}" alt="Today is Birthday"> 
-				<?php } ?>
-				</td>
-			</tr>
-		    <?php } ?>
+			<?php foreach($employeesdob as $empdobkey => $empdobvalue): ?>
+                <tr>
+                    <td><?php echo $empdobvalue->emp_code; ?></td>
+                    <td><?php echo $empdobvalue->emp_fname." ".$empdobvalue->emp_mname." ".$empdobvalue->emp_lname; ?></td>
+                    <td><?php echo date_format(date_create($empdobvalue->emp_dob), "d/m/Y"); ?></td>
+                    <td width="120">
+                        <?php if (!empty($empdobvalue->emp_image)): ?>
+                            <img src="{{ url('/') }}/storage/app/{{ $empdobvalue->emp_image }}" alt="profile Picture" width="50">
+                        <?php else: ?>
+                            <img src="{{ asset('images/img/prof.png')}}" alt="profile Picture" width="50">
+                        <?php endif; ?>
+                    </td>
+                    <td class="bday">
+                        <?php
+                        $employeeBirthday = date('m-d', strtotime($empdobvalue->emp_dob));
+                        $today = today()->format('m-d');
+                        if ($employeeBirthday == $today): ?>
+                            <img class="blink-image" src="{{ asset('images/img/baloon.png')}}" alt="Today is Birthday">
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
 		</table>
-		
+
 	  </div>
-       </div> 
+       </div>
       </div>
-	  
+
 	  <!------------------------------>
-     
+
       <div class="clearfix"></div>
-    
+
       <!----- retirement ------>
 	  <div class="dash-mar">
-	  
+
 	  <div class="row">
 	  <div class="col-md-12">
         <h2>Retirement Schedule (Current Year)</h2>
@@ -230,21 +232,21 @@ table tr:last-child{border-bottom:none;}
 			</tr>
 			<?php } ?>
 		</table>
-		
+
 	  </div>
-       </div> 
+       </div>
       </div>
-	  
+
 	  <!----------------------->
-      
-     
-      
+
+
+
     </div>
-           
+
 		</div>
         <!-- /.content -->
         <div class="clearfix"></div>
-       
+
 
 
 @endsection

@@ -61,6 +61,7 @@ BELLEVUE - Interview
                               <th>Date</th>
                               <th>Offered Salary</th>
 							         <th>Date Of Joining </th>
+                              <!-- <th>Action</th> -->
                               <th>Action</th>
                            </tr>
                         </thead>
@@ -85,19 +86,21 @@ BELLEVUE - Interview
                                     echo date('d/m/Y',strtotime($candidate->date_jo));
                                     ?>
                               </td>
-                              <td class="drp">
-                                 <div class="dropdown">
-                                    <button class="btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Action
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                       <a download class="dropdown-item" href="{{asset($candidate->dom_pdf)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
+                              <!-- <td class="drp"> -->
+                                 <!-- <div class="dropdown"> -->
+                                    <!-- <button class="btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+                                    <!-- Action -->
+                                    <!-- </button> -->
+                                    <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> -->
+                                       <!-- <a download class="dropdown-item" href="{{asset($candidate->dom_pdf)}}"><i class="fa fa-download"></i>&nbsp; Download</a>  -->
                                        {{-- <a class="dropdown-item" href="{{url('recruitment/send-letter/'.base64_encode($candidate->id))}}"><i class="fas fa-paper-plane"></i>&nbsp; Send</a>  --}}
                                        <!--<a class="dropdown-item" href="{{url('recruitment/offer-down-letter/'.base64_encode($candidate->id))}}"><i class="fas fa-eye"></i>&nbsp; View</a>-->
-                                       <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal<?=$ij;?>"><i class="fa fa-eye"></i>&nbsp; View</a>
-                                    </div>
-                                 </div>
-                              </td>
+                                       <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal<?=$ij;?>"><i class="fa fa-eye"></i>&nbsp; View</a> -->
+                                    <!-- </div> -->
+                                 <!-- </div> -->
+                              <!-- </td> -->
+                              <td><a href="{{ url('recruitment/view-letter/'.base64_encode($candidate->id))}}"><i class="fa fa-eye">view</i></a></td>
+
                               <!--            <td><a href="{{asset('public/pdf/'.$candidate->dom_pdf)}}" download title="Download"><img  style="width: 23px;" src="{{ asset('assets/img/download.png')}}"></a>-->
                               <!--<a href="{{url('recruitment/send-letter/'.base64_encode($candidate->id))}}" title="Send"><img  style="width: 23px;" src="{{ asset('assets/img/send.png')}}"></a>-->
                               <!--	&nbsp &nbsp	<a href="{{url('recruitment/offer-down-letter/'.base64_encode($candidate->id))}}" target="_blank" title="View"><img  style="width: 23px;" src="{{ asset('assets/img/view.png')}}"></a>-->

@@ -65,9 +65,9 @@ class PayslipEmployees implements ShouldQueue
         ->whereNotNull('employees.emp_email')
         ->where('employees.emp_status', '!=', 'EX-EMPLOYEE')
         //  ->whereBetween('employees.id', [1,60])
-         //->where('employees.emp_code','=',$emp_code)
+         ->where('employees.emp_code','=',$emp_code)
         ->get();
-       // dd($Payroll_details_rs);
+       //dd($Payroll_details_rs);
 
 
         foreach ($Payroll_details_rs as $payroll) {

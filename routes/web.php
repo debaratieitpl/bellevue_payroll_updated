@@ -396,6 +396,21 @@ Route::get('employees/designation', 'Employee\EmployeeController@employeesByDesi
 // Emploee Report
 Route::get('employees/retirement', 'Employee\EmployeeReportController@employeesByRetirement');
 Route::post('employees/retirement-export-report', 'Employee\EmployeeReportController@emp_retirement_xlsexport');
+Route::get('employees/gender-wise-report', 'Employee\EmployeeReportController@genderwisereport');
+Route::get('employees/department-wise-cost', 'Employee\EmployeeReportController@departmentwisecost');
+Route::post('employees/department-cost-export-report', 'Employee\EmployeeReportController@departmentwisecoseexcel');
+Route::get('employees/entry-wise-list', 'Employee\EmployeeReportController@entryWiseList');
+Route::post('employees/entry-wise-list', 'Employee\EmployeeReportController@entryWiseList');
+Route::get('employees/exit-wise-list', 'Employee\EmployeeReportController@exitWiseList');
+Route::post('employees/exit-wise-list', 'Employee\EmployeeReportController@exitWiseList');
+Route::get('employees/increment-wise-list', 'Employee\EmployeeReportController@employeesByIncrement');
+Route::post('employees/increment-export-report', 'Employee\EmployeeReportController@emp_increment_xlsexport');
+Route::get('employees/apprenticen-Nurce', 'Employee\EmployeeReportController@apprenticeNurce');
+Route::get('employees/confermation-list', 'Employee\EmployeeReportController@employeeConfermation');
+Route::post('employees/confermation-export-report', 'Employee\EmployeeReportController@emp_confermation_xlsexport');
+Route::get('employees/contract-renew-list', 'Employee\EmployeeReportController@employeeContractRenew');
+Route::post('employees/contract-renew-export-report', 'Employee\EmployeeReportController@emp_contract_renew_xlsexport');
+
 
 Route::post('employees/department-export-report', 'Employee\EmployeeController@emp_dep_xlsexport');
 Route::post('employees/designation-export-report', 'Employee\EmployeeController@emp_designation_xlsexport');
@@ -479,6 +494,10 @@ Route::post('recruitment/edit-offer-letter', 'Recruitment\RecruitmentController@
 Route::get('recruitment/rejected', 'Recruitment\RecruitmentController@viewReejected');
 Route::get('recruitment/apply', 'Recruitment\RecruitmentController@applyView');
 Route::post('recruitment/saveapply', 'Recruitment\RecruitmentController@applysave');
+Route::get('recruitment/view-letter/{id}', 'Recruitment\RecruitmentController@viewofferlater');
+
+
+
 
 
 

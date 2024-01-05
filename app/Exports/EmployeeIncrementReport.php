@@ -9,7 +9,7 @@ use App\Models\Role\Employee;
 
 use DB;
 
-class EmployeeRetirementReport implements FromCollection, WithHeadings
+class EmployeeIncrementReport implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -18,10 +18,10 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
     {
         //dd();
 
-        $record_rs = Employee::whereDate('emp_retirement_date', '>=', now()) // Today and future dates
+        $record_rs = Employee::whereDate('emp_next_increament_date', '>=', now()) // Today and future dates
                     ->where('emp_status', '!=', 'TEMPORARY')
                     ->where('emp_status', '!=', 'EX-EMPLOYEE')
-                    ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
+                    ->orderByRaw('emp_next_increament_date = CURDATE() DESC, emp_next_increament_date ASC')
                     ->get();
 
         $h = 1;
@@ -42,7 +42,7 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
                     'Designation'=>$record->emp_designation,
                     'DOB'=>$record->emp_dob,
                     'DOJ'=>$record->emp_doj,
-                    'Retirement Date'=>$record->emp_retirement_date,
+                    'Increment Date'=>$record->emp_next_increament_date,
                     'Status'=>$record->emp_status,
                     'Mobile No.'=>$record->emp_pr_mobile,
                     'Class'=>ucwords($record->group_name),
@@ -75,7 +75,7 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
             'Designation',
             'DOB',
             'DOJ',
-            'Retirement Date',
+            'Increment Date',
             'Status',
             'Mobile No.',
             'Class',

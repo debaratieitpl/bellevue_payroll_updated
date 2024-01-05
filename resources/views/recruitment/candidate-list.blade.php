@@ -40,7 +40,7 @@ BELLEVUE - Job Lists
          <div class="main-card">
             <div class="card">
                <div class="card-header">
-                  @include('include.messages')
+                 @include('include.messages')
                </div>
                <div class="card-body">
                   <div class="srch-rslt" style="overflow-x:scroll;">
@@ -71,14 +71,14 @@ BELLEVUE - Job Lists
                               <td>
                                  <?php
                                     $job_details=DB::table('candidate_historys')->where('user_id', '=', $candidate->id )->orderBy('id', 'DESC')->first();
-                                    
-                                    
-                                    if(!empty($job_details)){ 
-                                    
+
+
+                                    if(!empty($job_details)){
+
                                     echo date('d/m/Y ',strtotime($job_details->date));
-                                    
-                                    
-                                    
+
+
+
                                     }
                                     else{
                                     echo date('d/m/Y',strtotime($candidate->date));
@@ -92,16 +92,16 @@ BELLEVUE - Job Lists
                                     Action
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                       <a class="dropdown-item" href="{{url('recruitment/edit-candidate/'.base64_encode($candidate->id))}}"><i class="fa fa-edit"></i>&nbsp; Edit</a> 
-                                       <a download class="dropdown-item" href="{{asset($candidate->resume)}}"><i class="fa fa-download"></i>&nbsp; Download</a> 
-                                       {{-- @if($candidate->status=='Application Received')	
-                                       <a class="dropdown-item" href="{{url('recruitment/send-letter-job-applied/'.base64_encode($candidate->id))}}"><i class="fa fa-paper-plane"></i>&nbsp; Send</a> 
+                                       <a class="dropdown-item" href="{{url('recruitment/edit-candidate/'.base64_encode($candidate->id))}}"><i class="fa fa-edit"></i>&nbsp; Edit</a>
+                                       <a download class="dropdown-item" href="{{asset($candidate->resume)}}"><i class="fa fa-download"></i>&nbsp; Download</a>
+                                       {{-- @if($candidate->status=='Application Received')
+                                       <a class="dropdown-item" href="{{url('recruitment/send-letter-job-applied/'.base64_encode($candidate->id))}}"><i class="fa fa-paper-plane"></i>&nbsp; Send</a>
                                        @endif --}}
                                     </div>
                                  </div>
                               </td>
                            </tr>
-                           @endforeach  
+                           @endforeach
                         </tbody>
                      </table>
                   </div>

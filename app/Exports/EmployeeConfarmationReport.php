@@ -9,20 +9,18 @@ use App\Models\Role\Employee;
 
 use DB;
 
-class EmployeeRetirementReport implements FromCollection, WithHeadings
+class EmployeeConfarmationReport implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        //dd();
-
-        $record_rs = Employee::whereDate('emp_retirement_date', '>=', now()) // Today and future dates
-                    ->where('emp_status', '!=', 'TEMPORARY')
-                    ->where('emp_status', '!=', 'EX-EMPLOYEE')
-                    ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
-                    ->get();
+        $record_rs = Employee::whereDate('emp_from_date', '>=', now()) // Today and future dates
+        ->where('emp_status', '!=', 'TEMPORARY')
+        ->where('emp_status', '!=', 'EX-EMPLOYEE')
+        ->orderByRaw('emp_from_date = CURDATE() DESC, emp_from_date ASC')
+        ->get();
 
         $h = 1;
         $collection_array = array();
@@ -42,7 +40,7 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
                     'Designation'=>$record->emp_designation,
                     'DOB'=>$record->emp_dob,
                     'DOJ'=>$record->emp_doj,
-                    'Retirement Date'=>$record->emp_retirement_date,
+                    'Increment Date'=>$record->emp_next_increament_date,
                     'Status'=>$record->emp_status,
                     'Mobile No.'=>$record->emp_pr_mobile,
                     'Class'=>ucwords($record->group_name),
@@ -54,6 +52,7 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
                     'Account No.'=>$record->emp_account_no,
                     'emp_pf_inactuals'=>$record->emp_pf_inactuals,
                     'emp_pension'=>$record->emp_pension,
+                    'confermation Date'=>$record->emp_from_date
 
                 );
                 $h++;
@@ -75,7 +74,7 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
             'Designation',
             'DOB',
             'DOJ',
-            'Retirement Date',
+            'Increment Date',
             'Status',
             'Mobile No.',
             'Class',
@@ -87,6 +86,7 @@ class EmployeeRetirementReport implements FromCollection, WithHeadings
             'Account No.',
             'emp_pf_inactuals',
             'emp_pension',
+            'confermation Date'
 
         ];
     }

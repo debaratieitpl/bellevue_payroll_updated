@@ -81,12 +81,15 @@ class EmployeeController extends Controller
                 ->orderBy('emp_next_increament_date', 'asc')
                 ->get();
 
-            $data['employeesdob'] = Employee::whereDay('emp_dob', '>=', date('d'))
-                ->whereMonth('emp_dob', '=', date('m'))
-                ->where('status', '=', 'active')
+                $data['employeesdob'] = Employee::where('status', '=', 'active')
                 ->where('emp_status', '!=', 'TEMPORARY')
                 ->where('emp_status', '!=', 'EX-EMPLOYEE')
-                ->orderBy('emp_dob', 'desc')
+                ->where(function ($query) {
+                    $query->whereRaw('MONTH(emp_dob) = MONTH(NOW())')
+                        ->whereRaw('DAY(emp_dob) >= DAY(NOW())')
+                        ->orWhereRaw('MONTH(emp_dob) > MONTH(NOW())');
+                })
+                ->orderByRaw('MONTH(emp_dob) = MONTH(NOW()) AND DAY(emp_dob) = DAY(NOW()) DESC, MONTH(emp_dob), DAY(emp_dob)')
                 ->get();
 
             $data['employeeretirement'] = Employee::where('emp_retirement_date', '>=', date('Y-m-d'))
@@ -163,6 +166,7 @@ class EmployeeController extends Controller
             return redirect('/');
         }
     }
+   
     public function employeesByDesignation()
     {
         if (!empty(Session::get('admin'))) {
@@ -410,7 +414,7 @@ class EmployeeController extends Controller
         if (!empty(Session::get('admin'))) {
 
              //dd($request->all());
-
+             $email = Session::get('adminusernmae');
             date_default_timezone_set('Asia/Kolkata');
 
             if (strtotime($request->emp_dob) > strtotime(date('Y-m-d'))) {
@@ -997,6 +1001,8 @@ class EmployeeController extends Controller
                     'emp_reg_date' => $request->emp_reg_date,
                     'emp_reg_council' => $request->emp_reg_council,
                     'emp_up_graduation' => $request->emp_up_graduation,
+                    'ctc'=>$email,
+                    'created_at' => date('Y-m-d'),
 
 
                 );
@@ -1065,6 +1071,7 @@ class EmployeeController extends Controller
 
     public function editEmployee()
     {
+        
         if (!empty(Session::get('admin'))) {
 
             $email = Session::get('adminusernmae');
@@ -1258,6 +1265,8 @@ class EmployeeController extends Controller
 
     public function updateEmployee(Request $request)
     {
+        $email = Session::get('adminusernmae');
+        // dd($email);
         if (!empty(Session::get('admin'))) {
             // dd($request->all());
             date_default_timezone_set('Asia/Kolkata');
@@ -1719,6 +1728,8 @@ class EmployeeController extends Controller
                 'emp_reg_date' => $request->emp_reg_date,
                 'emp_reg_council' => $request->emp_reg_council,
                 'emp_up_graduation' => $request->emp_up_graduation,
+                 'ctc'=>$email,
+                'updated_at' => date('Y-m-d'),
             );
 
             //dd($payupdate);
