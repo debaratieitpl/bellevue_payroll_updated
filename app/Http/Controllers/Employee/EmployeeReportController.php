@@ -112,7 +112,7 @@ class EmployeeReportController extends Controller
 
                 $data['result'] = Employee::join('employee_pay_structures', 'employee_pay_structures.employee_code', 'employees.emp_code')
                 ->select(
-                    DB::raw('sum(basic_pay) as total_salary'),
+                    DB::raw('sum(basic_pay + others_alw + tiff_alw + hra + misc_alw + medical + conv + over_time ) as total_salary'),
                     // DB::raw('basic_pay + others_alw) as total_salary'),
                     // DB::raw('(COALESCE(basic_pay, 0) + COALESCE(others_alw, 0) + COALESCE(tiff_alw, 0) + COALESCE(hra, 0) + COALESCE(misc_alw, 0) + COALESCE(medical, 0) + COALESCE(conv, 0) + COALESCE(over_time, 0) + COALESCE(leave_inc, 0) + COALESCE(bouns, 0) + COALESCE(hta, 0)) as total_salary'),
                     DB::raw('emp_department as department'),
