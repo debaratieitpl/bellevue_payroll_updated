@@ -32,7 +32,7 @@ class EmployeeContractRenewReport implements FromCollection, WithHeadings
 
                 $collection_array[] = array(
                     'Sl No' => $h,
-                    'Employee ID'=>$record->emp_code,
+                    // 'Employee ID'=>$record->emp_code,
                     'Employee Code'=>$record->old_emp_code,
                     'Employee Name'=>$record->salutation.' '.$record->emp_fname.' '.$record->emp_mname.' '.$record->emp_lname,
                     'Father Name'=>$record->emp_father_name,
@@ -67,7 +67,7 @@ class EmployeeContractRenewReport implements FromCollection, WithHeadings
     {
         return [
             'Sl No',
-            'Employee ID',
+            // 'Employee ID',
             'Employee Code',
             'Employee Name',
             'Father Name',

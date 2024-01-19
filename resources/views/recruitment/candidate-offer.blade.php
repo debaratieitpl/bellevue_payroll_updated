@@ -99,7 +99,10 @@ BELLEVUE - Interview
                                     <!-- </div> -->
                                  <!-- </div> -->
                               <!-- </td> -->
-                              <td><a href="{{ url('recruitment/view-letter/'.base64_encode($candidate->id))}}"><i class="fa fa-eye">view</i></a></td>
+                              <td>
+                                 <a href="{{ url('recruitment/view-letter/'.base64_encode($candidate->id))}}"><i class="fa fa-eye">view</i></a>
+                                 <a href="{{ url('recruitment/edit-letter/'.base64_encode($candidate->id))}}"><i class="fa fa-pencil">Edit</i></a>
+                              </td>
 
                               <!--            <td><a href="{{asset('public/pdf/'.$candidate->dom_pdf)}}" download title="Download"><img  style="width: 23px;" src="{{ asset('assets/img/download.png')}}"></a>-->
                               <!--<a href="{{url('recruitment/send-letter/'.base64_encode($candidate->id))}}" title="Send"><img  style="width: 23px;" src="{{ asset('assets/img/send.png')}}"></a>-->

@@ -247,6 +247,14 @@ Employee Information System-Employees
 				@endforeach
 				</select>
 			   </div>
+			   <div class="col-md-3">
+                                       <label>Gender</span></label>
+                                       <select class="form-control" name="emp_gender">
+                                          <!-- <option value="">Select</option> -->
+                                           <option value="male" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_gender ==="male") {echo 'selected';}}?>>Male</option>
+                                           <option value="female" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_gender ==="female") {echo 'selected';}}?>>Female</option>
+                                       </select>
+                                    </div>
 
 			   	<div class="col-md-3">
 			   		<label> Marital Status</span></label><br>
@@ -399,6 +407,10 @@ Employee Information System-Employees
 				<div class="col-md-3">
 				<label>Next Increment Date </label>
                     <input type="date" name="emp_next_increment_date" id="emp_next_increment_date" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->emp_next_increament_date;}?>" class="form-control" >
+				</div>
+				<div class="col-md-3">
+				<label>Date Of Exit </label>
+                    <input type="date" name="date_of_exit" id="date_of_exit" value="<?php if (request()->get('q') != '') {echo $employee_rs[0]->date_of_exit;}?>" class="form-control" >
 				</div>
 				<div class="col-md-3">
 					<label>Eligible for Promotion</label>

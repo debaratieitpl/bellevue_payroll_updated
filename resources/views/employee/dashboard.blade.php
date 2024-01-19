@@ -168,7 +168,11 @@ table tr:last-child{border-bottom:none;}
 
 	  <div class="row">
 	  <div class="col-md-12">
-        <h2>Birthday Reminder (for the month of <?php echo date('F', mktime(0, 0, 0, date('m'), 10)) ?>, <?php echo date('Y'); ?>)</h2>
+        <h2>Birthday Reminder (for the month of <?php echo date('F', mktime(0, 0, 0, date('m'), 10)) ?>, <?php echo date('Y'); ?>)<form  method="post" action="{{ url('employees/birthday-export-report') }}" enctype="multipart/form-data" >
+                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                     <button data-toggle="tooltip" data-placement="bottom" title="Download BirthDay Report" class="btn btn-default" style="background:none !important;padding: 10px 15px;margin-top: -40px;float:right;margin-right: 15px;" type="submit"><img  style="width: 35px;" src="{{ asset('img/excel-dnld.png')}}"></button>
+                  </form>
+</h2>
 		<table class="table birthday" style="background: #fff;margin: 15px 0;box-shadow: 0 9px 12px -5px;">
 			<tr>
 				<th><i class="la la-male"></i> Employee Code</th>

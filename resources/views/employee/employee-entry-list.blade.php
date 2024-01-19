@@ -99,12 +99,12 @@ Employee Retirement Report
                                         @foreach ($entry_list as $record)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$record->emp_code}}</td>
+                                                <td>{{$record->old_emp_code}}</td>
                                                 <td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
                                                 <td>{{ucwords($record->emp_department)}}</td>
                                                 <td>{{ucwords($record->emp_designation)}}</td>
                                                 <td>{{ ucfirst(\Carbon\Carbon::parse($record->created_at)->format('Y-m-d')) }}</td>
-                                                <td>{{ucwords($record->emp_dob)}}</td>
+                                                <td>{{ucwords($record->emp_doj)}}</td>
                                                 <td>{{$record->emp_retirement_date}}</td>
                                             </tr>
                                             @endforeach

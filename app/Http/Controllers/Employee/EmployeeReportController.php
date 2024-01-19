@@ -49,6 +49,8 @@ use App\Exports\DepartmentwiseExcel;
 use App\Exports\EmployeeIncrementReport;
 use App\Exports\EmployeeConfarmationReport;
 use App\Exports\EmployeeContractRenewReport;
+use App\Exports\DepartmentwiseAllEmpExcel;
+use App\Exports\DepartmentNateSalaryExcel;
 use DB;
 use Carbon\Carbon;
 
@@ -71,28 +73,46 @@ class EmployeeReportController extends Controller
                     ->where('emp_status', '!=', 'EX-EMPLOYEE')
                     ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
                     ->get();
+                    // dd($data['result']);
                 return view('employee.EmployeeListRetirementReport', $data);
         } else {
             return redirect('/');
         }
     }
 
-    public function genderwisereport()
+    public function genderwisereport(Request $request)
     {
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
+            $gender=$request->gender;
+           if($gender==null){
             $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
-                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
-                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
-                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
-                ->where('member_id', '=', $email)
-                ->get();
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', $email)
+            ->get();
 
-                $data['result'] = Employee::where('emp_status', '!=', 'TEMPORARY')
-                    ->where('emp_status', '!=', 'EX-EMPLOYEE')
-                    ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
-                    ->get();
-                return view('employee.gender-wise-report', $data);
+            $data['result'] = Employee::where('emp_status', '!=', 'TEMPORARY')
+                ->where('emp_status', '!=', 'EX-EMPLOYEE')
+                ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
+                ->get();
+            return view('employee.gender-wise-report', $data);
+           }else{
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', $email)
+            ->get();
+
+            $data['result'] = Employee::where('emp_status', '!=', 'TEMPORARY')
+                ->where('emp_status', '!=', 'EX-EMPLOYEE')
+                ->where('emp_gender',$gender)
+                ->orderByRaw('emp_retirement_date = CURDATE() DESC, emp_retirement_date ASC')
+                ->get();
+            return view('employee.gender-wise-report', $data);
+           }
         } else {
             return redirect('/');
         }
@@ -127,6 +147,89 @@ class EmployeeReportController extends Controller
         }
     }
 
+    public function netsalaryfunction(){
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+
+                $data['result'] = Employee::join('employee_pay_structures', 'employee_pay_structures.employee_code', 'employees.emp_code')
+                ->select(
+                    DB::raw('sum(basic_pay + others_alw + tiff_alw + hra + misc_alw + medical + conv + over_time ) as total_salary'),
+                    DB::raw('sum(pf + apf + i_tax + insu_prem  + furniture ) as total_deduction'),
+                    DB::raw('(sum(basic_pay + others_alw + tiff_alw + hra + misc_alw + medical + conv + over_time ) - sum(pf + apf + i_tax + insu_prem  + furniture )) as netSalary'),
+                    DB::raw('emp_department as department'),
+                )
+                ->groupBy('emp_department')
+                ->get();
+            // dd($data['result']);
+               
+                return view('employee.emp-net-salary-report', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function netsalaryexcel(){
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+               
+            return Excel::download(new DepartmentNateSalaryExcel(), 'DepartmentwiseAllEmpExcel.xlsx');
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function netsalaryfunctiondepartfilter($id){
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+
+                $data['result'] = Employee::join('employee_pay_structures', 'employee_pay_structures.employee_code', 'employees.emp_code')
+                ->where('emp_department',$id)
+                ->get(); 
+                // dd($data['result']); 
+                return view('employee.dep-emp-net-salary-report-filter', $data);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function departmetwiseallempexcel(Request $request){
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+                $department=$request->department;
+                // dd($department);
+            return Excel::download(new DepartmentwiseAllEmpExcel($department), 'DepartmentwiseAllEmpExcel.xlsx');
+        } else {
+            return redirect('/');
+        }
+    }
+
+
     public function entryWiseList(Request $request){
         if (!empty(Session::get('admin'))) {
             $email = Session::get('adminusernmae');
@@ -141,11 +244,11 @@ class EmployeeReportController extends Controller
                 $firstDayOfMonth = $currentDate->firstOfMonth()->toDateString();
                 $lastDayOfMonth = $currentDate->lastOfMonth()->toDateString();
                 if($request->to_date ==null){
-                $data['entry_list'] = Employee::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->get();
+                $data['entry_list'] = Employee::whereBetween('emp_doj', [$firstDayOfMonth, $lastDayOfMonth])->get();
                 }else{
                  $formDate=$request->form_date;
                  $toDate=$request->to_date;
-                $data['entry_list'] = Employee::whereBetween('created_at', [$formDate, $toDate])->get();
+                $data['entry_list'] = Employee::whereBetween('emp_doj', [$formDate, $toDate])->get();
 
                 }
                
@@ -169,11 +272,11 @@ class EmployeeReportController extends Controller
                 $firstDayOfMonth = $currentDate->firstOfMonth()->toDateString();
                 $lastDayOfMonth = $currentDate->lastOfMonth()->toDateString();
                 if($request->to_date ==null){
-                $data['entry_list'] = Employee::whereBetween('updated_at', [$firstDayOfMonth, $lastDayOfMonth])->get();
+                $data['entry_list'] = Employee::whereBetween('date_of_exit', [$firstDayOfMonth, $lastDayOfMonth])->get();
                 }else{
                  $formDate=$request->form_date;
                  $toDate=$request->to_date;
-                $data['entry_list'] = Employee::whereBetween('updated_at', [$formDate, $toDate])->get();
+                $data['entry_list'] = Employee::whereBetween('date_of_exit', [$formDate, $toDate])->get();
 
                 }
                

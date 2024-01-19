@@ -957,12 +957,14 @@ class RecruitmentController extends Controller
             ->where('member_id', '=', Session::get('adminusernmae'))
             ->get();
 
-            $data['candidate_rs'] = DB::Table('candidate_offer')
-                ->join('company_jobs', 'candidate_offer.job_id', '=', 'company_jobs.id')
-                ->where('candidate_offer.status', '=', 'Hired')
-                ->select('candidate_offer.*', 'company_jobs.job_code')
-                ->get();
-            //    dd($data['candidate_rs']);
+            $data['candidate_rs'] = DB::table('candidate_offer')
+            ->join('company_jobs', 'candidate_offer.job_id', '=', 'company_jobs.id')
+            ->where('candidate_offer.status', '=', 'Hired')
+            ->select('candidate_offer.*', 'company_jobs.job_code')
+            ->orderBy('candidate_offer.date_jo', 'desc') // Add this line for ordering
+            ->get();
+        
+            
             return view('recruitment/candidate-offer', $data);
         } else {
             return redirect('/');
@@ -979,6 +981,53 @@ class RecruitmentController extends Controller
 
       }
        
+    }
+
+    public function editofferlater($id){
+        if (!empty(Session::get('admin'))) {
+
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', Session::get('adminusernmae'))
+            ->get();
+          $data['candidate_offer']= DB::table('candidate_offer')->where('id',base64_decode($id))->first();
+        //   dd($data['candidate_offer']);
+        $data['employeelists'] = DB::table('employees')->get();
+
+          return view('recruitment/offer-edit',$data);
+        }else{
+            return redirect('/');
+        }
+    }
+
+    public function updateofferlater(Request $request){
+        if (!empty(Session::get('admin'))) {
+
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+            ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+            ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+            ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+            ->where('member_id', '=', Session::get('adminusernmae'))
+            ->get();
+         
+            $data=array(
+                'offered_sal'=>$request->offered_sal,
+                'name'=>$request->name,
+                'payment_type'=>$request->payment_type,
+                'date_jo'=>$request->date_jo,
+                'reportauthor'=>$request->reportauthor,
+                'address'=>$request->address,
+                'pincode'=>$request->pincode,
+                'state'=>$request->state,
+                'method_type'=>$request->method_type
+            );
+            DB::table('candidate_offer')->where('id',$request->id)->update($data);
+            return redirect('recruitment/offer-letter');
+        }else{
+            return redirect('/');
+        }
     }
     public function viewsofferlattercandidate()
     {

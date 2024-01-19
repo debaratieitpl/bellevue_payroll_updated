@@ -120,9 +120,12 @@ $menuslist = array_unique($menus);?>
                             <li><a href="{{ url('employees/confermation-list') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Confermation List</a></li>
                             <li><a href="{{ url('employees/gender-wise-report') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Gender Wise List</a></li>
                             <li><a href="{{ url('employees/department-wise-cost') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Department Wise Cost</a></li>
+                            <li><a href="{{ url('employees/department-wise-net-salary') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Department Wise Net Salary</a></li>
+
                             <li><a href="{{ url('employees/entry-wise-list') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Entry List</a></li>
                             <li><a href="{{ url('employees/exit-wise-list') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Exit List</a></li>
                             <li><a href="{{ url('employees/contract-renew-list') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Contract Renew List</a></li>
+                            <!-- <li><a href="{{ url('employees/contract-renew-list') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Employee Contract Renew List</a></li> -->
 
                             <li><a href="{{ url('employees/ex-report') }}"><img src="{{ asset('images/lv-rule.png') }}" alt="" /> Ex Employee </a></li>
 			            </ul>

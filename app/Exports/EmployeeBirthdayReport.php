@@ -9,18 +9,22 @@ use App\Models\Role\Employee;
 
 use DB;
 
-class EmployeeConfarmationReport implements FromCollection, WithHeadings
+class EmployeeBirthdayReport implements FromCollection, WithHeadings
 {
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        $record_rs = Employee::whereDate('emp_from_date', '>=', now()) // Today and future dates
+       
+        $record_rs = Employee::where('status', '=', 'active')
         ->where('emp_status', '!=', 'TEMPORARY')
         ->where('emp_status', '!=', 'EX-EMPLOYEE')
-        ->orderByRaw('emp_from_date = CURDATE() DESC, emp_from_date ASC')
+        ->whereRaw('MONTH(emp_dob) = MONTH(NOW())')
+        ->orderByRaw('DAY(emp_dob) DESC, MONTH(emp_dob), DAY(emp_dob)')
         ->get();
+
+        // dd($record_rs);
 
         $h = 1;
         $collection_array = array();
@@ -32,7 +36,7 @@ class EmployeeConfarmationReport implements FromCollection, WithHeadings
 
                 $collection_array[] = array(
                     'Sl No' => $h,
-                    // 'Employee ID'=>$record->emp_code,
+                    'Employee ID'=>$record->emp_code,
                     'Employee Code'=>$record->old_emp_code,
                     'Employee Name'=>$record->salutation.' '.$record->emp_fname.' '.$record->emp_mname.' '.$record->emp_lname,
                     'Father Name'=>$record->emp_father_name,
@@ -66,7 +70,7 @@ class EmployeeConfarmationReport implements FromCollection, WithHeadings
     {
         return [
             'Sl No',
-            // 'Employee ID',
+            'Employee ID',
             'Employee Code',
             'Employee Name',
             'Father Name',

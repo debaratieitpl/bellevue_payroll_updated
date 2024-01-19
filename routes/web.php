@@ -398,6 +398,13 @@ Route::get('employees/retirement', 'Employee\EmployeeReportController@employeesB
 Route::post('employees/retirement-export-report', 'Employee\EmployeeReportController@emp_retirement_xlsexport');
 Route::get('employees/gender-wise-report', 'Employee\EmployeeReportController@genderwisereport');
 Route::get('employees/department-wise-cost', 'Employee\EmployeeReportController@departmentwisecost');
+Route::get('employees/department-wise-net-salary', 'Employee\EmployeeReportController@netsalaryfunction');
+Route::post('employees/department-net-salary-export', 'Employee\EmployeeReportController@netsalaryexcel');
+
+Route::get('employee/department-wise-cost-filter/{id}', 'Employee\EmployeeReportController@netsalaryfunctiondepartfilter');
+Route::post('employees/excel-export-report', 'Employee\EmployeeReportController@departmetwiseallempexcel');
+
+
 Route::post('employees/department-cost-export-report', 'Employee\EmployeeReportController@departmentwisecoseexcel');
 Route::get('employees/entry-wise-list', 'Employee\EmployeeReportController@entryWiseList');
 Route::post('employees/entry-wise-list', 'Employee\EmployeeReportController@entryWiseList');
@@ -411,6 +418,8 @@ Route::post('employees/confermation-export-report', 'Employee\EmployeeReportCont
 Route::get('employees/contract-renew-list', 'Employee\EmployeeReportController@employeeContractRenew');
 Route::post('employees/contract-renew-export-report', 'Employee\EmployeeReportController@emp_contract_renew_xlsexport');
 
+
+Route::post('employees/birthday-export-report', 'Employee\EmployeeController@emp_birthday_excel');
 
 Route::post('employees/department-export-report', 'Employee\EmployeeController@emp_dep_xlsexport');
 Route::post('employees/designation-export-report', 'Employee\EmployeeController@emp_designation_xlsexport');
@@ -495,12 +504,8 @@ Route::get('recruitment/rejected', 'Recruitment\RecruitmentController@viewReejec
 Route::get('recruitment/apply', 'Recruitment\RecruitmentController@applyView');
 Route::post('recruitment/saveapply', 'Recruitment\RecruitmentController@applysave');
 Route::get('recruitment/view-letter/{id}', 'Recruitment\RecruitmentController@viewofferlater');
-
-
-
-
-
-
+Route::get('recruitment/edit-letter/{id}', 'Recruitment\RecruitmentController@editofferlater');
+Route::post('recruitment/update-offer-letter','Recruitment\RecruitmentController@updateofferlater');
 
 
 Route::get('pis/getjobpostByIdlkkk/{empid}','Recruitment\RecruitmentController@getDepartment');

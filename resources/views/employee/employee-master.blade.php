@@ -221,6 +221,23 @@ Employee Information System-Employees
                                        </select>
                                     </div>
                                     <div class="col-md-3">
+                                       <label>Gender</span></label>
+                                       <select class="form-control" name="emp_gender">
+                                          <option value="">Select</option>
+                                           <option value="male">Male</option>
+                                           <option value="female">Female</option>
+                                       </select>
+                                    </div>
+                                    <!-- <div class="col-md-3">
+                                       <label>Blood Group</span></label>
+                                       <select class="form-control" name="emp_blood">
+                                          <option value="">Select</option>
+                                          @foreach($blood_group as $item)
+                                          <option value="{{$item->blood_group}}" <?php if (request()->get('q') != '') {if ($employee_rs[0]->emp_religion == $item->blood_group) {echo 'selected';}}?>>{{$item->blood_group}}</option>
+                                          @endforeach
+                                       </select>
+                                    </div> -->
+                                    <div class="col-md-3">
                                        <label> Marital Status</span></label><br>
                                        <div class="form-check-inline">
                                           <label class="form-check-label">

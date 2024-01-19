@@ -52,11 +52,13 @@ use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
 use Session;
 use view;
+use DB;
 use App\Imports\ImportEmployee;
 use App\Imports\ImportEmail;
 use App\Imports\ImportPayDetails;
 use App\Exports\SampleEmployeeExport;
 use App\Exports\ExcelEmpDesignationReport;
+use App\Exports\EmployeeBirthdayReport;
 class EmployeeController extends Controller
 {
     //
@@ -103,6 +105,22 @@ class EmployeeController extends Controller
             return redirect('/');
         }
     }
+    public function emp_birthday_excel(Request $request){
+        if (!empty(Session::get('admin'))) {
+            $email = Session::get('adminusernmae');
+            $data['Roledata'] = Role_authorization::leftJoin('modules', 'role_authorizations.module_name', '=', 'modules.id')
+                ->leftJoin('sub_modules', 'role_authorizations.sub_module_name', '=', 'sub_modules.id')
+                ->leftJoin('module_configs', 'role_authorizations.menu', '=', 'module_configs.id')
+                ->select('role_authorizations.*', 'modules.module_name', 'sub_modules.sub_module_name', 'module_configs.menu_name')
+                ->where('member_id', '=', $email)
+                ->get();
+
+            return Excel::download(new EmployeeBirthdayReport(), 'EmpBirthdayReport.xlsx');
+        } else {
+            return redirect('/');
+        }
+    }
+// }
 
     public function getEmployees()
     {
@@ -390,7 +408,7 @@ class EmployeeController extends Controller
             $data['pay_master'] = Pay_head_master::leftJoin('pay_types', 'pay_types.id', '=', 'pay_head_masters.pay_type')
                 ->select('pay_head_masters.*', 'pay_types.pay_type_name')
                 ->get();
-
+                $data['blood_group']=DB::table('bloodbank')->get();
             //echo "<pre>";print_r($data['states']);exit;
             return view('employee/employee-master', $data);
         } else {
@@ -875,6 +893,8 @@ class EmployeeController extends Controller
                     'emp_sub_caste' => $request->emp_sub_caste,
                     'emp_religion' => $request->emp_religion,
                     'emp_image' => $filename,
+                    'emp_gender'=>$request->emp_gender,
+                    'emp_blood'=>$request->emp_blood,
                     'emp_spouse_working_status' => $request->emp_spouse_working,
                     'emp_government' => $request->emp_government,
                     'emp_spouse_quarter' => $request->emp_spouse_quarter,
@@ -1011,32 +1031,32 @@ class EmployeeController extends Controller
 
                 //boton roy code user access
                 
-                $name=strtoupper($request->emp_fname).' '.strtoupper($request->emp_lname);
-                $min = 10004;
-                $max = 99999;
-                $randomNumber = rand($min, $max);
-                $hashedPassword = bcrypt($randomNumber);
-                $userData=array(
-                        'employee_id'=> $request->emp_code,
-                        'name'=>$name,
-                        'email'=>$request->email,
-                        'user_type'=>'employee',
-                        'password'=>$hashedPassword,
-                        'status'=>'active',
-                );
-                $usercheck=User::where('email','=',$request->email)->first();
-                if(!empty($usercheck)){
-                    Session::flash('error', 'Employee Email Id Alredy Exit');
-                    return redirect('employees');
-                }
-                $toEmail=$request->email;
-                User::insert($userData);
-                 //Send Mail
-                 \Mail::send('employeeMail', ['name' =>$name,'email'=>$request->email,'password'=>$randomNumber,'base_url'=>env('BASE_URL')], function ($message) use ($toEmail){
-                    $subject = 'Bellevue-Employee Access';
-                    $message->to($toEmail)->subject($subject);
-                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-                });
+                // $name=strtoupper($request->emp_fname).' '.strtoupper($request->emp_lname);
+                // $min = 10004;
+                // $max = 99999;
+                // $randomNumber = rand($min, $max);
+                // $hashedPassword = bcrypt($randomNumber);
+                // $userData=array(
+                //         'employee_id'=> $request->emp_code,
+                //         'name'=>$name,
+                //         'email'=>$request->email,
+                //         'user_type'=>'employee',
+                //         'password'=>$hashedPassword,
+                //         'status'=>'active',
+                // );
+                // $usercheck=User::where('email','=',$request->email)->first();
+                // if(!empty($usercheck)){
+                //     Session::flash('error', 'Employee Email Id Alredy Exit');
+                //     return redirect('employees');
+                // }
+                // $toEmail=$request->email;
+                // User::insert($userData);
+                //  //Send Mail
+                //  \Mail::send('employeeMail', ['name' =>$name,'email'=>$request->email,'password'=>$randomNumber,'base_url'=>env('BASE_URL')], function ($message) use ($toEmail){
+                //     $subject = 'Bellevue-Employee Access';
+                //     $message->to($toEmail)->subject($subject);
+                //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                // });
                 
 
 
@@ -1601,6 +1621,7 @@ class EmployeeController extends Controller
                 'emp_present_city_class' => $request->emp_present_city,
                 'emp_residential_distance' => $request->emp_resdential_distance,
                 'emp_home_town' => $request->emp_home_town,
+                'emp_gender' => $request->emp_gender,
                 'emp_nearest_railway' => $request->emp_nearest_railway,
                 'emp_caste' => $request->emp_caste,
                 'emp_sub_caste' => $request->emp_sub_caste,
@@ -1618,6 +1639,7 @@ class EmployeeController extends Controller
                 'emp_dob' => $request->emp_dob,
                 'emp_doj' => $request->emp_doj,
                 'emp_retirement_date' => $retire_date,
+                'date_of_exit' =>$request->date_of_exit,
                 'emp_next_increament_date' => date("Y-m-d", strtotime($request->emp_next_increment_date)),
                 'emp_status' => $request->emp_status,
                 'emp_shift_group' => $request->emp_sift_grp,

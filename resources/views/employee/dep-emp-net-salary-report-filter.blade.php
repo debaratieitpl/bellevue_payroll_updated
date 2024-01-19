@@ -33,14 +33,14 @@ Employee Retirement Report
    <div class="animated fadeIn">
       <div class="row" style="border:none;">
          <div class="col-md-6">
-            <h5 class="card-title">Employee Retirement Report</h5>
+            <h5 class="card-title">Department Wise Cost Report</h5>
          </div>
          <div class="col-md-6">
             <span class="right-brd" style="padding-right:15x;">
                <ul class="">
                   <li><a href="#">Employee</a></li>
                   <li>/</li>
-                  <li class="active"> Retirement Report</li>
+                  <li class="active"> Department Wise Net Report</li>
                </ul>
             </span>
          </div>
@@ -51,8 +51,9 @@ Employee Retirement Report
             @if($result!='')
             <div class="card">
                <div class="card-header">
-                  <form  method="post" action="{{ url('employees/retirement-export-report') }}" enctype="multipart/form-data" >
+                  <form  method="post" action="{{ url('employees/excel-export-report') }}" enctype="multipart/form-data" >
                      <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                     <input type="hidden" value="<?php print_r($result['0']->emp_department) ?>" name="department">
                      <button data-toggle="tooltip" data-placement="bottom" title="Download Retirement Report" class="btn btn-default" style="background:none !important;padding: 10px 15px;margin-top: -30px;float:right;margin-right: 15px;" type="submit"><img  style="width: 35px;" src="{{ asset('img/excel-dnld.png')}}"></button>
                   </form>
                   @include('include.messages')
@@ -61,29 +62,46 @@ Employee Retirement Report
                <div class="card-body card-block">
                   <div class="payroll-table table-responsive" style="width:100%;margin:0 auto;">
                      <table id="bootstrap-data-table" class="table table-striped table-bordered">
-                        <thead style="text-align:center;vertical-align:middle;">
+                        <thead style="text-align:center;vertical-align:middle;"> 
                            <tr>
                               <th>Sl. No.</th>
-                              <th>Employee Code</th>
-                              <th>Employee Name</th>
-                              <th>Employee Department</th>
+                              <th>Emp_Code</th>
+                              <th>Name</th>
+                              <th>Department</th>
                               <th>Designation</th>
-                              <th>Joining Date</th>
-                              <th>Date of Birth</th>
-                              <th>Retirement date</th>
+                              <th>Gross Salary</th>
+                              <!-- <th>Salary Deduction</th> -->
+                              <th>Net Salary</th>
                            </tr>
                         </thead>
                         <tbody>
+                
                            @foreach ($result as $record)
                            <tr>
                               <td>{{$loop->iteration}}</td>
                               <td>{{$record->old_emp_code}}</td>
-                              <td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
-                              <td>{{ucwords($record->emp_department)}}</td>
-                              <td>{{ucwords($record->emp_designation)}}</td>
-                              <td>{{ucwords($record->emp_doj)}}</td>
-                              <td>{{ucwords($record->emp_dob)}}</td>
-                              <td>{{$record->emp_retirement_date}}</td>
+                              <td>{{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
+                              <td>{{$record->emp_department}}</td>
+                              <td>{{$record->emp_designation}}</td>
+                              <td>
+                                @php
+                                    $sumBasicPay = $record->basic_pay + $record->hra + $record->tiff_alw + $record->others_alw + $record->misc_alw + $record->medical + $record->conv + $record->conv + $record->over_time + $record->bouns + $record->leave_inc;
+                                    echo $sumBasicPay;
+                                @endphp
+                            </td>
+                            <!-- <td>
+                                @php
+                                    $sumBasicdeduction = $record->prof_tax + $record->pf + $record->pf_int + $record->apf + $record->i_tax + $record->insu_prem + $record->pf_loan + $record->esi + $record->adv + $record->hrd + $record->co_op + $record->furniture + $record->misc_ded;
+                                    echo $sumBasicdeduction;
+                                @endphp
+                            </td> -->
+                            <td>
+                            <!-- $sumBasicPay = -->
+                            {{ $record->basic_pay + $record->hra + $record->tiff_alw + $record->others_alw + $record->misc_alw + $record->medical + $record->conv + $record->conv + $record->over_time + $record->bouns + $record->leave_inc - ($record->prof_tax + $record->pf + $record->pf_int + $record->apf + $record->i_tax + $record->insu_prem + $record->pf_loan + $record->esi + $record->adv + $record->hrd + $record->co_op + $record->furniture + $record->misc_ded) }}
+                            <!-- $sumBasicdeduction = $record->prof_tax + $record->pf + $record->pf_int + $record->apf + $record->i_tax + $record->insu_prem + $record->pf_loan + $record->esi + $record->adv + $record->hrd + $record->co_op + $record->furniture + $record->misc_ded;
+                            $netSalary=$sumBasicPay - $sumBasicdeduction;
+                            echo $netSalary; -->
+                            </td>
                            </tr>
                            @endforeach
                         </tbody>

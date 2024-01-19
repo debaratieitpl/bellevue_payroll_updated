@@ -33,32 +33,56 @@ Employee Retirement Report
    <div class="animated fadeIn">
       <div class="row" style="border:none;">
          <div class="col-md-6">
-            <h5 class="card-title">Employee Retirement Report</h5>
+            <h5 class="card-title">Gender Wise Report</h5>
          </div>
          <div class="col-md-6">
             <span class="right-brd" style="padding-right:15x;">
                <ul class="">
                   <li><a href="#">Employee</a></li>
                   <li>/</li>
-                  <li class="active"> Retirement Report</li>
+                  <li class="active"> Gender Wise Report</li>
                </ul>
             </span>
          </div>
       </div>
       <!-- Widgets  -->
+      
       <div class="row">
          <div class="main-card">
             @if($result!='')
             <div class="card">
-               <div class="card-header">
+            
+
+               <!-- <div class="card-header">
                   <form  method="post" action="{{ url('employees/retirement-export-report') }}" enctype="multipart/form-data" >
                      <input type="hidden" name="_token" value="{{ csrf_token() }}">
                      <button data-toggle="tooltip" data-placement="bottom" title="Download Retirement Report" class="btn btn-default" style="background:none !important;padding: 10px 15px;margin-top: -30px;float:right;margin-right: 15px;" type="submit"><img  style="width: 35px;" src="{{ asset('img/excel-dnld.png')}}"></button>
                   </form>
                   @include('include.messages')
-               </div>
+               </div> -->
                <!----------------view----------------->
                <div class="card-body card-block">
+                   <!--Search Payslip-->
+                   <form  method="get" action="{{ url('employees/gender-wise-report') }}" enctype="multipart/form-data" >
+                              <!-- <h5 class="card-title">Gender Wise Report</h5> -->
+                              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <div class="row form-group">
+                                    <div class="col-md-4">
+                                        <label for="text-input" class=" form-control-label">Select Gender
+                                            <span>(*)</span></label>
+                                            <select class="form-control" name="gender">
+                                                <option value="">Select</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                            </select>
+                                    </div>
+                                    
+                                    <div class="col-md-4 btn-up">
+                                        <button type="submit" class="btn btn-danger btn-sm">View </button><br/><br/>
+                                    </div>
+                                </div>
+                            </form>
+                            <!--End-->
                   <div class="payroll-table table-responsive" style="width:100%;margin:0 auto;">
                      <table id="bootstrap-data-table" class="table table-striped table-bordered">
                         <thead style="text-align:center;vertical-align:middle;"> 
@@ -79,13 +103,14 @@ Employee Retirement Report
                            @foreach ($result as $record)
                            <tr>
                               <td>{{$loop->iteration}}</td>
-                              <td>{{$record->emp_code}}</td>
+                              <td>{{$record->old_emp_code}}</td>
                               <td>{{$record->salutation}} {{$record->emp_fname}} {{$record->emp_mname}} {{$record->emp_lname}}</td>
                               <td>{{ucwords($record->emp_department)}}</td>
                               <td>{{ucwords($record->emp_designation)}}</td>
                               <td>{{ucwords($record->emp_doj)}}</td>
                               <td>{{ucwords($record->emp_dob)}}</td>
                               <td>{{$record->emp_retirement_date}}</td>
+                              <td>{{$record->emp_gender}}</td>
                            </tr>
                            @endforeach
                         </tbody>
@@ -97,6 +122,7 @@ Employee Retirement Report
             @endif
          </div>
       </div>
+
    </div>
    <!-- /Widgets -->
 </div>
